@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MIC Platform — Batch 7</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#080808;font-family:'Inter',sans-serif;padding:40px 24px 80px}
+:root{
+  --g900:#0D2B1A;--g800:#1A4731;--g700:#22593D;--g600:#2D6A4F;--g500:#40916C;--g400:#52B788;--g300:#74C69D;--g200:#B7E4C7;--g100:#D8F3DC;--g50:#F0FAF3;
+  --gold:#C9A84C;--gold2:#E8C96A;--goldb:#FFF8E1;
+  --red:#DC2626;--redb:#FEF2F2;--amber:#D97706;--ambb:#FFFBEB;
+  --blue:#2563EB;--blueb:#EFF6FF;--purple:#7C3AED;--purb:#F5F3FF;--purdark:#6D28D9;
+  --ink:#111827;--ink2:#374151;--ink3:#6B7280;--ink4:#9CA3AF;
+  --bg:#F2F4F2;--white:#FFFFFF;--bdr:#E5E7EB;--bdr2:#F3F4F6;
+  --r8:8px;--r12:12px;--r16:16px;--r20:20px;--r99:99px
+}
+.canvas{display:flex;flex-direction:column;align-items:center;gap:56px}
+.rl{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#444;padding:7px 16px;border:1px solid #222;border-radius:99px;margin-bottom:-36px}
+.srow{display:flex;flex-wrap:wrap;gap:28px;justify-content:center;align-items:flex-start;width:100%}
+.sc{display:flex;flex-direction:column;align-items:center;gap:10px}
+.sc-num{font-size:10px;font-weight:700;color:#555;letter-spacing:1px;background:#1A1A1A;padding:3px 10px;border-radius:99px}
+.sc-lbl{font-size:11px;font-weight:600;color:#888;text-align:center;max-width:200px}
+.phone{width:390px;background:var(--bg);border-radius:50px;overflow:hidden;box-shadow:0 0 0 10px #1C1C1E,0 0 0 12px #3A3A3C,0 28px 60px rgba(0,0,0,.6);display:flex;flex-direction:column;position:relative;min-height:900px}
+.phone::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:126px;height:34px;background:#1C1C1E;border-radius:0 0 20px 20px;z-index:100}
+.sb{height:50px;padding:14px 24px 0;display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:700;flex-shrink:0;position:relative;z-index:10}
+.sb-l{background:var(--white);color:var(--ink)}.sb-d{background:var(--g800);color:#fff}.sb-sa{background:#06150D;color:#fff}
+.sico{display:flex;gap:5px;font-size:11px}
+.tbar{height:54px;padding:0 20px;display:flex;align-items:center;justify-content:space-between;background:var(--white);border-bottom:1px solid var(--bdr);flex-shrink:0}
+.tb-back{font-size:22px;color:var(--ink3)}.tb-title{font-family:'Lora',serif;font-size:16px;font-weight:700;color:var(--ink)}.tb-act{font-size:13px;font-weight:600;color:var(--g600)}
+.sa-tbar{height:54px;padding:0 20px;display:flex;align-items:center;justify-content:space-between;background:#06150D;flex-shrink:0}
+.tabs{display:flex;border-bottom:1px solid var(--bdr);background:var(--white);flex-shrink:0;overflow-x:auto}
+.tab{padding:12px 14px;font-size:12px;font-weight:600;color:var(--ink3);white-space:nowrap;cursor:pointer;border-bottom:2.5px solid transparent;flex-shrink:0}
+.tab.on{color:var(--g700);border-bottom-color:var(--g600)}
+.scr{flex:1;overflow-y:auto;padding:16px}.scr::-webkit-scrollbar{display:none}
+.card{background:var(--white);border-radius:var(--r16);border:1px solid var(--bdr);padding:16px;margin-bottom:12px}
+.card-hdr{display:flex;gap:10px;align-items:center;margin-bottom:12px}
+.card-ico{width:36px;height:36px;border-radius:10px;background:var(--g100);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.card-ico.gold{background:var(--goldb)}.card-ico.red{background:var(--redb)}.card-ico.blue{background:var(--blueb)}.card-ico.purple{background:var(--purb)}.card-ico.amber{background:var(--ambb)}
+.card-title{font-size:14px;font-weight:700;color:var(--ink)}.card-sub{font-size:11px;color:var(--ink3);margin-top:2px}
+.irow{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--bdr2)}
+.irow:last-child{border:none}.il{font-size:13px;color:var(--ink3)}.ir{font-size:13px;font-weight:600;color:var(--ink);text-align:right;max-width:55%}
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:var(--r99);font-size:11px;font-weight:700}
+.bg-green{background:var(--g100);color:var(--g700)}.bg-gold{background:var(--goldb);color:var(--amber)}.bg-red{background:var(--redb);color:var(--red)}.bg-blue{background:var(--blueb);color:var(--blue)}.bg-gray{background:var(--bdr2);color:var(--ink3)}.bg-purple{background:var(--purb);color:var(--purple)}
+.fgroup{margin-bottom:14px}.flabel{font-size:12px;font-weight:600;color:var(--ink2);margin-bottom:6px;display:block}.req{color:var(--red)}
+.finput{width:100%;height:46px;background:var(--white);border:1.5px solid var(--bdr);border-radius:var(--r12);padding:0 14px;font-size:14px;color:var(--ink);display:flex;align-items:center}
+.finput.on{border-color:var(--g400)}.finput.ph{color:var(--ink4)}
+.ftxt{width:100%;background:var(--white);border:1.5px solid var(--bdr);border-radius:var(--r12);padding:12px 14px;font-size:13px;color:var(--ink);line-height:1.55;min-height:80px}
+.frow{display:flex;gap:10px}.frow .fgroup{flex:1}
+.tag{padding:7px 13px;border-radius:var(--r99);border:1.5px solid var(--bdr);background:var(--white);font-size:12px;font-weight:600;color:var(--ink3);cursor:pointer}
+.tag.on{border-color:var(--g500);background:var(--g50);color:var(--g700)}
+.tag-row{display:flex;flex-wrap:wrap;gap:8px}
+.tog{width:44px;height:26px;border-radius:13px;background:var(--g500);position:relative;flex-shrink:0}
+.tog::after{content:'';position:absolute;right:3px;top:3px;width:20px;height:20px;border-radius:50%;background:#fff}
+.tog.off{background:var(--bdr)}.tog.off::after{right:auto;left:3px}
+.ban{display:flex;gap:10px;align-items:flex-start;padding:12px 16px;font-size:12px;line-height:1.55;flex-shrink:0}
+.ban-green{background:var(--g50);border-bottom:1px solid var(--g200);color:var(--g800)}
+.ban-gold{background:var(--goldb);border-bottom:1px solid #FFE082;color:#7C5C00}
+.ban-red{background:var(--redb);border-bottom:1px solid #FECACA;color:var(--red)}
+.ban-blue{background:var(--blueb);border-bottom:1px solid #BFDBFE;color:var(--blue)}
+.ban-purple{background:var(--purb);border-bottom:1px solid #DDD6FE;color:var(--purple)}
+.btn-p{width:100%;height:52px;background:linear-gradient(135deg,var(--g800),var(--g600));color:#fff;border:none;border-radius:var(--r16);font-size:15px;font-weight:700;cursor:pointer}
+.btn-s{width:100%;height:48px;background:var(--white);color:var(--g800);border:2px solid var(--g700);border-radius:var(--r16);font-size:14px;font-weight:700;cursor:pointer}
+.btn-pur{width:100%;height:52px;background:linear-gradient(135deg,var(--purple),var(--purdark));color:#fff;border:none;border-radius:var(--r16);font-size:15px;font-weight:700;cursor:pointer}
+.btn-red{width:100%;height:48px;background:linear-gradient(135deg,#991B1B,var(--red));color:#fff;border:none;border-radius:var(--r16);font-size:14px;font-weight:700;cursor:pointer}
+.btn-sm{height:34px;padding:0 14px;border-radius:var(--r8);border:none;font-size:12px;font-weight:700;cursor:pointer}
+.btn-g{background:var(--g100);color:var(--g800)}.btn-r{background:var(--redb);color:var(--red)}.btn-gr{background:var(--bdr2);color:var(--ink3)}.btn-gold{background:var(--goldb);color:var(--amber)}
+.li{display:flex;align-items:center;gap:12px;padding:13px 16px;background:var(--white);border-bottom:1px solid var(--bdr2);cursor:pointer}
+.li:last-child{border-bottom:none}
+.li-ava{width:44px;height:44px;border-radius:50%;background:var(--g100);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.li-name{font-size:14px;font-weight:600;color:var(--ink)}.li-det{font-size:12px;color:var(--ink3);margin-top:2px}
+.shdr{background:linear-gradient(150deg,#06150D,var(--g900));padding:14px 20px 20px;flex-shrink:0}
+.nsg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px}
+.nsg-box{background:rgba(255,255,255,.08);border-radius:var(--r12);padding:10px;text-align:center}
+.nsg-n{font-size:15px;font-weight:800;color:#fff;line-height:1}
+.nsg-n.g{color:#86EFAC}.nsg-n.gold{color:var(--gold2)}.nsg-n.b{color:#93C5FD}.nsg-n.p{color:#C4B5FD}
+.nsg-l{font-size:9px;color:rgba(255,255,255,.4);margin-top:3px;text-transform:uppercase;letter-spacing:.4px}
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.kpi{background:var(--white);border-radius:var(--r12);padding:14px;border:1px solid var(--bdr)}
+.kpi-l{font-size:11px;color:var(--ink3);margin-bottom:4px}.kpi-n{font-size:22px;font-weight:800;color:var(--ink);line-height:1}.kpi-ch{font-size:10px;color:var(--ink4);margin-top:3px}
+.prog{height:6px;background:var(--bdr2);border-radius:99px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--g500),var(--g400));border-radius:99px}
+.bnav{height:82px;background:var(--white);border-top:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-around;padding:0 10px;flex-shrink:0}
+.bni{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:8px 12px;border-radius:12px}
+.bni.on{background:var(--g50)}.bni-ico{font-size:22px}.bni-lbl{font-size:10px;font-weight:600;color:var(--ink3)}.bni.on .bni-lbl{color:var(--g700)}
+.info{background:var(--g50);border:1px solid var(--g200);border-radius:var(--r12);padding:12px 14px;margin-bottom:12px;display:flex;gap:8px;font-size:12px;color:var(--g800);line-height:1.55}
+.info.amber{background:var(--ambb);border-color:#FFE082;color:#7C5C00}.info.blue{background:var(--blueb);border-color:#BFDBFE;color:var(--blue)}.info.red{background:var(--redb);border-color:#FECACA;color:var(--red)}.info.purple{background:var(--purb);border-color:#DDD6FE;color:var(--purple)}
+.sa-only{background:var(--purb);border:1px solid #DDD6FE;border-radius:6px;padding:2px 8px;font-size:10px;font-weight:700;color:var(--purple)}
+.searchbar{display:flex;align-items:center;gap:10px;background:var(--bg);border-radius:var(--r12);padding:0 14px;height:44px;border:1px solid var(--bdr)}
+.chat-msg{display:flex;gap:8px;margin-bottom:12px}
+.chat-bubble{padding:10px 14px;border-radius:18px;max-width:72%;font-size:13px;line-height:1.5}
+.bubble-in{background:var(--white);border:1px solid var(--bdr);color:var(--ink);border-bottom-left-radius:4px}
+.bubble-out{background:var(--g800);color:#fff;border-bottom-right-radius:4px;margin-left:auto}
+.bar-chart{display:flex;align-items:flex-end;gap:6px;height:100px}
+.bar-col{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1}
+.bar-fill{width:100%;border-radius:5px 5px 0 0;background:linear-gradient(180deg,var(--g400),var(--g600))}
+.bar-lbl{font-size:9px;color:var(--ink4)}
+.upload-done{border:2px solid var(--g400);border-radius:var(--r12);padding:12px 14px;background:var(--g50);display:flex;gap:10px;align-items:center;margin-bottom:8px}
+.upload-box{border:2px dashed var(--g400);border-radius:var(--r12);padding:16px;text-align:center;background:var(--g50);cursor:pointer;margin-bottom:8px}
+.sec-div{display:flex;align-items:center;gap:10px;margin:16px 0 12px}
+.sec-label{font-size:12px;font-weight:700;color:var(--ink);white-space:nowrap}.sec-line{flex:1;height:1px;background:var(--bdr)}
+.spacer{height:100px}.mb8{margin-bottom:8px}.mb12{margin-bottom:12px}.mb14{margin-bottom:14px}.mb16{margin-bottom:16px}.mt12{margin-top:12px}
+</style>
+</head>
+<body>
+<div class="canvas">
+
+<div style="text-align:center;padding:20px 0 4px">
+  <div style="font-family:'Lora',serif;font-size:28px;font-weight:700;color:#fff;margin-bottom:6px">MIC Platform — Batch 7</div>
+  <div style="font-size:13px;color:#555">SA Detail Screens · User New Features · Admin Blood Bank · Support Chat · Analytics</div>
+</div>
+
+<!-- ══════════════════════════════════
+  SUPER ADMIN — REMAINING DETAIL SCREENS
+══════════════════════════════════ -->
+<div class="rl">Super Admin · Remaining Detail — State Drilldown, Masjid View, Analytics, Fee Config</div>
+<div class="srow">
+
+<!-- SD-01 State Drilldown Full -->
+<div class="sc">
+<div class="sc-num">SD-01</div>
+<div class="phone" style="min-height:980px">
+  <div class="sb sb-sa"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="sa-tbar">
+    <div style="color:rgba(255,255,255,.5);font-size:22px">←</div>
+    <div style="font-family:'Lora',serif;font-size:16px;font-weight:700;color:#fff">Karnataka Drilldown</div>
+    <div style="font-size:13px;font-weight:600;color:var(--gold2)">Export</div>
+  </div>
+  <div class="tabs">
+    <div class="tab on">Overview</div>
+    <div class="tab">Masjids (1,840)</div>
+    <div class="tab">Admins (24)</div>
+    <div class="tab">Cases (8)</div>
+  </div>
+  <div class="scr" style="background:var(--bg);padding:14px 16px">
+
+    <!-- State hero -->
+    <div style="background:linear-gradient(135deg,#06150D,var(--g900));border-radius:var(--r20);padding:20px;margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px">
+        <div>
+          <div style="font-size:10px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">State Report · Q2 2025</div>
+          <div style="font-family:'Lora',serif;font-size:22px;font-weight:700;color:#fff;margin-bottom:2px">Karnataka</div>
+          <div style="font-size:12px;color:rgba(255,255,255,.5)">South India · KA · #1 Nationally</div>
+        </div>
+        <div style="background:linear-gradient(135deg,var(--gold),#B8860B);color:#fff;padding:5px 12px;border-radius:99px;font-size:11px;font-weight:700">🥇 Top State</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
+        <div style="text-align:center"><div style="font-size:18px;font-weight:800;color:#fff">3,40,218</div><div style="font-size:9px;color:rgba(255,255,255,.4);text-transform:uppercase;margin-top:2px">Members</div></div>
+        <div style="text-align:center"><div style="font-size:18px;font-weight:800;color:var(--gold2)">1,840</div><div style="font-size:9px;color:rgba(255,255,255,.4);text-transform:uppercase;margin-top:2px">Masjids</div></div>
+        <div style="text-align:center"><div style="font-size:18px;font-weight:800;color:#86EFAC">24</div><div style="font-size:9px;color:rgba(255,255,255,.4);text-transform:uppercase;margin-top:2px">Admins</div></div>
+      </div>
+      <!-- Mini bar chart -->
+      <div style="background:rgba(255,255,255,.07);border-radius:12px;padding:12px">
+        <div style="font-size:10px;color:rgba(255,255,255,.4);margin-bottom:8px">Member Growth — 2025</div>
+        <div class="bar-chart">
+          <div class="bar-col"><div class="bar-fill" style="height:42px;background:rgba(82,183,136,.5)"></div><div class="bar-lbl" style="color:rgba(255,255,255,.3)">Jan</div></div>
+          <div class="bar-col"><div class="bar-fill" style="height:56px;background:rgba(82,183,136,.6)"></div><div class="bar-lbl" style="color:rgba(255,255,255,.3)">Feb</div></div>
+          <div class="bar-col"><div class="bar-fill" style="height:48px;background:rgba(82,183,136,.5)"></div><div class="bar-lbl" style="color:rgba(255,255,255,.3)">Mar</div></div>
+          <div class="bar-col"><div class="bar-fill" style="height:62px;background:rgba(82,183,136,.65)"></div><div class="bar-lbl" style="color:rgba(255,255,255,.3)">Apr</div></div>
+          <div class="bar-col"><div class="bar-fill" style="height:74px;background:rgba(82,183,136,.75)"></div><div class="bar-lbl" style="color:rgba(255,255,255,.3)">May</div></div>
+          <div class="bar-col"><div class="bar-fill" style="height:88px;background:rgba(82,183,136,.9)"></div><div class="bar-lbl" style="color:rgba(255,255,255,.3)">Jun</div></div>
+          <div class="bar-col"><div class="bar-fill" style="height:100px;"></div><div class="bar-lbl" style="color:rgba(255,255,255,.3)">Jul</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi"><div class="kpi-l">Donations 2025</div><div class="kpi-n" style="color:var(--gold)">₹68.4L</div><div class="kpi-ch">↑28% vs 2024</div></div>
+      <div class="kpi"><div class="kpi-l">NM Members</div><div class="kpi-n" style="color:var(--purple)">840</div><div class="kpi-ch">#1 nationally</div></div>
+      <div class="kpi"><div class="kpi-l">Conversions</div><div class="kpi-n">64</div><div class="kpi-ch">YTD · ↑41%</div></div>
+      <div class="kpi"><div class="kpi-l">Avg Admin Rating</div><div class="kpi-n" style="color:var(--g600)">4.6⭐</div><div class="kpi-ch">Above average</div></div>
+    </div>
+
+    <!-- District breakdown -->
+    <div style="font-size:13px;font-weight:700;margin-bottom:10px">Top Districts</div>
+    <div style="background:var(--white);border-radius:var(--r16);border:1px solid var(--bdr);overflow:hidden;margin-bottom:14px">
+      <div class="li"><div class="li-ava">🏙️</div><div style="flex:1"><div class="li-name">Bengaluru Urban</div><div class="li-det">1,40,000 members · 840 Masjids · 14 admins</div></div><span class="badge bg-green" style="font-size:10px">Top ⭐</span></div>
+      <div class="li"><div class="li-ava">🏙️</div><div style="flex:1"><div class="li-name">Mysuru</div><div class="li-det">48,000 members · 240 Masjids</div></div><span class="badge bg-green" style="font-size:10px">A Grade</span></div>
+      <div class="li"><div class="li-ava">🏙️</div><div style="flex:1"><div class="li-name">Dakshina Kannada</div><div class="li-det">42,000 members · 210 Masjids</div></div><span class="badge bg-green" style="font-size:10px">A Grade</span></div>
+      <div class="li"><div class="li-ava">🏙️</div><div style="flex:1"><div class="li-name">Dharwad</div><div class="li-det">38,000 members · 180 Masjids</div></div><span class="badge bg-gold" style="font-size:10px">B+ Grade</span></div>
+      <div class="li"><div class="li-ava">🏙️</div><div style="flex:1"><div class="li-name">Raichur</div><div class="li-det">22,000 members · 120 Masjids</div></div><span class="badge bg-red" style="font-size:10px">⚠ Needs Focus</span></div>
+    </div>
+
+    <!-- Cases -->
+    <div style="font-size:13px;font-weight:700;margin-bottom:10px">Active Cases (8)</div>
+    <div style="background:var(--white);border-radius:var(--r16);border:1px solid var(--bdr);overflow:hidden;margin-bottom:14px">
+      <div class="li"><div class="li-ava">⚖️</div><div style="flex:1"><div class="li-name">Debt dispute — resolved</div><div class="li-det">Bengaluru · COMP-2025-0422 · July 12</div></div><span class="badge bg-green" style="font-size:10px">Resolved</span></div>
+      <div class="li"><div class="li-ava">🚚</div><div style="flex:1"><div class="li-name">NOC issued — BLR→MUM</div><div class="li-det">NOC-2025-BLR-0242 · July 5</div></div><span class="badge bg-green" style="font-size:10px">Done</span></div>
+      <div class="li"><div class="li-ava">💒</div><div style="flex:1"><div class="li-name">BG Check — Under Review</div><div class="li-det">BGC-2025-0421 · Day 3</div></div><span class="badge bg-gold" style="font-size:10px">Pending</span></div>
+    </div>
+
+    <button class="btn-pur mb12">📡 Broadcast to Karnataka Members</button>
+    <button class="btn-s">📄 Export Karnataka Report PDF</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+<div class="sc-lbl">SD-01 · State Drilldown Full</div>
+</div>
+
+<!-- SD-02 Masjid SA View Full -->
+<div class="sc">
+<div class="sc-num">SD-02</div>
+<div class="phone" style="min-height:980px">
+  <div class="sb sb-sa"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="sa-tbar">
+    <div style="color:rgba(255,255,255,.5);font-size:22px">←</div>
+    <div style="font-family:'Lora',serif;font-size:16px;font-weight:700;color:#fff">Masjid SA View</div>
+    <div class="sa-only">SA</div>
+  </div>
+  <div class="tabs">
+    <div class="tab on">Profile</div>
+    <div class="tab">Members (847)</div>
+    <div class="tab">Finance</div>
+    <div class="tab">Admin</div>
+  </div>
+  <div class="scr" style="background:var(--bg);padding:14px 16px">
+    <!-- Masjid hero -->
+    <div style="background:linear-gradient(135deg,#06150D,var(--g900));border-radius:var(--r20);padding:18px;margin-bottom:14px;display:flex;gap:14px;align-items:center">
+      <div style="width:64px;height:64px;border-radius:18px;background:rgba(255,255,255,.1);border:2px solid rgba(201,168,76,.4);display:flex;align-items:center;justify-content:center;font-size:34px;flex-shrink:0">🕌</div>
+      <div style="flex:1">
+        <div style="font-family:'Lora',serif;font-size:16px;font-weight:700;color:#fff;margin-bottom:2px">Jama Masjid, Shivajinagar</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.55);margin-bottom:6px">Miller's Road, Bengaluru 560 001 · Est. 1924</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <span class="badge bg-green" style="font-size:9px">✓ Waqf Registered</span>
+          <span class="badge" style="background:rgba(255,255,255,.15);color:#fff;font-size:9px">⭐ 4.98 Admin</span>
+          <span class="badge bg-purple" style="font-size:9px">SA Verified</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr"><div class="card-ico">📋</div><div><div class="card-title">Masjid Details</div></div></div>
+      <div class="irow"><div class="il">Waqf Reg. No.</div><div class="ir">WB-KA-BLR-00142</div></div>
+      <div class="irow"><div class="il">Prayer Capacity</div><div class="ir">2,000 persons</div></div>
+      <div class="irow"><div class="il">Total Members</div><div class="ir">847</div></div>
+      <div class="irow"><div class="il">NM Visitors</div><div class="ir">18 registered</div></div>
+      <div class="irow"><div class="il">Area Admin</div><div class="ir">Haji Rashid Khan ⭐ 4.98</div></div>
+      <div class="irow"><div class="il">Head Imam</div><div class="ir">Maulana Abdul Qadir</div></div>
+      <div class="irow"><div class="il">Last SA Audit</div><div class="ir">March 2025 · No issues</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr"><div class="card-ico gold">💰</div><div><div class="card-title">Financial Summary — 2025</div></div></div>
+      <div class="irow"><div class="il">Total Donations</div><div class="ir" style="color:var(--g600)">₹3,84,000</div></div>
+      <div class="irow"><div class="il">Zakat Collected</div><div class="ir">₹2,80,000</div></div>
+      <div class="irow"><div class="il">Welfare Disbursed</div><div class="ir">₹1,92,000</div></div>
+      <div class="irow"><div class="il">Maktab Fees</div><div class="ir">₹1,47,000</div></div>
+      <div class="irow"><div class="il">Reg. Fees (₹100×847)</div><div class="ir">₹84,700</div></div>
+      <div class="irow"><div class="il">Masjid Balance</div><div class="ir" style="color:var(--g700);font-weight:800">₹42,800</div></div>
+    </div>
+
+    <!-- SA-only actions -->
+    <div style="background:var(--purb);border:1.5px solid #DDD6FE;border-radius:var(--r16);padding:14px;margin-bottom:14px">
+      <div style="font-size:12px;font-weight:700;color:var(--purple);margin-bottom:10px">🛡️ Super Admin Actions</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <button class="btn-sm" style="width:100%;height:40px;background:linear-gradient(135deg,var(--purple),var(--purdark));color:#fff;border:none;font-size:13px;border-radius:var(--r12)">🔐 Suspend Masjid Access</button>
+        <button class="btn-sm btn-gold" style="width:100%;height:40px;font-size:13px;border-radius:var(--r12)">💰 Allocate Emergency Welfare Fund</button>
+        <button class="btn-sm btn-g" style="width:100%;height:40px;font-size:13px;border-radius:var(--r12)">🧑‍💼 Reassign Area Admin</button>
+      </div>
+    </div>
+
+    <button class="btn-p mb12">📄 Full Masjid Report PDF</button>
+    <button class="btn-s">📞 Contact Masjid Admin</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+<div class="sc-lbl">SD-02 · Masjid SA View Full</div>
+</div>
+
+<!-- SD-11 National Analytics Full -->
+<div class="sc">
+<div class="sc-num">SD-11</div>
+<div class="phone" style="min-height:980px">
+  <div class="sb sb-sa"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="shdr">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px">
+      <div>
+        <div style="font-size:10px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Platform Intelligence</div>
+        <div style="font-family:'Lora',serif;font-size:20px;font-weight:700;color:#fff;margin-bottom:2px">National Analytics</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.45)">2025 YTD · Live Data</div>
+      </div>
+      <div style="width:38px;height:38px;background:rgba(255,255,255,.1);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px">📊</div>
+    </div>
+    <div class="nsg">
+      <div class="nsg-box"><div class="nsg-n gold">2.4M</div><div class="nsg-l">Members</div></div>
+      <div class="nsg-box"><div class="nsg-n g">18,420</div><div class="nsg-l">Masjids</div></div>
+      <div class="nsg-box"><div class="nsg-n b">324</div><div class="nsg-l">Admins</div></div>
+      <div class="nsg-box"><div class="nsg-n p">99.94%</div><div class="nsg-l">Uptime</div></div>
+    </div>
+  </div>
+  <div class="tabs">
+    <div class="tab on">Members</div>
+    <div class="tab">Services</div>
+    <div class="tab">Finance</div>
+    <div class="tab">NM</div>
+  </div>
+  <div class="scr" style="background:var(--bg);padding:14px 16px">
+
+    <!-- Growth chart -->
+    <div style="background:var(--white);border-radius:var(--r16);border:1px solid var(--bdr);padding:16px;margin-bottom:14px">
+      <div style="font-size:12px;font-weight:700;color:var(--ink);margin-bottom:12px">National Member Growth — 2025</div>
+      <div class="bar-chart" style="height:120px">
+        <div class="bar-col"><div class="bar-fill" style="height:55px"></div><div class="bar-lbl">Jan</div></div>
+        <div class="bar-col"><div class="bar-fill" style="height:65px"></div><div class="bar-lbl">Feb</div></div>
+        <div class="bar-col"><div class="bar-fill" style="height:72px"></div><div class="bar-lbl">Mar</div></div>
+        <div class="bar-col"><div class="bar-fill" style="height:80px"></div><div class="bar-lbl">Apr</div></div>
+        <div class="bar-col"><div class="bar-fill" style="height:90px"></div><div class="bar-lbl">May</div></div>
+        <div class="bar-col"><div class="bar-fill" style="height:104px"></div><div class="bar-lbl">Jun</div></div>
+        <div class="bar-col"><div class="bar-fill" style="height:120px"></div><div class="bar-lbl">Jul</div></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid var(--bdr2)">
+        <div style="font-size:11px;color:var(--ink3)">Jan: 23,10,000</div>
+        <div style="font-size:11px;font-weight:700;color:var(--g600)">Jul: 24,00,218 ↑3.9%</div>
+      </div>
+    </div>
+
+    <!-- Service analytics -->
+    <div style="font-size:13px;font-weight:700;margin-bottom:10px">Service Request Analytics — Jul 2025</div>
+    <div style="background:var(--white);border-radius:var(--r16);border:1px solid var(--bdr);overflow:hidden;margin-bottom:14px">
+      <div style="padding:12px 16px;border-bottom:1px solid var(--bdr2);display:flex;justify-content:space-between;align-items:center"><div style="font-size:13px;font-weight:600;color:var(--ink)">💒 Marriage BG Checks</div><div style="text-align:right"><div style="font-size:14px;font-weight:700">2,840</div><div style="font-size:10px;color:var(--g600)">↑18% vs Jun</div></div></div>
+      <div style="padding:12px 16px;border-bottom:1px solid var(--bdr2);display:flex;justify-content:space-between;align-items:center"><div style="font-size:13px;font-weight:600;color:var(--ink)">🚚 Relocation NOCs</div><div style="text-align:right"><div style="font-size:14px;font-weight:700">1,240</div><div style="font-size:10px;color:var(--g600)">↑12% vs Jun</div></div></div>
+      <div style="padding:12px 16px;border-bottom:1px solid var(--bdr2);display:flex;justify-content:space-between;align-items:center"><div style="font-size:13px;font-weight:600;color:var(--ink)">⚖️ Complaints Filed</div><div style="text-align:right"><div style="font-size:14px;font-weight:700">480</div><div style="font-size:10px;color:var(--red)">88.9% resolved</div></div></div>
+      <div style="padding:12px 16px;border-bottom:1px solid var(--bdr2);display:flex;justify-content:space-between;align-items:center"><div style="font-size:13px;font-weight:600;color:var(--ink)">📚 Maktab Admissions</div><div style="text-align:right"><div style="font-size:14px;font-weight:700">3,420</div><div style="font-size:10px;color:var(--g600)">8,400 active students</div></div></div>
+      <div style="padding:12px 16px;display:flex;justify-content:space-between;align-items:center"><div style="font-size:13px;font-weight:600;color:var(--ink)">🕊️ Death Services</div><div style="text-align:right"><div style="font-size:14px;font-weight:700">218</div><div style="font-size:10px;color:var(--ink4)">Avg 4hr response</div></div></div>
+    </div>
+
+    <!-- Housing type national breakdown -->
+    <div style="font-size:13px;font-weight:700;margin-bottom:10px">Housing Type — National</div>
+    <div style="background:var(--white);border-radius:var(--r16);border:1px solid var(--bdr);padding:16px;margin-bottom:14px">
+      <div style="display:flex;gap:10px;align-items:center;margin-bottom:10px">
+        <div style="font-size:18px">🏠</div>
+        <div style="flex:1"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><div style="font-size:12px;font-weight:600">Building Owner</div><div style="font-size:11px;color:var(--ink3)">8,64,079 · 36%</div></div><div class="prog"><div class="prog-fill" style="width:36%"></div></div></div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;margin-bottom:10px">
+        <div style="font-size:18px">🏘️</div>
+        <div style="flex:1"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><div style="font-size:12px;font-weight:600">Rent House</div><div style="font-size:11px;color:var(--ink3)">10,80,099 · 45%</div></div><div class="prog"><div class="prog-fill" style="width:45%;background:linear-gradient(90deg,var(--amber),#FBBF24)"></div></div></div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;margin-bottom:10px">
+        <div style="font-size:18px">📝</div>
+        <div style="flex:1"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><div style="font-size:12px;font-weight:600">Lease House</div><div style="font-size:11px;color:var(--ink3)">2,88,026 · 12%</div></div><div class="prog"><div class="prog-fill" style="width:12%;background:linear-gradient(90deg,var(--blue),#60A5FA)"></div></div></div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <div style="font-size:18px">🏡</div>
+        <div style="flex:1"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><div style="font-size:12px;font-weight:600">Family Property</div><div style="font-size:11px;color:var(--ink3)">1,68,014 · 7%</div></div><div class="prog"><div class="prog-fill" style="width:7%;background:linear-gradient(90deg,var(--ink3),var(--ink4))"></div></div></div>
+      </div>
+    </div>
+
+    <button class="btn-pur mb12">📄 Download Full Analytics Report</button>
+    <button class="btn-s">📊 Schedule Weekly Report</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+<div class="sc-lbl">SD-11 · National Analytics Full</div>
+</div>
+
+<!-- SD-10 Fee Configuration Full -->
+<div class="sc">
+<div class="sc-num">SD-10</div>
+<div class="phone" style="min-height:980px">
+  <div class="sb sb-sa"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="sa-tbar">
+    <div style="color:rgba(255,255,255,.5);font-size:22px">←</div>
+    <div style="font-family:'Lora',serif;font-size:16px;font-weight:700;color:#fff">Fee Configuration</div>
+    <div style="font-size:13px;font-weight:600;color:var(--gold2)">Save</div>
+  </div>
+  <div class="ban ban-purple"><span>⚙️</span><span>Platform-wide fee changes apply immediately to all 18,420 Masjids. All changes are logged in the national audit trail and require 2FA.</span></div>
+  <div class="scr" style="background:var(--bg);padding:16px">
+
+    <div class="card">
+      <div class="card-hdr"><div class="card-ico purple">💳</div><div><div class="card-title">Member Registration Fee</div><div class="card-sub">Paid once at registration · Currently ₹100</div></div></div>
+      <div class="irow"><div class="il">Current Fee</div><div class="ir">₹100 (one-time)</div></div>
+      <div class="irow"><div class="il">NM Visitors</div><div class="ir">₹0 (always free)</div></div>
+      <div class="irow"><div class="il">Fee Waiver</div><div class="ir">Admin discretion allowed</div></div>
+      <div class="fgroup" style="margin-top:12px;margin-bottom:0"><label class="flabel">Update Registration Fee (₹)</label><div class="finput on">₹ 100</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr"><div class="card-ico gold">🛎️</div><div><div class="card-title">Service Fees</div></div></div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg);border-radius:var(--r12)">
+          <div style="font-size:18px">💒</div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--ink)">Marriage BG Check</div></div>
+          <div style="width:80px;height:38px;background:var(--white);border:1.5px solid var(--g400);border-radius:var(--r8);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--g800)">₹500</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg);border-radius:var(--r12)">
+          <div style="font-size:18px">🚚</div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--ink)">Relocation NOC</div></div>
+          <div style="width:80px;height:38px;background:var(--white);border:1.5px solid var(--g400);border-radius:var(--r8);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--g800)">₹300</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg);border-radius:var(--r12)">
+          <div style="font-size:18px">📚</div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--ink)">Maktab Admission</div></div>
+          <div style="width:80px;height:38px;background:var(--white);border:1.5px solid var(--g400);border-radius:var(--r8);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--g800)">₹200</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg);border-radius:var(--r12)">
+          <div style="font-size:18px">📚</div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--ink)">Maktab Monthly Fee</div></div>
+          <div style="width:80px;height:38px;background:var(--white);border:1.5px solid var(--g400);border-radius:var(--r8);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--g800)">₹500</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg);border-radius:var(--r12)">
+          <div style="font-size:18px">📜</div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--ink)">Conversion Certificate</div></div>
+          <div style="width:80px;height:38px;background:var(--g50);border:1.5px solid var(--g400);border-radius:var(--r8);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--g600)">Free</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg);border-radius:var(--r12)">
+          <div style="font-size:18px">🕊️</div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--ink)">Death &amp; Burial Services</div></div>
+          <div style="width:80px;height:38px;background:var(--g50);border:1.5px solid var(--g400);border-radius:var(--r8);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--g600)">Free</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr"><div class="card-ico">🌐</div><div><div class="card-title">Platform Revenue Summary</div></div></div>
+      <div class="irow"><div class="il">Registration Fees (₹100×2.4M)</div><div class="ir" style="color:var(--g600)">₹24.0Cr lifetime</div></div>
+      <div class="irow"><div class="il">BG Check Fees (₹500 avg)</div><div class="ir">₹7.1L/month</div></div>
+      <div class="irow"><div class="il">Relocation NOC Fees</div><div class="ir">₹1.86L/month</div></div>
+      <div class="irow"><div class="il">Maktab Fees (8,400 students)</div><div class="ir">₹42.0L/month</div></div>
+      <div class="irow"><div class="il">Total Platform Revenue</div><div class="ir" style="color:var(--g700);font-weight:800">₹51.0L/month</div></div>
+    </div>
+
+    <button class="btn-pur mb12">🛡️ Save Fee Changes (2FA Required)</button>
+    <button class="btn-s">📄 Download Fee Schedule PDF</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+<div class="sc-lbl">SD-10 · Fee Configuration Full</div>
+</div>
+
+</div>
+
+<!-- ══════════════════════════════════
+  USER APP — NEW FEATURE SCREENS
+══════════════════════════════════ -->
+<div class="rl">User App · New Screens — Blood Donation, Welfare, Family View, Support Chat</div>
+<div class="srow">
+
+<!-- U-NEW-1 Blood Donation Registry -->
+<div class="sc">
+<div class="sc-num">U-61</div>
+<div class="phone">
+  <div class="sb sb-l"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="tbar"><div class="tb-back">←</div><div class="tb-title">Blood Donation</div><div class="tb-act">My Requests</div></div>
+  <div class="scr" style="background:var(--bg);padding:16px">
+
+    <!-- Donor card -->
+    <div style="background:linear-gradient(135deg,#7F1D1D,var(--red));border-radius:var(--r20);padding:20px;margin-bottom:14px">
+      <div style="font-size:10px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Your Blood Donor Status</div>
+      <div style="display:flex;gap:14px;align-items:center;margin-bottom:14px">
+        <div style="width:56px;height:56px;background:rgba(255,255,255,.15);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0">🩸</div>
+        <div>
+          <div style="font-family:'Lora',serif;font-size:18px;font-weight:700;color:#fff">Mohammed Irfan Khan</div>
+          <div style="font-size:13px;color:rgba(255,255,255,.7)">Blood Group: <strong>O+</strong></div>
+          <div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:2px">Last donated: April 2025</div>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding-top:12px;border-top:1px solid rgba(255,255,255,.15)">
+        <div style="text-align:center"><div style="font-size:18px;font-weight:800;color:#fff">7</div><div style="font-size:9px;color:rgba(255,255,255,.5);text-transform:uppercase">Times Donated</div></div>
+        <div style="text-align:center"><div style="font-size:18px;font-weight:800;color:#FCA5A5">3 months</div><div style="font-size:9px;color:rgba(255,255,255,.5);text-transform:uppercase">Next Eligible</div></div>
+        <div style="text-align:center"><div style="font-size:18px;font-weight:800;color:#86EFAC">✓</div><div style="font-size:9px;color:rgba(255,255,255,.5);text-transform:uppercase">Registered</div></div>
+      </div>
+    </div>
+
+    <!-- Urgent requests -->
+    <div style="font-size:13px;font-weight:700;margin-bottom:10px">🚨 Urgent Blood Requests</div>
+    <div style="background:var(--redb);border:1.5px solid #FECACA;border-radius:var(--r16);padding:14px;margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+        <div><div style="font-size:14px;font-weight:700;color:var(--ink)">O+ Blood Needed — Urgent</div><div style="font-size:11px;color:var(--ink3)">Victoria Hospital, Bengaluru</div></div>
+        <span class="badge bg-red" style="font-size:10px">Urgent</span>
+      </div>
+      <div style="font-size:12px;color:var(--ink2);margin-bottom:10px">Patient: Ahmed Khan · Surgery scheduled July 8 · 2 units needed</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn-sm" style="flex:1;height:36px;background:var(--red);color:#fff;border:none;border-radius:var(--r8);font-weight:700">🩸 I Can Donate</button>
+        <button class="btn-sm btn-gr" style="height:36px">Share</button>
+      </div>
+    </div>
+
+    <div style="background:var(--white);border:1px solid var(--bdr);border-radius:var(--r16);padding:14px;margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+        <div><div style="font-size:14px;font-weight:700;color:var(--ink)">B+ Blood Needed</div><div style="font-size:11px;color:var(--ink3)">St. John's Hospital, Bengaluru</div></div>
+        <span class="badge bg-gold" style="font-size:10px">Today</span>
+      </div>
+      <div style="font-size:12px;color:var(--ink2);margin-bottom:10px">Patient: Fatima Begum · Delivery complication · 1 unit needed</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn-sm btn-g" style="flex:1;height:36px">🩸 Respond</button>
+        <button class="btn-sm btn-gr" style="height:36px">Share</button>
+      </div>
+    </div>
+
+    <!-- Register / Update -->
+    <div class="card">
+      <div class="card-hdr"><div class="card-ico red">⚙️</div><div><div class="card-title">Your Donor Settings</div></div></div>
+      <div class="irow"><div class="il">Blood Group</div><div class="ir">O+ ›</div></div>
+      <div class="irow"><div class="il">Available to Donate</div><div class="ir"><div class="tog off"></div></div></div>
+      <div class="irow"><div class="il">Receive Blood Requests</div><div class="ir"><div class="tog"></div></div></div>
+      <div class="irow"><div class="il">Notify for Emergencies</div><div class="ir"><div class="tog"></div></div></div>
+    </div>
+
+    <button class="btn-p mb12">🩸 Register as Active Donor</button>
+    <button class="btn-s">+ Create Blood Request</button>
+    <div class="spacer"></div>
+  </div>
+  <div class="bnav">
+    <div class="bni"><div class="bni-ico">🏠</div><div class="bni-lbl">Home</div></div>
+    <div class="bni"><div class="bni-ico">🪪</div><div class="bni-lbl">My Card</div></div>
+    <div class="bni on"><div class="bni-ico">🛎️</div><div class="bni-lbl">Services</div></div>
+    <div class="bni"><div class="bni-ico">🔔</div><div class="bni-lbl">Alerts</div></div>
+    <div class="bni"><div class="bni-ico">👤</div><div class="bni-lbl">Profile</div></div>
+  </div>
+</div>
+<div class="sc-lbl">U-61 · Blood Donation Registry</div>
+</div>
+
+<!-- U-62 Welfare Application -->
+<div class="sc">
+<div class="sc-num">U-62</div>
+<div class="phone">
+  <div class="sb sb-l"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="tbar"><div class="tb-back">←</div><div class="tb-title">Apply for Welfare</div></div>
+  <div class="ban ban-green"><span>💚</span><span>Welfare assistance is available to all verified MIC members in genuine need. Your application is treated with full confidentiality.</span></div>
+  <div class="scr" style="background:var(--bg);padding:16px">
+    <div class="fgroup">
+      <label class="flabel">Type of Assistance Needed <span class="req">*</span></label>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div style="background:var(--g50);border:2px solid var(--g500);border-radius:var(--r12);padding:12px;text-align:center;cursor:pointer"><div style="font-size:22px">🏠</div><div style="font-size:12px;font-weight:700;color:var(--g800);margin-top:4px">Rent / Housing</div></div>
+        <div style="background:var(--white);border:1.5px solid var(--bdr);border-radius:var(--r12);padding:12px;text-align:center;cursor:pointer"><div style="font-size:22px">📚</div><div style="font-size:12px;color:var(--ink2);margin-top:4px">Education</div></div>
+        <div style="background:var(--white);border:1.5px solid var(--bdr);border-radius:var(--r12);padding:12px;text-align:center;cursor:pointer"><div style="font-size:22px">🏥</div><div style="font-size:12px;color:var(--ink2);margin-top:4px">Medical</div></div>
+        <div style="background:var(--white);border:1.5px solid var(--bdr);border-radius:var(--r12);padding:12px;text-align:center;cursor:pointer"><div style="font-size:22px">🍽️</div><div style="font-size:12px;color:var(--ink2);margin-top:4px">Food / Essentials</div></div>
+        <div style="background:var(--white);border:1.5px solid var(--bdr);border-radius:var(--r12);padding:12px;text-align:center;cursor:pointer"><div style="font-size:22px">💒</div><div style="font-size:12px;color:var(--ink2);margin-top:4px">Marriage Support</div></div>
+        <div style="background:var(--white);border:1.5px solid var(--bdr);border-radius:var(--r12);padding:12px;text-align:center;cursor:pointer"><div style="font-size:22px">💼</div><div style="font-size:12px;color:var(--ink2);margin-top:4px">Job / Business</div></div>
+      </div>
+    </div>
+
+    <div class="fgroup"><label class="flabel">Amount Needed (₹) <span class="req">*</span></label><div class="finput on">₹ 15,000</div></div>
+    <div class="fgroup"><label class="flabel">Reason / Situation <span class="req">*</span></label><div class="ftxt" style="min-height:100px">Husband passed away in January 2025. I have 3 children aged 6, 10 and 14. Unable to pay rent of ₹8,000 for the last 2 months. Landlord is pressuring to vacate. I need ₹15,000 to clear dues and have 1 month buffer while I look for work.</div></div>
+
+    <div class="fgroup">
+      <label class="flabel">Supporting Documents</label>
+      <div class="upload-done"><span style="font-size:22px">✅</span><div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--g800)">death_certificate.pdf</div><div style="font-size:11px;color:var(--g600)">1.4 MB</div></div><button class="btn-sm btn-g" style="font-size:10px;height:28px">Change</button></div>
+      <div class="upload-box"><div style="font-size:22px;margin-bottom:5px">📎</div><div style="font-size:13px;font-weight:600;color:var(--g700)">Add rent receipts / bills</div><div style="font-size:11px;color:var(--g500);margin-top:2px">PDF or JPEG · Multiple files</div></div>
+    </div>
+
+    <div class="fgroup">
+      <label class="flabel">Is your situation known to the Masjid?</label>
+      <div class="tag-row"><span class="tag on">Yes — Admin knows</span><span class="tag">No — First request</span></div>
+    </div>
+
+    <div class="info mb12"><span>🔒</span><div>Your application is strictly confidential. Only your Masjid admin can see it. Details are never shared publicly.</div></div>
+
+    <button class="btn-p mb12">💚 Submit Welfare Application</button>
+    <button class="btn-s">📞 Call Masjid Admin Directly</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+<div class="sc-lbl">U-62 · Welfare Application</div>
+</div>
+
+<!-- U-63 Family Member Detail View -->
+<div class="sc">
+<div class="sc-num">U-63</div>
+<div class="phone">
+  <div class="sb sb-l"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="tbar"><div class="tb-back">←</div><div class="tb-title">Family Member</div><div class="tb-act">Edit</div></div>
+  <div class="scr" style="background:var(--bg);padding:16px">
+    <!-- Member hero -->
+    <div style="background:linear-gradient(135deg,var(--g900),var(--g700));border-radius:var(--r20);padding:18px;margin-bottom:14px;text-align:center">
+      <div style="width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,.12);border:2.5px solid rgba(201,168,76,.4);display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 12px">👩</div>
+      <div style="font-family:'Lora',serif;font-size:18px;font-weight:700;color:#fff;margin-bottom:3px">Zainab Banu</div>
+      <div style="font-size:12px;color:rgba(255,255,255,.55);margin-bottom:6px">Spouse · MIC ID: KA-BLR-00440</div>
+      <div style="display:flex;justify-content:center;gap:8px">
+        <span class="badge bg-green" style="font-size:9px">✓ Verified</span>
+        <span class="badge bg-gold" style="font-size:9px">B+ Blood</span>
+        <span class="badge" style="background:rgba(255,255,255,.15);color:#fff;font-size:9px">Nikah: Aug 20, 2025</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr"><div class="card-ico">👩</div><div><div class="card-title">Personal Details</div></div></div>
+      <div class="irow"><div class="il">Full Name</div><div class="ir">Zainab Banu Irfan</div></div>
+      <div class="irow"><div class="il">Relationship</div><div class="ir">Spouse (Wife)</div></div>
+      <div class="irow"><div class="il">Date of Birth</div><div class="ir">12 Jun 1988 · Age 37</div></div>
+      <div class="irow"><div class="il">Blood Group</div><div class="ir">B+</div></div>
+      <div class="irow"><div class="il">Mobile</div><div class="ir">+91 99870 12345</div></div>
+      <div class="irow"><div class="il">Father's Name</div><div class="ir">Yusuf Banu</div></div>
+      <div class="irow"><div class="il">Education</div><div class="ir">Post-Graduate</div></div>
+      <div class="irow"><div class="il">Occupation</div><div class="ir">Teacher</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr"><div class="card-ico gold">📋</div><div><div class="card-title">MIC Details</div></div></div>
+      <div class="irow"><div class="il">MIC ID</div><div class="ir">KA-BLR-00440</div></div>
+      <div class="irow"><div class="il">Linked Masjid</div><div class="ir">Jama Masjid, BLR</div></div>
+      <div class="irow"><div class="il">Card Status</div><div class="ir"><span class="badge bg-green" style="font-size:10px">Active ✓</span></div></div>
+      <div class="irow"><div class="il">Card Expiry</div><div class="ir">December 2025</div></div>
+      <div class="irow"><div class="il">Nikah Certificate</div><div class="ir"><span class="badge bg-green" style="font-size:10px">NIKA-2025-BLR-0218 ✓</span></div></div>
+    </div>
+
+    <div style="display:flex;gap:8px;margin-bottom:14px">
+      <button class="btn-sm btn-g" style="flex:1;height:40px">🪪 View Her MIC Card</button>
+      <button class="btn-sm btn-g" style="flex:1;height:40px">📞 Call</button>
+    </div>
+
+    <button class="btn-p mb12">✏️ Edit Family Member Details</button>
+    <button class="btn-sm btn-r" style="width:100%;height:44px;font-size:13px">🗑️ Remove from Family Record</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+<div class="sc-lbl">U-63 · Family Member Detail</div>
+</div>
+
+<!-- U-64 Support Chat -->
+<div class="sc">
+<div class="sc-num">U-64</div>
+<div class="phone">
+  <div class="sb sb-l"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="tbar">
+    <div class="tb-back">←</div>
+    <div style="display:flex;flex-direction:column;align-items:center">
+      <div class="tb-title" style="font-family:'Inter',sans-serif;font-size:14px">Jama Masjid Support</div>
+      <div style="font-size:10px;color:var(--g500);font-weight:600">🟢 Haji Rashid Khan · Online</div>
+    </div>
+    <div class="tb-act">Info</div>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:16px;background:var(--bg)">
+    <!-- Date -->
+    <div style="text-align:center;font-size:11px;color:var(--ink4);margin-bottom:16px;background:var(--bdr2);display:inline-block;padding:4px 12px;border-radius:99px;margin-left:50%">July 5, 2025</div>
+
+    <!-- Messages -->
+    <div class="chat-msg">
+      <div class="li-ava" style="width:36px;height:36px;font-size:16px;flex-shrink:0;align-self:flex-end">🕌</div>
+      <div class="chat-bubble bubble-in">As-salamu alaykum! I'm Haji Rashid Khan, admin of Jama Masjid. How can I help you today?</div>
+    </div>
+
+    <div class="chat-msg" style="flex-direction:row-reverse">
+      <div class="li-ava" style="width:36px;height:36px;font-size:16px;flex-shrink:0;align-self:flex-end">👤</div>
+      <div class="chat-bubble bubble-out">Wa alaykum As-salam! I want to enquire about my BG Check status — Ref BGC-2025-0421</div>
+    </div>
+
+    <div class="chat-msg">
+      <div class="li-ava" style="width:36px;height:36px;font-size:16px;flex-shrink:0;align-self:flex-end">🕌</div>
+      <div class="chat-bubble bubble-in">JazakAllah for reaching out. I've checked your case. Groom's side is clear. We're waiting on Al-Noor Masjid, Mysuru to confirm bride's side. Should be done by July 9 inshaAllah.</div>
+    </div>
+
+    <div class="chat-msg" style="flex-direction:row-reverse">
+      <div class="li-ava" style="width:36px;height:36px;font-size:16px;flex-shrink:0;align-self:flex-end">👤</div>
+      <div class="chat-bubble bubble-out">JazakAllah Khair! One more thing — we also wanted to register our son Yusuf (age 9) for Arabic class. Is there space in the morning batch?</div>
+    </div>
+
+    <div class="chat-msg">
+      <div class="li-ava" style="width:36px;height:36px;font-size:16px;flex-shrink:0;align-self:flex-end">🕌</div>
+      <div class="chat-bubble bubble-in">Yes! Morning batch (7–9 AM, Mon–Sat) with Hafiz Abdur Rahman has 2 seats left. Fee is ₹500/month + ₹200 admission. Fill the Maktab Admission form in the app and I'll confirm. 🌙</div>
+    </div>
+
+    <div class="chat-msg" style="flex-direction:row-reverse">
+      <div class="li-ava" style="width:36px;height:36px;font-size:16px;flex-shrink:0;align-self:flex-end">👤</div>
+      <div class="chat-bubble bubble-out">MashAllah! I'll submit the form right now. Thank you so much!</div>
+    </div>
+
+    <div class="chat-msg">
+      <div class="li-ava" style="width:36px;height:36px;font-size:16px;flex-shrink:0;align-self:flex-end">🕌</div>
+      <div class="chat-bubble bubble-in">Excellent! I'll confirm it as soon as the form is submitted. May Allah bless your family. 🤲</div>
+    </div>
+
+    <div style="text-align:center;margin-top:8px"><span style="font-size:10px;color:var(--ink4)">Haji Rashid Khan · Seen 2:14 PM ✓✓</span></div>
+    <div class="spacer"></div>
+  </div>
+  <!-- Chat input -->
+  <div style="background:var(--white);border-top:1px solid var(--bdr);padding:12px 16px;flex-shrink:0;display:flex;gap:10px;align-items:center">
+    <div style="flex:1;background:var(--bg);border:1.5px solid var(--bdr);border-radius:var(--r99);padding:10px 16px;font-size:14px;color:var(--ink4)">Type a message…</div>
+    <div style="width:44px;height:44px;background:var(--g800);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;cursor:pointer">➤</div>
+  </div>
+</div>
+<div class="sc-lbl">U-64 · Support Chat with Admin</div>
+</div>
+
+</div>
+
+<!-- ══════════════════════════════════
+  ADMIN APP — NEW MANAGEMENT SCREENS
+══════════════════════════════════ -->
+<div class="rl">Admin App · New Screens — Blood Bank, Zakat Collection, Bulk SMS, Member Merge</div>
+<div class="srow">
+
+<!-- A-NEW-1 Blood Bank Registry (Admin) -->
+<div class="sc">
+<div class="sc-num">A-47</div>
+<div class="phone">
+  <div class="sb sb-l"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="tbar"><div class="tb-back">←</div><div class="tb-title">Blood Bank Registry</div><div class="tb-act">+ Request</div></div>
+  <div class="tabs">
+    <div class="tab on">All Donors</div>
+    <div class="tab">By Group</div>
+    <div class="tab">Active Requests</div>
+  </div>
+  <div class="scr" style="background:var(--bg);padding:14px 16px">
+
+    <div class="kpi-grid">
+      <div class="kpi"><div class="kpi-l">Registered Donors</div><div class="kpi-n" style="color:var(--red)">284</div><div class="kpi-ch">33.5% of members</div></div>
+      <div class="kpi"><div class="kpi-l">Active Requests</div><div class="kpi-n" style="color:var(--amber)">2</div><div class="kpi-ch">O+ and B+</div></div>
+      <div class="kpi"><div class="kpi-l">Available (O+)</div><div class="kpi-n">48</div><div class="kpi-ch">Most common</div></div>
+      <div class="kpi"><div class="kpi-l">Available (O−)</div><div class="kpi-n" style="color:var(--red)">4</div><div class="kpi-ch">Critical shortage</div></div>
+    </div>
+
+    <!-- Blood group summary -->
+    <div style="font-size:13px;font-weight:700;margin-bottom:10px">Donors by Blood Group</div>
+    <div style="background:var(--white);border-radius:var(--r16);border:1px solid var(--bdr);overflow:hidden;margin-bottom:14px">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0;padding:12px">
+        <div style="text-align:center;padding:10px"><div style="width:44px;height:44px;border-radius:50%;background:var(--redb);border:2px solid #FECACA;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--red);margin:0 auto 5px">O+</div><div style="font-size:16px;font-weight:800;color:var(--ink)">48</div><div style="font-size:9px;color:var(--ink4)">donors</div></div>
+        <div style="text-align:center;padding:10px"><div style="width:44px;height:44px;border-radius:50%;background:var(--redb);border:2px solid #FECACA;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--red);margin:0 auto 5px">O−</div><div style="font-size:16px;font-weight:800;color:var(--red)">4</div><div style="font-size:9px;color:var(--red)">critical!</div></div>
+        <div style="text-align:center;padding:10px"><div style="width:44px;height:44px;border-radius:50%;background:var(--redb);border:2px solid #FECACA;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--red);margin:0 auto 5px">A+</div><div style="font-size:16px;font-weight:800;color:var(--ink)">62</div><div style="font-size:9px;color:var(--ink4)">donors</div></div>
+        <div style="text-align:center;padding:10px"><div style="width:44px;height:44px;border-radius:50%;background:var(--redb);border:2px solid #FECACA;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--red);margin:0 auto 5px">B+</div><div style="font-size:16px;font-weight:800;color:var(--ink)">58</div><div style="font-size:9px;color:var(--ink4)">donors</div></div>
+        <div style="text-align:center;padding:10px"><div style="width:44px;height:44px;border-radius:50%;background:var(--redb);border:2px solid #FECACA;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--red);margin:0 auto 5px">B−</div><div style="font-size:16px;font-weight:800;color:var(--ink)">12</div><div style="font-size:9px;color:var(--ink4)">donors</div></div>
+        <div style="text-align:center;padding:10px"><div style="width:44px;height:44px;border-radius:50%;background:var(--redb);border:2px solid #FECACA;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--red);margin:0 auto 5px">AB+</div><div style="font-size:16px;font-weight:800;color:var(--ink)">38</div><div style="font-size:9px;color:var(--ink4)">donors</div></div>
+        <div style="text-align:center;padding:10px"><div style="width:44px;height:44px;border-radius:50%;background:var(--redb);border:2px solid #FECACA;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--red);margin:0 auto 5px">AB−</div><div style="font-size:16px;font-weight:800;color:var(--ink)">18</div><div style="font-size:9px;color:var(--ink4)">donors</div></div>
+        <div style="text-align:center;padding:10px"><div style="width:44px;height:44px;border-radius:50%;background:var(--redb);border:2px solid #FECACA;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--red);margin:0 auto 5px">A−</div><div style="font-size:16px;font-weight:800;color:var(--ink)">44</div><div style="font-size:9px;color:var(--ink4)">donors</div></div>
+      </div>
+    </div>
+
+    <!-- Active requests -->
+    <div style="font-size:13px;font-weight:700;margin-bottom:10px">Active Requests</div>
+    <div style="background:var(--redb);border:1.5px solid #FECACA;border-radius:var(--r16);padding:14px;margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+        <div><div style="font-size:13px;font-weight:700;color:var(--ink)">O+ Required — Victoria Hospital</div><div style="font-size:11px;color:var(--ink3)">Patient: Ahmed Khan · 2 units · Surgery July 8</div></div>
+        <span class="badge bg-red" style="font-size:10px">Urgent</span>
+      </div>
+      <div style="font-size:12px;color:var(--ink3);margin-bottom:10px">48 eligible O+ donors in your Masjid</div>
+      <button class="btn-sm" style="width:100%;height:36px;background:var(--red);color:#fff;border:none;border-radius:var(--r8);font-weight:700;font-size:12px">📢 Notify All 48 O+ Donors</button>
+    </div>
+
+    <button class="btn-p mb12">+ Create New Blood Request</button>
+    <button class="btn-s">📊 Blood Donor Report PDF</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+<div class="sc-lbl">A-47 · Blood Bank Registry</div>
+</div>
+
+<!-- A-NEW-2 Zakat Collection Management -->
+<div class="sc">
+<div class="sc-num">A-48</div>
+<div class="phone">
+  <div class="sb sb-l"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="tbar"><div class="tb-back">←</div><div class="tb-title">Zakat Collection</div><div class="tb-act">July 2025 ▾</div></div>
+  <div class="tabs">
+    <div class="tab on">Collected</div>
+    <div class="tab">Disbursed</div>
+    <div class="tab">Eligible Members</div>
+  </div>
+  <div class="scr" style="background:var(--bg);padding:14px 16px">
+
+    <div style="background:linear-gradient(135deg,var(--g900),var(--g700));border-radius:var(--r20);padding:20px;margin-bottom:14px">
+      <div style="font-size:10px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Zakat Fund — July 2025</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+        <div style="text-align:center"><div style="font-size:16px;font-weight:800;color:#86EFAC">₹68,400</div><div style="font-size:9px;color:rgba(255,255,255,.4);text-transform:uppercase;margin-top:2px">Collected</div></div>
+        <div style="text-align:center"><div style="font-size:16px;font-weight:800;color:#FCA5A5">₹32,000</div><div style="font-size:9px;color:rgba(255,255,255,.4);text-transform:uppercase;margin-top:2px">Disbursed</div></div>
+        <div style="text-align:center"><div style="font-size:16px;font-weight:800;color:var(--gold2)">₹36,400</div><div style="font-size:9px;color:rgba(255,255,255,.4);text-transform:uppercase;margin-top:2px">Available</div></div>
+      </div>
+    </div>
+
+    <div style="font-size:13px;font-weight:700;margin-bottom:10px">Recent Collections</div>
+    <div style="background:var(--white);border-radius:var(--r16);border:1px solid var(--bdr);overflow:hidden;margin-bottom:14px">
+      <div class="li"><div class="li-ava">🌙</div><div style="flex:1"><div class="li-name">Mohammed Irfan Khan</div><div class="li-det">Zakat ul-Mal · June 14 · UPI</div></div><div style="font-size:14px;font-weight:700;color:var(--g700)">₹15,113</div></div>
+      <div class="li"><div class="li-ava">🌙</div><div style="flex:1"><div class="li-name">Haji Abdul Rahman</div><div class="li-det">Zakat ul-Mal · June 12 · Cash</div></div><div style="font-size:14px;font-weight:700;color:var(--g700)">₹22,000</div></div>
+      <div class="li"><div class="li-ava">💚</div><div style="flex:1"><div class="li-name">Fatima Begum</div><div class="li-det">Sadaqah · June 10 · UPI</div></div><div style="font-size:14px;font-weight:700;color:var(--g700)">₹2,000</div></div>
+      <div class="li"><div class="li-ava">💚</div><div style="flex:1"><div class="li-name">Yusuf Ansari</div><div class="li-det">Sadaqah · June 8 · UPI</div></div><div style="font-size:14px;font-weight:700;color:var(--g700)">₹5,000</div></div>
+    </div>
+
+    <div style="font-size:13px;font-weight:700;margin-bottom:10px">Zakat Eligible Families (in your Masjid)</div>
+    <div style="background:var(--white);border-radius:var(--r16);border:1px solid var(--bdr);overflow:hidden;margin-bottom:14px">
+      <div class="li"><div class="li-ava">👩</div><div style="flex:1"><div class="li-name">Ruqaiyya Banu (Widow)</div><div class="li-det">3 children · Rent ₹8,000 · KA-BLR-00411</div></div><span class="badge bg-red" style="font-size:10px">Priority</span></div>
+      <div class="li"><div class="li-ava">👨</div><div style="flex:1"><div class="li-name">Ibrahim Sharif</div><div class="li-det">Job loss · Family of 5 · KA-BLR-00380</div></div><span class="badge bg-gold" style="font-size:10px">Eligible</span></div>
+      <div class="li"><div class="li-ava">👴</div><div style="flex:1"><div class="li-name">Haji Akbar Khan (Elderly)</div><div class="li-det">No income · Lives alone · KA-BLR-00210</div></div><span class="badge bg-gold" style="font-size:10px">Eligible</span></div>
+      <div style="padding:12px 16px;text-align:center;font-size:12px;color:var(--g600);font-weight:600">12 eligible families total →</div>
+    </div>
+
+    <button class="btn-p mb12">💚 Disburse Zakat to Family</button>
+    <button class="btn-s">📄 Zakat Report — July 2025</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+<div class="sc-lbl">A-48 · Zakat Collection Mgmt</div>
+</div>
+
+<!-- A-NEW-3 Bulk SMS to Members -->
+<div class="sc">
+<div class="sc-num">A-49</div>
+<div class="phone">
+  <div class="sb sb-l"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="tbar"><div class="tb-back">←</div><div class="tb-title">Bulk SMS</div></div>
+  <div class="ban ban-gold"><span>💬</span><span>SMS reaches members who may not have the app installed. Keep messages concise — 160 characters max per SMS.</span></div>
+  <div class="scr" style="background:var(--bg);padding:16px">
+    <div class="fgroup">
+      <label class="flabel">Send To <span class="req">*</span></label>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="background:var(--g50);border:2px solid var(--g500);border-radius:var(--r12);padding:11px 14px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:13px;font-weight:700;color:var(--g800)">All Members (847)</div><div style="font-size:10px;color:var(--g600)">Muslim MIC card holders</div></div><span style="color:var(--g500);font-size:16px">✓</span></div>
+        <div style="background:var(--white);border:1.5px solid var(--bdr);border-radius:var(--r12);padding:11px 14px;display:flex;justify-content:space-between;align-items:center"><div style="font-size:13px;color:var(--ink)">NM Community Visitors (18)</div><div class="tog off"></div></div>
+        <div style="background:var(--white);border:1.5px solid var(--bdr);border-radius:var(--r12);padding:11px 14px;display:flex;justify-content:space-between;align-items:center"><div style="font-size:13px;color:var(--ink)">Without App Only (84)</div><div class="tog off"></div></div>
+        <div style="background:var(--white);border:1.5px solid var(--bdr);border-radius:var(--r12);padding:11px 14px;display:flex;justify-content:space-between;align-items:center"><div style="font-size:13px;color:var(--ink)">Custom Group</div><div class="tog off"></div></div>
+      </div>
+    </div>
+
+    <div class="fgroup">
+      <label class="flabel">SMS Message <span class="req">*</span></label>
+      <div class="ftxt" style="min-height:100px">As-salamu alaykum! Jama Masjid, Shivajinagar will be closed for repair work July 12-14. Jumah prayers at Al-Noor Masjid, MG Road. Regular prayers in side hall. - Admin</div>
+      <div style="font-size:11px;color:var(--ink3);margin-top:4px;text-align:right">142 / 160 characters</div>
+    </div>
+
+    <div class="frow">
+      <div class="fgroup"><label class="flabel">Send</label><div class="finput on">Now</div></div>
+      <div class="fgroup"><label class="flabel">Schedule For</label><div class="finput ph">Optional</div></div>
+    </div>
+
+    <!-- Cost estimate -->
+    <div style="background:var(--white);border-radius:var(--r12);border:1px solid var(--bdr);padding:14px;margin-bottom:14px">
+      <div style="font-size:12px;font-weight:700;color:var(--ink);margin-bottom:10px">Estimated Cost</div>
+      <div class="irow"><div class="il">Recipients</div><div class="ir">847 members</div></div>
+      <div class="irow"><div class="il">SMS per member</div><div class="ir">1 SMS (142 chars)</div></div>
+      <div class="irow"><div class="il">Cost per SMS</div><div class="ir">₹0.15</div></div>
+      <div class="irow"><div class="il">Total Estimated</div><div class="ir" style="color:var(--g700);font-weight:800">₹127.05</div></div>
+      <div class="irow"><div class="il">Masjid SMS Balance</div><div class="ir"><span class="badge bg-green" style="font-size:10px">₹2,400 available ✓</span></div></div>
+    </div>
+
+    <button class="btn-p mb12">💬 Send Bulk SMS to 847 Members</button>
+    <button class="btn-s">💾 Save as Template</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+<div class="sc-lbl">A-49 · Bulk SMS to Members</div>
+</div>
+
+<!-- A-NEW-4 Member Merge / Duplicate Fix -->
+<div class="sc">
+<div class="sc-num">A-50</div>
+<div class="phone">
+  <div class="sb sb-l"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="tbar"><div class="tb-back">←</div><div class="tb-title">Fix Duplicate Member</div></div>
+  <div class="ban ban-red"><span>⚠️</span><span>Merging accounts is permanent. The secondary account will be deactivated and all history transferred to the primary account.</span></div>
+  <div class="scr" style="background:var(--bg);padding:16px">
+    <div class="info red mb12"><span>🔍</span><div>System detected 2 possible duplicate accounts for the same person. Review and merge to keep records clean.</div></div>
+
+    <!-- Account A -->
+    <div style="background:var(--g50);border:2px solid var(--g500);border-radius:var(--r16);padding:14px;margin-bottom:10px">
+      <div style="font-size:11px;font-weight:700;color:var(--g700);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Primary Account (Keep This)</div>
+      <div class="irow" style="padding:7px 0"><div class="il">MIC ID</div><div class="ir" style="color:var(--g700);font-family:monospace;font-weight:700">KA-BLR-00421</div></div>
+      <div class="irow" style="padding:7px 0"><div class="il">Name</div><div class="ir">Mohammed Irfan Khan</div></div>
+      <div class="irow" style="padding:7px 0"><div class="il">Aadhaar</div><div class="ir">XXXX-XXXX-4821</div></div>
+      <div class="irow" style="padding:7px 0"><div class="il">DOB</div><div class="ir">15 Mar 1985</div></div>
+      <div class="irow" style="padding:7px 0;border:none"><div class="il">Registered</div><div class="ir">Jan 2019 · ₹100 paid</div></div>
+    </div>
+
+    <!-- Account B -->
+    <div style="background:var(--redb);border:2px solid #FECACA;border-radius:var(--r16);padding:14px;margin-bottom:14px">
+      <div style="font-size:11px;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Secondary Account (Will be Deactivated)</div>
+      <div class="irow" style="padding:7px 0"><div class="il">MIC ID</div><div class="ir" style="color:var(--red);font-family:monospace;font-weight:700">KA-BLR-00842</div></div>
+      <div class="irow" style="padding:7px 0"><div class="il">Name</div><div class="ir">M. Irfan Khan</div></div>
+      <div class="irow" style="padding:7px 0"><div class="il">Aadhaar</div><div class="ir">XXXX-XXXX-4821 (same)</div></div>
+      <div class="irow" style="padding:7px 0"><div class="il">DOB</div><div class="ir">15 Mar 1985 (same)</div></div>
+      <div class="irow" style="padding:7px 0;border:none"><div class="il">Registered</div><div class="ir">Mar 2024 · ₹100 paid</div></div>
+    </div>
+
+    <!-- What will be merged -->
+    <div class="card">
+      <div class="card-hdr"><div class="card-ico">🔄</div><div><div class="card-title">What Gets Merged</div></div></div>
+      <div class="irow"><div class="il">Service history</div><div class="ir"><span class="badge bg-green" style="font-size:10px">Transferred ✓</span></div></div>
+      <div class="irow"><div class="il">Donation records</div><div class="ir"><span class="badge bg-green" style="font-size:10px">Transferred ✓</span></div></div>
+      <div class="irow"><div class="il">Registration fee (duplicate ₹100)</div><div class="ir"><span class="badge bg-gold" style="font-size:10px">Refund issued</span></div></div>
+      <div class="irow"><div class="il">Secondary MIC ID</div><div class="ir"><span class="badge bg-red" style="font-size:10px">Retired forever</span></div></div>
+      <div class="irow"><div class="il">Family records</div><div class="ir"><span class="badge bg-green" style="font-size:10px">Merged ✓</span></div></div>
+    </div>
+
+    <button class="btn-p mb12">🔄 Merge Accounts (Irreversible)</button>
+    <button class="btn-s mb12">↔ Swap Primary / Secondary</button>
+    <button class="btn-sm btn-gr" style="width:100%;height:44px;font-size:13px">✗ Cancel — Not a Duplicate</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+<div class="sc-lbl">A-50 · Member Merge / Dedup</div>
+</div>
+
+</div>
+
+<!-- ══ BATCH 7 SUMMARY ══ -->
+<div class="rl" style="margin-top:48px">Batch 7 — Screen Summary &amp; Grand Total</div>
+<div style="max-width:1400px;width:100%;background:#0E0E0E;border-radius:24px;padding:36px;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:24px">
+
+  <div>
+    <div style="font-size:12px;font-weight:700;color:#C4B5FD;margin-bottom:12px">👑 SA Detail Screens (Batch 7)</div>
+    <div style="font-size:11px;color:#555;line-height:2">
+      SD-01 · State Drilldown Full (bar chart, district breakdown, cases)<br>
+      SD-02 · Masjid SA View Full (finance, SA actions)<br>
+      SD-11 · National Analytics (growth chart, service stats, housing types)<br>
+      SD-10 · Fee Configuration Full (all fees, revenue summary)<br>
+      <span style="color:#C4B5FD;font-weight:700">4 screens</span>
+    </div>
+  </div>
+
+  <div>
+    <div style="font-size:12px;font-weight:700;color:#86EFAC;margin-bottom:12px">📱 User App New Screens</div>
+    <div style="font-size:11px;color:#555;line-height:2">
+      U-61 · Blood Donation Registry (donor status, urgent requests, settings)<br>
+      U-62 · Welfare Application (assistance types, upload, confidential)<br>
+      U-63 · Family Member Detail (spouse full profile, linked MIC ID)<br>
+      U-64 · Support Chat with Admin (full conversation UI)<br>
+      <span style="color:#86EFAC;font-weight:700">4 screens</span>
+    </div>
+  </div>
+
+  <div>
+    <div style="font-size:12px;font-weight:700;color:#E8C96A;margin-bottom:12px">🛡️ Admin App New Screens</div>
+    <div style="font-size:11px;color:#555;line-height:2">
+      A-47 · Blood Bank Registry (all groups, active requests, notify donors)<br>
+      A-48 · Zakat Collection Mgmt (collected, disbursed, eligible families)<br>
+      A-49 · Bulk SMS (recipients, cost estimate, 847 members)<br>
+      A-50 · Member Merge / Dedup (detect duplicates, merge, refund)<br>
+      <span style="color:#E8C96A;font-weight:700">4 screens</span>
+    </div>
+  </div>
+
+  <div style="background:#181818;border-radius:18px;padding:28px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center">
+    <div style="font-size:11px;color:#3A3A3A;text-transform:uppercase;letter-spacing:2px;margin-bottom:12px">All Files Combined</div>
+    <div style="font-family:'Lora',serif;font-size:72px;font-weight:700;color:#fff;line-height:1">215</div>
+    <div style="font-size:14px;color:#3A3A3A;margin:8px 0 20px">total screens</div>
+    <div style="display:flex;flex-direction:column;gap:8px;width:100%">
+      <div style="background:#0D2B1A;border-radius:10px;padding:10px 14px;display:flex;justify-content:space-between"><span style="font-size:12px;color:#86EFAC">📱 User App</span><span style="font-size:18px;font-weight:800;color:#fff">64</span></div>
+      <div style="background:#1A1600;border-radius:10px;padding:10px 14px;display:flex;justify-content:space-between"><span style="font-size:12px;color:#E8C96A">🛡️ Admin App</span><span style="font-size:18px;font-weight:800;color:#fff">50</span></div>
+      <div style="background:#1A0A2E;border-radius:10px;padding:10px 14px;display:flex;justify-content:space-between"><span style="font-size:12px;color:#C4B5FD">👑 Super Admin</span><span style="font-size:18px;font-weight:800;color:#fff">56</span></div>
+    </div>
+    <div style="margin-top:14px;font-size:10px;color:#2A2A2A;line-height:1.8">
+      Base files + Continuation + Reg Update<br>
+      + Batch 5 + Batch 6 + Batch 7 (this file)
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center;margin-top:44px;padding-bottom:60px;font-size:12px;color:#222;line-height:2.4">
+  MIC Platform · Batch 7 · 12 new screens<br>
+  SA: SD-01 State Drilldown · SD-02 Masjid View · SD-10 Fee Config · SD-11 Analytics<br>
+  User: Blood Donation · Welfare Application · Family Member Detail · Support Chat<br>
+  Admin: Blood Bank · Zakat Collection · Bulk SMS · Member Merge/Dedup<br>
+  Platform Total: 215 screens across 7 files · 3 apps · Pure static HTML
+</div>
+
+</div>
+</body>
+</html>

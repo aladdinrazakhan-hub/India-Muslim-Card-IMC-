@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MIC Platform — Batch 5 Continuation</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#080808;font-family:'Inter',sans-serif;padding:40px 24px 80px}
+:root{
+  --g900:#0D2B1A;--g800:#1A4731;--g700:#22593D;--g600:#2D6A4F;
+  --g500:#40916C;--g400:#52B788;--g300:#74C69D;--g200:#B7E4C7;--g100:#D8F3DC;--g50:#F0FAF3;
+  --gold:#C9A84C;--gold2:#E8C96A;--goldb:#FFF8E1;
+  --red:#DC2626;--redb:#FEF2F2;--amber:#D97706;--ambb:#FFFBEB;
+  --blue:#2563EB;--blueb:#EFF6FF;
+  --purple:#7C3AED;--purb:#F5F3FF;--purdark:#6D28D9;
+  --teal:#1A2E1A;
+  --ink:#111827;--ink2:#374151;--ink3:#6B7280;--ink4:#9CA3AF;
+  --bg:#F2F4F2;--white:#FFFFFF;--bdr:#E5E7EB;--bdr2:#F3F4F6;
+  --r8:8px;--r12:12px;--r16:16px;--r20:20px;--r99:99px
+}
+.canvas{display:flex;flex-direction:column;align-items:center;gap:56px}
+.rl{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#444;
+    padding:7px 16px;border:1px solid #222;border-radius:99px;margin-bottom:-36px}
+.srow{display:flex;flex-wrap:wrap;gap:28px;justify-content:center;align-items:flex-start;width:100%}
+.sc{display:flex;flex-direction:column;align-items:center;gap:10px}
+.sc-num{font-size:10px;font-weight:700;color:#555;letter-spacing:1px;background:#1A1A1A;padding:3px 10px;border-radius:99px}
+.sc-lbl{font-size:11px;font-weight:600;color:#888;text-align:center;max-width:200px}
+.nbadge{font-size:9px;font-weight:700;background:#7C3AED;color:#fff;padding:2px 7px;border-radius:99px;margin-left:4px}
+.ubadge{font-size:9px;font-weight:700;background:#D97706;color:#fff;padding:2px 7px;border-radius:99px;margin-left:4px}
+
+.phone{width:390px;background:var(--bg);border-radius:50px;overflow:hidden;
+  box-shadow:0 0 0 10px #1C1C1E,0 0 0 12px #3A3A3C,0 28px 60px rgba(0,0,0,.6);
+  display:flex;flex-direction:column;position:relative;min-height:900px}
+.phone::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:126px;height:34px;background:#1C1C1E;border-radius:0 0 20px 20px;z-index:100}
+
+.sb{height:50px;padding:14px 24px 0;display:flex;justify-content:space-between;
+  align-items:center;font-size:12px;font-weight:700;flex-shrink:0;position:relative;z-index:10}
+.sb-l{background:var(--white);color:var(--ink)}
+.sb-d{background:var(--g800);color:#fff}
+.sb-sa{background:#06150D;color:#fff}
+.sico{display:flex;gap:5px;font-size:11px}
+
+.tbar{height:54px;padding:0 20px;display:flex;align-items:center;justify-content:space-between;
+  background:var(--white);border-bottom:1px solid var(--bdr);flex-shrink:0}
+.tb-back{font-size:22px;color:var(--ink3)}
+.tb-title{font-family:'Lora',serif;font-size:16px;font-weight:700;color:var(--ink)}
+.tb-act{font-size:13px;font-weight:600;color:var(--g600)}
+
+.sa-tbar{height:54px;padding:0 20px;display:flex;align-items:center;justify-content:space-between;
+  background:#06150D;flex-shrink:0}
+
+.tabs{display:flex;border-bottom:1px solid var(--bdr);background:var(--white);
+  flex-shrink:0;overflow-x:auto}
+.tab{padding:12px 14px;font-size:12px;font-weight:600;color:var(--ink3);
+  white-space:nowrap;cursor:pointer;border-bottom:2.5px solid transparent;flex-shrink:0}
+.tab.on{color:var(--g700);border-bottom-color:var(--g600)}
+
+.scr{flex:1;overflow-y:auto;padding:16px}
+.scr::-webkit-scrollbar{display:none}
+
+.card{background:var(--white);border-radius:var(--r16);border:1px solid var(--bdr);
+  padding:16px;margin-bottom:12px}
+.card-hdr{display:flex;gap:10px;align-items:center;margin-bottom:12px}
+.card-ico{width:36px;height:36px;border-radius:10px;background:var(--g100);
+  display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.card-ico.gold{background:var(--goldb)}
+.card-ico.red{background:var(--redb)}
+.card-ico.blue{background:var(--blueb)}
+.card-ico.purple{background:var(--purb)}
+.card-ico.teal{background:rgba(26,46,26,.15)}
+.card-title{font-size:14px;font-weight:700;color:var(--ink)}
+.card-sub{font-size:11px;color:var(--ink3);margin-top:2px}
+
+.irow{display:flex;justify-content:space-between;align-items:center;
+  padding:9px 0;border-bottom:1px solid var(--bdr2)}
+.irow:last-child{border:none}
+.il{font-size:13px;color:var(--ink3)}
+.ir{font-size:13px;font-weight:600;color:var(--ink);text-align:right;max-width:55%}
+
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:var(--r99);font-size:11px;font-weight:700}
+.bg-green{background:var(--g100);color:var(--g700)}
+.bg-gold{background:var(--goldb);color:var(--amber)}
+.bg-red{background:var(--redb);color:var(--red)}
+.bg-blue{background:var(--blueb);color:var(--blue)}
+.bg-gray{background:var(--bdr2);color:var(--ink3)}
+.bg-purple{background:var(--purb);color:var(--purple)}
+.bg-teal{background:rgba(26,46,26,.2);color:#4ADE80}
+
+.fgroup{margin-bottom:14px}
+.flabel{font-size:12px;font-weight:600;color:var(--ink2);margin-bottom:6px;display:block}
+.req{color:var(--red)}
+.fopt{font-size:10px;color:var(--ink4);font-weight:400;margin-left:4px}
+.finput{width:100%;height:46px;background:var(--white);border:1.5px solid var(--bdr);
+  border-radius:var(--r12);padding:0 14px;font-size:14px;color:var(--ink);display:flex;align-items:center}
+.finput.on{border-color:var(--g400)}
+.finput.ph{color:var(--ink4)}
+.ftxt{width:100%;background:var(--white);border:1.5px solid var(--bdr);
+  border-radius:var(--r12);padding:12px 14px;font-size:13px;color:var(--ink);
+  line-height:1.55;min-height:76px}
+.frow{display:flex;gap:10px}
+.frow .fgroup{flex:1}
+
+.tag{padding:7px 13px;border-radius:var(--r99);border:1.5px solid var(--bdr);
+  background:var(--white);font-size:12px;font-weight:600;color:var(--ink3);cursor:pointer}
+.tag.on{border-color:var(--g500);background:var(--g50);color:var(--g700)}
+.tag-row{display:flex;flex-wrap:wrap;gap:8px}
+
+.tog{width:44px;height:26px;border-radius:13px;background:var(--g500);position:relative;flex-shrink:0}
+.tog::after{content:'';position:absolute;right:3px;top:3px;width:20px;height:20px;border-radius:50%;background:#fff}
+.tog.off{background:var(--bdr)}
+.tog.off::after{right:auto;left:3px}
+
+.ban{display:flex;gap:10px;align-items:flex-start;padding:12px 16px;
+  font-size:12px;line-height:1.55;flex-shrink:0}
+.ban-green{background:var(--g50);border-bottom:1px solid var(--g200);color:var(--g800)}
+.ban-gold{background:var(--goldb);border-bottom:1px solid #FFE082;color:#7C5C00}
+.ban-red{background:var(--redb);border-bottom:1px solid #FECACA;color:var(--red)}
+.ban-blue{background:var(--blueb);border-bottom:1px solid #BFDBFE;color:var(--blue)}
+.ban-purple{background:var(--purb);border-bottom:1px solid #DDD6FE;color:var(--purple)}
+.ban-teal{background:rgba(26,46,26,.15);border-bottom:1px solid rgba(74,222,128,.2);color:#4ADE80}
+
+.btn-p{width:100%;height:52px;background:linear-gradient(135deg,var(--g800),var(--g600));
+  color:#fff;border:none;border-radius:var(--r16);font-size:15px;font-weight:700;cursor:pointer}
+.btn-s{width:100%;height:48px;background:var(--white);color:var(--g800);
+  border:2px solid var(--g700);border-radius:var(--r16);font-size:14px;font-weight:700;cursor:pointer}
+.btn-pur{width:100%;height:52px;background:linear-gradient(135deg,var(--purple),var(--purdark));
+  color:#fff;border:none;border-radius:var(--r16);font-size:15px;font-weight:700;cursor:pointer}
+.btn-red{width:100%;height:48px;background:linear-gradient(135deg,#991B1B,var(--red));
+  color:#fff;border:none;border-radius:var(--r16);font-size:14px;font-weight:700;cursor:pointer}
+.btn-sm{height:34px;padding:0 14px;border-radius:var(--r8);border:none;font-size:12px;font-weight:700;cursor:pointer}
+.btn-g{background:var(--g100);color:var(--g800)}
+.btn-r{background:var(--redb);color:var(--red)}
+.btn-gr{background:var(--bdr2);color:var(--ink3)}
+.btn-gold{background:var(--goldb);color:var(--amber)}
+
+.ucard{display:flex;gap:12px;align-items:center;background:var(--white);
+  border-radius:var(--r16);border:1px solid var(--bdr);padding:12px 14px;margin-bottom:8px}
+.uava{width:46px;height:46px;border-radius:50%;background:var(--g100);
+  display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+
+.li{display:flex;align-items:center;gap:12px;padding:13px 16px;
+  background:var(--white);border-bottom:1px solid var(--bdr2);cursor:pointer}
+.li:last-child{border-bottom:none}
+.li-ava{width:44px;height:44px;border-radius:50%;background:var(--g100);
+  display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.li-name{font-size:14px;font-weight:600;color:var(--ink)}
+.li-det{font-size:12px;color:var(--ink3);margin-top:2px}
+
+.shdr{background:linear-gradient(150deg,#06150D,var(--g900));padding:14px 20px 20px;flex-shrink:0}
+.nsg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px}
+.nsg-box{background:rgba(255,255,255,.08);border-radius:var(--r12);padding:10px;text-align:center}
+.nsg-n{font-size:15px;font-weight:800;color:#fff;line-height:1}
+.nsg-n.g{color:#86EFAC}
+.nsg-n.gold{color:var(--gold2)}
+.nsg-n.b{color:#93C5FD}
+.nsg-n.p{color:#C4B5FD}
+.nsg-l{font-size:9px;color:rgba(255,255,255,.4);margin-top:3px;text-transform:uppercase;letter-spacing:.4px}
+
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.kpi{background:var(--white);border-radius:var(--r12);padding:14px;border:1px solid var(--bdr)}
+.kpi-l{font-size:11px;color:var(--ink3);margin-bottom:4px}
+.kpi-n{font-size:22px;font-weight:800;color:var(--ink);line-height:1}
+.kpi-ch{font-size:10px;color:var(--ink4);margin-top:3px}
+
+.prog{height:6px;background:var(--bdr2);border-radius:99px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--g500),var(--g400));border-radius:99px}
+
+.sett-list{background:var(--white);border-radius:var(--r16);border:1px solid var(--bdr);overflow:hidden;margin-bottom:14px}
+.sett-item{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--bdr2)}
+.sett-item:last-child{border:none}
+.sett-ico{font-size:20px;flex-shrink:0;width:32px;text-align:center}
+.sett-name{font-size:14px;color:var(--ink);flex:1}
+.sett-r{font-size:13px;color:var(--ink3);margin-left:auto}
+
+.bnav{height:82px;background:var(--white);border-top:1px solid var(--bdr);
+  display:flex;align-items:center;justify-content:space-around;padding:0 10px;flex-shrink:0}
+.bni{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:8px 12px;border-radius:12px}
+.bni.on{background:var(--g50)}
+.bni-ico{font-size:22px}
+.bni-lbl{font-size:10px;font-weight:600;color:var(--ink3)}
+.bni.on .bni-lbl{color:var(--g700)}
+
+.upload-box{border:2px dashed var(--g400);border-radius:var(--r12);padding:16px;
+  text-align:center;background:var(--g50);cursor:pointer;margin-bottom:4px}
+.upload-done{border:2px solid var(--g400);border-radius:var(--r12);padding:12px 14px;
+  background:var(--g50);display:flex;gap:10px;align-items:center;margin-bottom:4px}
+
+.sec-div{display:flex;align-items:center;gap:10px;margin:16px 0 12px}
+.sec-label{font-size:12px;font-weight:700;color:var(--ink);white-space:nowrap}
+.sec-line{flex:1;height:1px;background:var(--bdr)}
+
+.info{background:var(--g50);border:1px solid var(--g200);border-radius:var(--r12);
+  padding:12px 14px;margin-bottom:12px;display:flex;gap:8px;font-size:12px;color:var(--g800);line-height:1.55}
+.info.amber{background:var(--ambb);border-color:#FFE082;color:#7C5C00}
+.info.blue{background:var(--blueb);border-color:#BFDBFE;color:var(--blue)}
+.info.red{background:var(--redb);border-color:#FECACA;color:var(--red)}
+.info.purple{background:var(--purb);border-color:#DDD6FE;color:var(--purple)}
+
+.htype{border-radius:var(--r12);border:2px solid var(--bdr);padding:10px 12px;
+  display:flex;gap:10px;align-items:center;cursor:pointer;margin-bottom:8px;background:var(--white)}
+.htype.own{border-color:var(--g500);background:var(--g50)}
+.htype.rent{border-color:var(--amber);background:var(--ambb)}
+.htype.lease{border-color:var(--blue);background:var(--blueb)}
+.htype-ico{width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+
+.pcard{background:var(--white);border-radius:var(--r16);border:1px solid var(--bdr);
+  padding:14px;margin-bottom:10px}
+.pcard-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.pcard-title{font-size:13px;font-weight:700;color:var(--ink)}
+.pcard-sub{font-size:11px;color:var(--ink3);margin-top:2px}
+
+.step-dots{display:flex;gap:4px;align-items:center;margin-bottom:14px}
+.sdot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.sdot.done{background:var(--g400);color:#fff}
+.sdot.cur{background:#fff;color:var(--g800)}
+.sdot.pend{background:rgba(255,255,255,.15);color:rgba(255,255,255,.45)}
+.sline-done{flex:1;height:2px;background:var(--g400)}
+.sline-pend{flex:1;height:2px;background:rgba(255,255,255,.15)}
+
+.reg-hdr{background:var(--g800);padding:14px 20px 16px;flex-shrink:0}
+
+.nmcard{background:linear-gradient(135deg,#1A2E1A,#0D2B1A);border-radius:var(--r20);
+  padding:20px;margin-bottom:14px;position:relative;overflow:hidden}
+
+.spacer{height:100px}
+.mb8{margin-bottom:8px}
+.mb12{margin-bottom:12px}
+.mb14{margin-bottom:14px}
+.mb16{margin-bottom:16px}
+.mt8{margin-top:8px}
+.mt12{margin-top:12px}
+.mt16{margin-top:16px}
+</style>
+</head>
+<body>
+<div class="canvas">
+
+<div style="text-align:center;padding:20px 0 4px">
+  <div style="font-family:'Lora',serif;font-size:28px;font-weight:700;color:#fff;margin-bottom:6px">MIC Platform — Batch 5</div>
+  <div style="font-size:13px;color:#555">NM Flow Update · Admin Deep Screens · User Service Screens · Review &amp; Submit</div>
+</div>
+
+<!-- ══════════════════════════════════
+  USER APP — NM REGISTRATION (UPDATED WITH HOUSING + ₹100)
+══════════════════════════════════ -->
+<div class="rl">User App · Non-Muslim Registration — Updated (Housing + Free / ₹0 for NM)</div>
+<div class="srow">
+
+<!-- NM-02 Personal — Updated -->
+<div class="sc">
+<div class="sc-num">NM-02 <span class="ubadge">UPDATED</span></div>
+<div class="phone">
+  <div class="sb sb-l"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="reg-hdr">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div>
+        <div style="font-family:'Lora',serif;font-size:15px;font-weight:700;color:#fff">Community Registration</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.55)">Step 2 of 5 — Personal Details</div>
+      </div>
+      <div style="font-size:12px;color:rgba(255,255,255,.5)">Save &amp; Exit</div>
+    </div>
+    <div class="step-dots">
+      <div class="sdot done">✓</div><div class="sline-done"></div>
+      <div class="sdot cur">2</div><div class="sline-pend"></div>
+      <div class="sdot pend">3</div><div class="sline-pend"></div>
+      <div class="sdot pend">4</div><div class="sline-pend"></div>
+      <div class="sdot pend">5</div>
+    </div>
+  </div>
+  <div class="scr" style="background:var(--bg);padding:16px">
+    <div class="prog mb12"><div class="prog-fill" style="width:40%"></div></div>
+
+    <div class="info" style="margin-bottom:14px"><span>🤝</span><div>Community Visitor registration is <strong>completely free</strong>. No registration fee. MIC members pay ₹100; NM visitors always join free.</div></div>
+
+    <div class="fgroup"><label class="flabel">Full Name <span class="req">*</span></label><div class="finput on">Ramesh Kumar Sharma</div></div>
+    <div class="frow">
+      <div class="fgroup"><label class="flabel">Date of Birth <span class="req">*</span></label><div class="finput on">12 / 05 / 1990</div></div>
+      <div class="fgroup"><label class="flabel">Gender <span class="req">*</span></label><div class="finput on">Male ▾</div></div>
+    </div>
+    <div class="fgroup"><label class="flabel">Religion <span class="req">*</span></label>
+      <div class="tag-row">
+        <span class="tag on">Hindu</span><span class="tag">Christian</span><span class="tag">Sikh</span>
+        <span class="tag">Buddhist</span><span class="tag">Jain</span><span class="tag">Other</span>
+      </div>
+    </div>
+    <div class="fgroup"><label class="flabel">Caste / Sub-group <span class="fopt">(optional)</span></label><div class="finput on">Brahmin</div></div>
+    <div class="fgroup"><label class="flabel">Occupation <span class="req">*</span></label><div class="finput on">Software Engineer ▾</div></div>
+    <div class="fgroup"><label class="flabel">Education</label><div class="finput on">Graduate ▾</div></div>
+    <div class="fgroup"><label class="flabel">Mobile Number <span class="req">*</span></label><div class="finput on">+91 98765 11111</div></div>
+    <div class="fgroup"><label class="flabel">Alternate Mobile <span class="fopt">(optional)</span></label><div class="finput ph">+91 XXXXX XXXXX</div></div>
+    <div class="fgroup"><label class="flabel">Email <span class="fopt">(optional)</span></label><div class="finput ph">ramesh@email.com</div></div>
+
+    <div class="sec-div"><div class="sec-line"></div><div class="sec-label">Identity</div><div class="sec-line"></div></div>
+    <div class="fgroup"><label class="flabel">Aadhaar Number <span class="req">*</span></label><div class="finput on">XXXX XXXX 8821</div></div>
+    <div class="fgroup"><label class="flabel">PAN <span class="fopt">(optional)</span></label><div class="finput ph">XXXXX0000X</div></div>
+    <div class="fgroup"><label class="flabel">Voter ID <span class="fopt">(optional)</span></label><div class="finput ph">Optional</div></div>
+    <div class="fgroup">
+      <label class="flabel">Profile Photo <span class="req">*</span></label>
+      <div class="upload-done"><span style="font-size:22px">✅</span><div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--g800)">ramesh_photo.jpg</div><div style="font-size:11px;color:var(--g600)">Uploaded · 0.9 MB</div></div></div>
+    </div>
+
+    <div class="fgroup"><label class="flabel">Father's Full Name <span class="req">*</span></label><div class="finput on">Suresh Kumar Sharma</div></div>
+    <div class="fgroup"><label class="flabel">Mother's Full Name <span class="req">*</span></label><div class="finput on">Laxmi Devi Sharma</div></div>
+    <div class="fgroup"><label class="flabel">Emergency Contact <span class="req">*</span></label><div class="finput on">Suresh Kumar · Father · +91 98001 00001</div></div>
+
+    <button class="btn-p mt12">Continue to Family &amp; Address →</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+<div class="sc-lbl">NM-02 · NM Personal (Updated)</div>
+</div>
+
+<!-- NM-03 Family + Address + Housing — Updated -->
+<div class="sc">
+<div class="sc-num">NM-03 <span class="ubadge">UPDATED</span></div>
+<div class="phone" style="min-height:1080px">
+  <div class="sb sb-l"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="reg-hdr">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div>
+        <div style="font-family:'Lora',serif;font-size:15px;font-weight:700;color:#fff">Community Registration</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.55)">Step 3 of 5 — Family, Address &amp; Housing</div>
+      </div>
+      <div style="font-size:12px;color:rgba(255,255,255,.5)">Save &amp; Exit</div>
+    </div>
+    <div class="step-dots">
+      <div class="sdot done">✓</div><div class="sline-done"></div>
+      <div class="sdot done">✓</div><div class="sline-done"></div>
+      <div class="sdot cur">3</div><div class="sline-pend"></div>
+      <div class="sdot pend">4</div><div class="sline-pend"></div>
+      <div class="sdot pend">5</div>
+    </div>
+  </div>
+  <div class="scr" style="background:var(--bg);padding:16px">
+    <div class="prog mb12"><div class="prog-fill" style="width:60%"></div></div>
+
+    <div class="sec-div"><div class="sec-line"></div><div class="sec-label">Spouse</div><div class="sec-line"></div></div>
+    <div class="fgroup"><label class="flabel">Marital Status</label>
+      <div class="tag-row"><span class="tag on">Married</span><span class="tag">Single</span><span class="tag">Widowed</span><span class="tag">Divorced</span></div>
+    </div>
+    <div class="fgroup"><label class="flabel">Spouse Name</label><div class="finput on">Priya Ramesh Sharma</div></div>
+    <div class="frow">
+      <div class="fgroup"><label class="flabel">Spouse Age</label><div class="finput on">29</div></div>
+      <div class="fgroup"><label class="flabel">Spouse Mobile</label><div class="finput ph">Optional</div></div>
+    </div>
+
+    <div class="sec-div"><div class="sec-line"></div><div class="sec-label">Children</div><div class="sec-line"></div></div>
+    <div style="background:var(--white);border:1px solid var(--bdr);border-radius:var(--r12);padding:12px 14px;margin-bottom:8px">
+      <div style="font-size:12px;font-weight:700;color:var(--ink);margin-bottom:10px">Child 1</div>
+      <div class="frow">
+        <div class="fgroup"><label class="flabel">Name</label><div class="finput on">Aryan</div></div>
+        <div class="fgroup"><label class="flabel">Age</label><div class="finput on">4</div></div>
+        <div class="fgroup"><label class="flabel">Gender</label><div class="finput on">M ▾</div></div>
+      </div>
+    </div>
+    <button style="width:100%;height:38px;border:2px dashed var(--g400);border-radius:var(--r12);background:var(--g50);color:var(--g700);font-size:12px;font-weight:600;cursor:pointer" class="mb14">+ Add Child</button>
+
+    <div class="sec-div"><div class="sec-line"></div><div class="sec-label">Current Address</div><div class="sec-line"></div></div>
+    <div class="fgroup"><label class="flabel">Flat / House No. &amp; Building <span class="req">*</span></label><div class="finput on">18, Gandhi Nagar Apartments</div></div>
+    <div class="fgroup"><label class="flabel">Street / Road <span class="req">*</span></label><div class="finput on">Church Street</div></div>
+    <div class="frow">
+      <div class="fgroup"><label class="flabel">Area <span class="req">*</span></label><div class="finput on">MG Road</div></div>
+      <div class="fgroup"><label class="flabel">Landmark</label><div class="finput ph">Optional</div></div>
+    </div>
+    <div class="frow">
+      <div class="fgroup"><label class="flabel">City <span class="req">*</span></label><div class="finput on">Bengaluru</div></div>
+      <div class="fgroup"><label class="flabel">PIN <span class="req">*</span></label><div class="finput on">560 001</div></div>
+    </div>
+
+    <div class="sec-div"><div class="sec-line"></div><div class="sec-label">Housing Type <span class="req">*</span></div><div class="sec-line"></div></div>
+    <!-- Rent selected for NM example -->
+    <div class="htype"><div class="htype-ico" style="background:var(--g100)">🏠</div><div style="flex:1"><div style="font-size:13px;color:var(--ink)">Building Owner</div></div><div style="width:20px;height:20px;border-radius:50%;border:2px solid var(--bdr);flex-shrink:0"></div></div>
+    <div class="htype rent"><div class="htype-ico" style="background:var(--ambb)">🏘️</div><div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--amber)">Rent House</div><div style="font-size:11px;color:var(--amber)">I pay monthly rent</div></div><div style="width:20px;height:20px;border-radius:50%;background:var(--amber);display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;flex-shrink:0">✓</div></div>
+    <div class="htype"><div class="htype-ico" style="background:var(--blueb)">📝</div><div style="flex:1"><div style="font-size:13px;color:var(--ink)">Lease House</div></div><div style="width:20px;height:20px;border-radius:50%;border:2px solid var(--bdr);flex-shrink:0"></div></div>
+    <div class="htype"><div class="htype-ico" style="background:var(--bdr2)">🏡</div><div style="flex:1"><div style="font-size:13px;color:var(--ink)">Family Property</div></div><div style="width:20px;height:20px;border-radius:50%;border:2px solid var(--bdr);flex-shrink:0"></div></div>
+
+    <!-- Rent expanded -->
+    <div style="background:var(--ambb);border:1.5px solid #FFE082;border-radius:var(--r16);padding:14px;margin-top:4px mb14">
+      <div style="font-size:12px;font-weight:700;color:var(--amber);margin-bottom:12px">🏘️ Landlord / Rent Details</div>
+      <div class="fgroup"><label class="flabel">Landlord Name <span class="req">*</span></label><div class="finput on">Mohammed Yusuf</div></div>
+      <div class="fgroup"><label class="flabel">Landlord Mobile <span class="req">*</span></label><div class="finput on">+91 98760 54321</div></div>
+      <div class="frow">
+        <div class="fgroup"><label class="flabel">Monthly Rent (₹)</label><div class="finput on">₹ 10,000</div></div>
+        <div class="fgroup"><label class="flabel">Since Date</label><div class="finput on">Jan 2022</div></div>
+      </div>
+      <div class="fgroup" style="margin-bottom:0"><label class="flabel">Upload Rent Agreement</label>
+        <div class="upload-done"><span style="font-size:20px">✅</span><div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--g800)">rent_agr.pdf</div><div style="font-size:11px;color:var(--g600)">2.1 MB</div></div></div>
+      </div>
+    </div>
+
+    <div class="sec-div"><div class="sec-line"></div><div class="sec-label">Nearest Masjid</div><div class="sec-line"></div></div>
+    <div style="background:var(--g50);border:1.5px solid var(--g400);border-radius:var(--r12);padding:12px 14px;display:flex;gap:10px;align-items:center;margin-bottom:14px">
+      <span style="font-size:22px">🕌</span>
+      <div style="flex:1"><div style="font-size:14px;font-weight:700;color:var(--g800)">Jama Masjid, Church Street</div><div style="font-size:11px;color:var(--g600)">0.4 km · Accepts NM Visitors ✓</div></div>
+      <span style="color:var(--g500);font-size:18px">✓</span>
+    </div>
+
+    <button class="btn-p">Continue to Documents &amp; Consent →</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+<div class="sc-lbl">NM-03 · Family + Address + Housing</div>
+</div>
+
+<!-- NM-04 Documents & Consent — Updated -->
+<div class="sc">
+<div class="sc-num">NM-04 <span class="ubadge">UPDATED</span></div>
+<div class="phone">
+  <div class="sb sb-l"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="reg-hdr">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div>
+        <div style="font-family:'Lora',serif;font-size:15px;font-weight:700;color:#fff">Community Registration</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.55)">Step 4 of 5 — Documents &amp; Consent</div>
+      </div>
+      <div style="font-size:12px;color:rgba(255,255,255,.5)">Save &amp; Exit</div>
+    </div>
+    <div class="step-dots">
+      <div class="sdot done">✓</div><div class="sline-done"></div>
+      <div class="sdot done">✓</div><div class="sline-done"></div>
+      <div class="sdot done">✓</div><div class="sline-done"></div>
+      <div class="sdot cur">4</div><div class="sline-pend"></div>
+      <div class="sdot pend">5</div>
+    </div>
+  </div>
+  <div class="scr" style="background:var(--bg);padding:16px">
+    <div class="prog mb12"><div class="prog-fill" style="width:80%"></div></div>
+
+    <div class="sec-div"><div class="sec-line"></div><div class="sec-label">Required Documents</div><div class="sec-line"></div></div>
+    <div class="fgroup">
+      <label class="flabel">Aadhaar Card — Front &amp; Back <span class="req">*</span></label>
+      <div class="upload-done"><span style="font-size:22px">✅</span><div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--g800)">aadhaar_front.jpg</div><div style="font-size:11px;color:var(--g600)">Uploaded · 1.1 MB</div></div><button class="btn-sm btn-g" style="font-size:10px;height:28px">Replace</button></div>
+    </div>
+    <div class="fgroup">
+      <label class="flabel">Address Proof <span class="req">*</span></label>
+      <div class="upload-done"><span style="font-size:22px">✅</span><div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--g800)">rent_agreement.pdf</div><div style="font-size:11px;color:var(--g600)">Uploaded · 2.1 MB</div></div><button class="btn-sm btn-g" style="font-size:10px;height:28px">Replace</button></div>
+    </div>
+
+    <div class="sec-div"><div class="sec-line"></div><div class="sec-label">Optional Documents</div><div class="sec-line"></div></div>
+    <div class="fgroup">
+      <label class="flabel">PAN Card <span class="fopt">(optional)</span></label>
+      <div class="upload-box"><div style="font-size:22px;margin-bottom:5px">💳</div><div style="font-size:13px;font-weight:600;color:var(--g700)">Upload PAN card</div><div style="font-size:11px;color:var(--g500);margin-top:3px">JPEG or PDF · Max 5 MB</div></div>
+    </div>
+    <div class="fgroup">
+      <label class="flabel">Family Photograph <span class="fopt">(optional)</span></label>
+      <div class="upload-box"><div style="font-size:22px;margin-bottom:5px">👨‍👩‍👧</div><div style="font-size:13px;font-weight:600;color:var(--g700)">Recent family photo</div><div style="font-size:11px;color:var(--g500);margin-top:3px">JPEG · Max 5 MB</div></div>
+    </div>
+
+    <div class="sec-div"><div class="sec-line"></div><div class="sec-label">Community Interests</div><div class="sec-line"></div></div>
+    <div class="fgroup">
+      <div class="tag-row">
+        <span class="tag on">🏥 Medical camps</span>
+        <span class="tag on">🤝 Interfaith dialogue</span>
+        <span class="tag">📖 Islamic learning</span>
+        <span class="tag on">🌊 Welfare &amp; relief</span>
+        <span class="tag">🎉 Cultural events</span>
+        <span class="tag">📚 Education support</span>
+        <span class="tag">🍽️ Community meals</span>
+      </div>
+    </div>
+
+    <div class="sec-div"><div class="sec-line"></div><div class="sec-label">Voluntary Declaration <span class="req">*</span></div><div class="sec-line"></div></div>
+    <div style="background:var(--white);border-radius:var(--r16);border:1px solid var(--bdr);overflow:hidden;margin-bottom:14px">
+      <div style="padding:14px 16px;border-bottom:1px solid var(--bdr2);display:flex;gap:12px;align-items:flex-start">
+        <div style="width:22px;height:22px;border-radius:6px;background:var(--g500);display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;flex-shrink:0;margin-top:1px">✓</div>
+        <div style="font-size:12px;color:var(--ink2);line-height:1.55">I am joining as a Community Visitor voluntarily. I am not being coerced, pressured, or incentivised in any way to change my religion.</div>
+      </div>
+      <div style="padding:14px 16px;border-bottom:1px solid var(--bdr2);display:flex;gap:12px;align-items:flex-start">
+        <div style="width:22px;height:22px;border-radius:6px;background:var(--g500);display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;flex-shrink:0;margin-top:1px">✓</div>
+        <div style="font-size:12px;color:var(--ink2);line-height:1.55">I understand this is a community welfare membership and does not involve religious conversion.</div>
+      </div>
+      <div style="padding:14px 16px;display:flex;gap:12px;align-items:flex-start">
+        <div style="width:22px;height:22px;border-radius:6px;background:var(--g500);display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;flex-shrink:0;margin-top:1px">✓</div>
+        <div style="font-size:12px;color:var(--ink2);line-height:1.55">I give consent for my details to be shared with the area Masjid admin for verification purposes only.</div>
+      </div>
+    </div>
+
+    <div class="info" style="margin-bottom:14px"><span>🔒</span><div>Your data is protected under the DPDP Act 2023. You can request deletion anytime from Settings → Privacy.</div></div>
+
+    <button class="btn-p">Continue to Review &amp; Submit →</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+<div class="sc-lbl">NM-04 · Docs &amp; Consent (Updated)</div>
+</div>
+
+<!-- NM-05 Review & Submit — Updated -->
+<div class="sc">
+<div class="sc-num">NM-05 <span class="ubadge">UPDATED</span></div>
+<div class="phone" style="min-height:1000px">
+  <div class="sb sb-l"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="reg-hdr">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div>
+        <div style="font-family:'Lora',serif;font-size:15px;font-weight:700;color:#fff">Community Registration</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.55)">Step 5 of 5 — Review &amp; Submit</div>
+      </div>
+      <div style="font-size:12px;color:rgba(255,255,255,.5)">Edit</div>
+    </div>
+    <div class="step-dots">
+      <div class="sdot done">✓</div><div class="sline-done"></div>
+      <div class="sdot done">✓</div><div class="sline-done"></div>
+      <div class="sdot done">✓</div><div class="sline-done"></div>
+      <div class="sdot done">✓</div><div class="sline-done"></div>
+      <div class="sdot cur">5</div>
+    </div>
+  </div>
+  <div class="scr" style="background:var(--bg);padding:16px">
+    <div class="prog mb12"><div class="prog-fill" style="width:100%"></div></div>
+
+    <div class="info" style="margin-bottom:14px"><span>✅</span><div>All details look good. Review and submit. Your application will be reviewed by Jama Masjid, Church Street within 3 working days.</div></div>
+
+    <div class="card">
+      <div class="card-hdr"><div class="card-ico">👤</div><div><div class="card-title">Personal Details</div><div style="font-size:11px;color:var(--g600);cursor:pointer;margin-top:2px">Edit ›</div></div></div>
+      <div class="irow"><div class="il">Full Name</div><div class="ir">Ramesh Kumar Sharma</div></div>
+      <div class="irow"><div class="il">Date of Birth</div><div class="ir">12 May 1990 · 35 yrs</div></div>
+      <div class="irow"><div class="il">Religion</div><div class="ir">Hindu · Brahmin</div></div>
+      <div class="irow"><div class="il">Occupation</div><div class="ir">Software Engineer</div></div>
+      <div class="irow"><div class="il">Mobile</div><div class="ir">+91 98765 11111</div></div>
+      <div class="irow"><div class="il">Aadhaar</div><div class="ir">XXXX XXXX 8821 ✓</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr"><div class="card-ico">👨‍👩‍👧</div><div><div class="card-title">Family Details</div><div style="font-size:11px;color:var(--g600);cursor:pointer;margin-top:2px">Edit ›</div></div></div>
+      <div class="irow"><div class="il">Father</div><div class="ir">Suresh Kumar Sharma</div></div>
+      <div class="irow"><div class="il">Mother</div><div class="ir">Laxmi Devi Sharma</div></div>
+      <div class="irow"><div class="il">Spouse</div><div class="ir">Priya Ramesh · Age 29</div></div>
+      <div class="irow"><div class="il">Children</div><div class="ir">Aryan (M, 4)</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr"><div class="card-ico" style="background:var(--ambb)">🏘️</div><div><div class="card-title">Address &amp; Housing</div><div style="font-size:11px;color:var(--g600);cursor:pointer;margin-top:2px">Edit ›</div></div></div>
+      <div class="irow"><div class="il">Address</div><div class="ir">18, Gandhi Nagar Apt, Church Street, BLR</div></div>
+      <div class="irow"><div class="il">Housing Type</div><div class="ir"><span class="badge bg-gold" style="font-size:10px">🏘️ Rent House</span></div></div>
+      <div class="irow"><div class="il">Landlord</div><div class="ir">Mohammed Yusuf</div></div>
+      <div class="irow"><div class="il">Monthly Rent</div><div class="ir">₹10,000</div></div>
+      <div class="irow"><div class="il">Nearest Masjid</div><div class="ir">Jama Masjid, Church Street ✓</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr"><div class="card-ico">📁</div><div><div class="card-title">Documents</div></div></div>
+      <div class="irow"><div class="il">Aadhaar</div><div class="ir"><span class="badge bg-green" style="font-size:10px">✓ Uploaded</span></div></div>
+      <div class="irow"><div class="il">Rent Agreement</div><div class="ir"><span class="badge bg-green" style="font-size:10px">✓ Uploaded</span></div></div>
+      <div class="irow"><div class="il">Consent Signed</div><div class="ir"><span class="badge bg-green" style="font-size:10px">✓ All 3</span></div></div>
+    </div>
+
+    <!-- NM Fee notice -->
+    <div style="background:var(--g50);border:2px solid var(--g300);border-radius:var(--r16);padding:16px;margin-bottom:16px;text-align:center">
+      <div style="font-size:28px;margin-bottom:6px">🎉</div>
+      <div style="font-family:'Lora',serif;font-size:18px;font-weight:700;color:var(--g800);margin-bottom:4px">Community Registration is Free!</div>
+      <div style="font-size:13px;color:var(--g600)">No registration fee for Community Visitors.<br>Muslim MIC members pay ₹100 one-time fee.</div>
+      <div style="margin-top:10px"><span class="badge bg-green">₹0 — No payment required</span></div>
+    </div>
+
+    <button class="btn-p mb12">🤝 Submit Community Registration</button>
+    <button class="btn-s">← Review / Edit Details</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+<div class="sc-lbl">NM-05 · Review &amp; Submit</div>
+</div>
+
+</div>
+
+<!-- ══════════════════════════════════
+  USER APP — SERVICE DETAIL PAGES (MISSING)
+══════════════════════════════════ -->
+<div class="rl">User App · Service Flow Detail Screens</div>
+<div class="srow">
+
+<!-- D-01 Marriage BG Check Status -->
+<div class="sc">
+<div class="sc-num">D-01</div>
+<div class="phone">
+  <div class="sb sb-l"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="tbar"><div class="tb-back">←</div><div class="tb-title">BG Check Status</div><div class="tb-act">Share</div></div>
+  <div class="scr" style="background:var(--bg);padding:16px">
+
+    <!-- Status card -->
+    <div style="background:linear-gradient(135deg,var(--g900),var(--g700));border-radius:var(--r20);padding:20px;margin-bottom:14px;text-align:center">
+      <div style="font-size:32px;margin-bottom:10px">💒</div>
+      <div style="font-family:'Lora',serif;font-size:18px;font-weight:700;color:#fff;margin-bottom:4px">Marriage BG Check</div>
+      <div style="font-size:12px;color:rgba(255,255,255,.55);margin-bottom:14px">Ref: BGC-2025-0421</div>
+      <div style="background:var(--goldb);border-radius:var(--r99);padding:6px 18px;display:inline-flex;gap:6px;align-items:center">
+        <span style="font-size:14px">⏳</span>
+        <span style="font-size:13px;font-weight:700;color:var(--amber)">Under Review — Day 3 of 7</span>
+      </div>
+    </div>
+
+    <!-- Couple info -->
+    <div class="card">
+      <div class="card-hdr"><div class="card-ico">👫</div><div><div class="card-title">Couple Details</div></div></div>
+      <div class="irow"><div class="il">Groom</div><div class="ir">Mohammed Irfan Khan · KA-BLR-00421</div></div>
+      <div class="irow"><div class="il">Bride</div><div class="ir">Aisha Fatima · KA-MYS-00218</div></div>
+      <div class="irow"><div class="il">Proposed Nikaah</div><div class="ir">August 15, 2025</div></div>
+      <div class="irow"><div class="il">Applied On</div><div class="ir">July 2, 2025</div></div>
+      <div class="irow"><div class="il">Fee Paid</div><div class="ir">₹500 · July 2 ✓</div></div>
+    </div>
+
+    <!-- Progress -->
+    <div class="card">
+      <div class="card-hdr"><div class="card-ico gold">📋</div><div><div class="card-title">Verification Progress</div></div></div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;gap:10px;align-items:flex-start">
+          <div style="width:28px;height:28px;border-radius:50%;background:var(--g500);display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;flex-shrink:0">✓</div>
+          <div><div style="font-size:13px;font-weight:700;color:var(--ink)">Application Received</div><div style="font-size:11px;color:var(--ink3)">July 2 · Both families confirmed</div></div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start">
+          <div style="width:28px;height:28px;border-radius:50%;background:var(--g500);display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;flex-shrink:0">✓</div>
+          <div><div style="font-size:13px;font-weight:700;color:var(--ink)">Groom's Masjid Check</div><div style="font-size:11px;color:var(--ink3)">July 3 · Jama Masjid — Clear</div></div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start">
+          <div style="width:28px;height:28px;border-radius:50%;background:var(--g800);display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;flex-shrink:0;box-shadow:0 0 0 4px rgba(26,71,49,.2)">⋯</div>
+          <div><div style="font-size:13px;font-weight:700;color:var(--g800)">Bride's Masjid Check</div><div style="font-size:11px;color:var(--ink3)">In progress · Al-Noor, Mysuru</div></div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start">
+          <div style="width:28px;height:28px;border-radius:50%;background:var(--bdr2);display:flex;align-items:center;justify-content:center;color:var(--ink4);font-size:13px;flex-shrink:0">4</div>
+          <div><div style="font-size:13px;color:var(--ink3)">Final Decision &amp; Certificate</div><div style="font-size:11px;color:var(--ink4)">Expected July 9</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info" style="margin-bottom:14px"><span>📱</span><div>You'll receive an SMS and app notification when the decision is made. Expected: July 9, 2025.</div></div>
+
+    <button class="btn-p mb12">📞 Contact Masjid Admin</button>
+    <button class="btn-s">📤 Share Status with Family</button>
+    <div class="spacer"></div>
+  </div>
+  <div class="bnav">
+    <div class="bni"><div class="bni-ico">🏠</div><div class="bni-lbl">Home</div></div>
+    <div class="bni"><div class="bni-ico">🪪</div><div class="bni-lbl">My Card</div></div>
+    <div class="bni on"><div class="bni-ico">🛎️</div><div class="bni-lbl">Services</div></div>
+    <div class="bni"><div class="bni-ico">🔔</div><div class="bni-lbl">Alerts</div></div>
+    <div class="bni"><div class="bni-ico">👤</div><div class="bni-lbl">Profile</div></div>
+  </div>
+</div>
+<div class="sc-lbl">D-01 · BG Check Status</div>
+</div>
+
+<!-- D-03 Relocation NOC Status -->
+<div class="sc">
+<div class="sc-num">D-03</div>
+<div class="phone">
+  <div class="sb sb-l"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="tbar"><div class="tb-back">←</div><div class="tb-title">Relocation NOC</div><div class="tb-act">Download</div></div>
+  <div class="scr" style="background:var(--bg);padding:16px">
+
+    <!-- Success NOC card -->
+    <div style="background:linear-gradient(135deg,var(--g900),var(--g600));border-radius:var(--r20);padding:20px;margin-bottom:14px">
+      <div style="font-size:10px;font-weight:700;letter-spacing:2px;color:rgba(201,168,76,.8);text-transform:uppercase;margin-bottom:12px">No Objection Certificate</div>
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px">
+        <div>
+          <div style="font-family:'Lora',serif;font-size:17px;font-weight:700;color:#fff">Mohammed Irfan Khan</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.55)">KA-BLR-00421</div>
+        </div>
+        <span class="badge bg-green" style="font-size:10px">✓ Issued</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+        <div><div style="font-size:10px;color:rgba(255,255,255,.4)">From Masjid</div><div style="font-size:12px;font-weight:700;color:#fff">Jama Masjid, BLR</div></div>
+        <div><div style="font-size:10px;color:rgba(255,255,255,.4)">To Masjid</div><div style="font-size:12px;font-weight:700;color:#fff">Al-Noor, Mumbai</div></div>
+        <div><div style="font-size:10px;color:rgba(255,255,255,.4)">Issued On</div><div style="font-size:12px;font-weight:700;color:#fff">July 5, 2025</div></div>
+        <div><div style="font-size:10px;color:rgba(255,255,255,.4)">Valid Until</div><div style="font-size:12px;font-weight:700;color:var(--gold2)">October 5, 2025</div></div>
+      </div>
+      <div style="padding-top:12px;border-top:1px solid rgba(255,255,255,.1)">
+        <div style="font-size:9px;color:rgba(255,255,255,.35);margin-bottom:3px">NOC Reference</div>
+        <div style="font-size:14px;font-weight:800;color:var(--gold2);font-family:monospace;letter-spacing:1px">NOC-2025-BLR-0242</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr"><div class="card-ico">📋</div><div><div class="card-title">Relocation Details</div></div></div>
+      <div class="irow"><div class="il">Reason</div><div class="ir">Job Transfer — Infosys</div></div>
+      <div class="irow"><div class="il">New Employer</div><div class="ir">Infosys Ltd, Mumbai</div></div>
+      <div class="irow"><div class="il">New Address</div><div class="ir">Flat 4B, Andheri West, Mumbai</div></div>
+      <div class="irow"><div class="il">Destination Masjid</div><div class="ir">Al-Noor Masjid, Andheri ✓</div></div>
+      <div class="irow"><div class="il">Status at Destination</div><div class="ir"><span class="badge bg-green" style="font-size:10px">Membership Activated</span></div></div>
+    </div>
+
+    <div class="info" style="margin-bottom:14px"><span>📱</span><div>Al-Noor Masjid, Andheri has received your membership transfer. Present this NOC to the admin on your first visit.</div></div>
+
+    <button class="btn-p mb12">⬇ Download NOC PDF</button>
+    <button class="btn-s">📤 Share NOC</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+<div class="sc-lbl">D-03 · Relocation NOC Issued</div>
+</div>
+
+<!-- D-11 Service History -->
+<div class="sc">
+<div class="sc-num">D-11</div>
+<div class="phone">
+  <div class="sb sb-l"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="tbar"><div class="tb-back">←</div><div class="tb-title">My Service History</div><div class="tb-act">Filter</div></div>
+  <div class="tabs">
+    <div class="tab on">All (8)</div>
+    <div class="tab">Active (2)</div>
+    <div class="tab">Completed (6)</div>
+  </div>
+  <div class="scr" style="background:var(--bg);padding:14px 16px">
+
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--ink4);margin-bottom:8px">Active</div>
+
+    <div class="pcard" style="border-left:3px solid var(--amber)">
+      <div class="pcard-top">
+        <div><div class="pcard-title">💒 Marriage BG Check</div><div class="pcard-sub">Ref: BGC-2025-0421 · Applied Jul 2</div></div>
+        <span class="badge bg-gold" style="font-size:10px">⏳ In Review</span>
+      </div>
+      <div style="font-size:12px;color:var(--ink3)">Day 3 of 7 · Expected decision: July 9</div>
+      <button class="btn-sm btn-g" style="height:30px;font-size:11px;margin-top:10px">Track Status →</button>
+    </div>
+
+    <div class="pcard" style="border-left:3px solid var(--g500)">
+      <div class="pcard-top">
+        <div><div class="pcard-title">⚖️ Complaint — Debt Dispute</div><div class="pcard-sub">Ref: COMP-2025-0381 · Filed Jun 28</div></div>
+        <span class="badge bg-gold" style="font-size:10px">⏳ Mediation</span>
+      </div>
+      <div style="font-size:12px;color:var(--ink3)">Mediation scheduled July 12 at Jama Masjid</div>
+      <button class="btn-sm btn-g" style="height:30px;font-size:11px;margin-top:10px">View Case →</button>
+    </div>
+
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--ink4);margin:14px 0 8px">Completed</div>
+
+    <div style="background:var(--white);border-radius:var(--r16);border:1px solid var(--bdr);overflow:hidden;margin-bottom:14px">
+      <div class="li">
+        <div class="li-ava">🚚</div>
+        <div style="flex:1"><div class="li-name">Relocation NOC</div><div class="li-det">BLR → MUM · July 5 · NOC-2025-0242</div></div>
+        <span class="badge bg-green" style="font-size:10px">✓ Done</span>
+      </div>
+      <div class="li">
+        <div class="li-ava">🌙</div>
+        <div style="flex:1"><div class="li-name">Zakat Paid</div><div class="li-det">₹15,113 · June 14 · RCP-2025-0842</div></div>
+        <span class="badge bg-green" style="font-size:10px">✓ Done</span>
+      </div>
+      <div class="li">
+        <div class="li-ava">📚</div>
+        <div style="flex:1"><div class="li-name">Maktab Admission</div><div class="li-det">Yusuf Khan · Beginner Batch · Jan 2025</div></div>
+        <span class="badge bg-green" style="font-size:10px">✓ Active</span>
+      </div>
+      <div class="li">
+        <div class="li-ava">🤝</div>
+        <div style="flex:1"><div class="li-name">Event RSVP — Medical Camp</div><div class="li-det">July 12 · Jama Masjid Hall</div></div>
+        <span class="badge bg-blue" style="font-size:10px">Attending</span>
+      </div>
+      <div class="li">
+        <div class="li-ava">💚</div>
+        <div style="flex:1"><div class="li-name">Donation — Bihar Relief</div><div class="li-det">₹500 · May 2 · Campaign</div></div>
+        <span class="badge bg-green" style="font-size:10px">✓ Done</span>
+      </div>
+      <div class="li">
+        <div class="li-ava">🪪</div>
+        <div style="flex:1"><div class="li-name">MIC Registration</div><div class="li-det">January 2019 · KA-BLR-00421 · ₹100 paid</div></div>
+        <span class="badge bg-green" style="font-size:10px">✓ Lifetime</span>
+      </div>
+    </div>
+    <div class="spacer"></div>
+  </div>
+  <div class="bnav">
+    <div class="bni"><div class="bni-ico">🏠</div><div class="bni-lbl">Home</div></div>
+    <div class="bni"><div class="bni-ico">🪪</div><div class="bni-lbl">My Card</div></div>
+    <div class="bni on"><div class="bni-ico">🛎️</div><div class="bni-lbl">Services</div></div>
+    <div class="bni"><div class="bni-ico">🔔</div><div class="bni-lbl">Alerts</div></div>
+    <div class="bni"><div class="bni-ico">👤</div><div class="bni-lbl">Profile</div></div>
+  </div>
+</div>
+<div class="sc-lbl">D-11 · Service History</div>
+</div>
+
+<!-- D-12 Notification Detail -->
+<div class="sc">
+<div class="sc-num">D-12</div>
+<div class="phone">
+  <div class="sb sb-l"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="tbar"><div class="tb-back">←</div><div class="tb-title">Notification Detail</div></div>
+  <div class="scr" style="background:var(--white);padding:0">
+    <!-- Notification hero -->
+    <div style="padding:24px 20px;border-bottom:1px solid var(--bdr)">
+      <div style="width:64px;height:64px;background:var(--g50);border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:32px;margin-bottom:14px">✅</div>
+      <div style="font-size:10px;font-weight:700;color:var(--ink4);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Service Update · July 5, 2025</div>
+      <div style="font-family:'Lora',serif;font-size:20px;font-weight:700;color:var(--ink);margin-bottom:8px;line-height:1.35">Relocation NOC Issued — Mumbai</div>
+      <div style="font-size:13px;color:var(--ink3);line-height:1.7">Your Relocation NOC (Ref: NOC-2025-BLR-0242) has been issued by Jama Masjid, Bengaluru. Your membership has been transferred to Al-Noor Masjid, Andheri, Mumbai. Please present the NOC to the admin on your first visit.</div>
+    </div>
+    <!-- Details -->
+    <div style="padding:16px 20px;border-bottom:1px solid var(--bdr)">
+      <div style="font-size:12px;font-weight:700;color:var(--ink);margin-bottom:12px">Details</div>
+      <div class="irow"><div class="il">NOC Ref</div><div class="ir" style="color:var(--g600);font-family:monospace">NOC-2025-BLR-0242</div></div>
+      <div class="irow"><div class="il">Issued By</div><div class="ir">Haji Rashid Khan · Jama Masjid</div></div>
+      <div class="irow"><div class="il">From Masjid</div><div class="ir">Jama Masjid, Bengaluru</div></div>
+      <div class="irow"><div class="il">To Masjid</div><div class="ir">Al-Noor Masjid, Mumbai</div></div>
+      <div class="irow"><div class="il">Valid Until</div><div class="ir">October 5, 2025</div></div>
+    </div>
+    <!-- Actions -->
+    <div style="padding:16px 20px">
+      <button class="btn-p mb12">⬇ Download NOC PDF</button>
+      <button class="btn-s">📤 Share NOC</button>
+    </div>
+    <div class="spacer"></div>
+  </div>
+</div>
+<div class="sc-lbl">D-12 · Notification Detail</div>
+</div>
+
+</div>
+
+<!-- ══════════════════════════════════
+  ADMIN APP — DEEP DETAIL SCREENS
+══════════════════════════════════ -->
+<div class="rl">Admin App · Deep Detail — User Profile, Stats Drilldown, Donation Record</div>
+<div class="srow">
+
+<!-- AD-01 User Full Profile (Admin view) -->
+<div class="sc">
+<div class="sc-num">AD-01</div>
+<div class="phone" style="min-height:1000px">
+  <div class="sb sb-l"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="tbar"><div class="tb-back">←</div><div class="tb-title">Member Profile</div><div class="tb-act">Edit</div></div>
+  <div class="tabs">
+    <div class="tab on">Profile</div>
+    <div class="tab">Family</div>
+    <div class="tab">Services (8)</div>
+    <div class="tab">Documents</div>
+  </div>
+  <div class="scr" style="background:var(--bg);padding:14px 16px">
+    <!-- Profile header -->
+    <div style="background:linear-gradient(135deg,var(--g900),var(--g700));border-radius:var(--r20);padding:18px;margin-bottom:14px;display:flex;gap:14px;align-items:center">
+      <div style="width:68px;height:68px;border-radius:50%;background:rgba(255,255,255,.12);border:2.5px solid rgba(201,168,76,.5);display:flex;align-items:center;justify-content:center;font-size:34px;flex-shrink:0">👤</div>
+      <div style="flex:1">
+        <div style="font-family:'Lora',serif;font-size:17px;font-weight:700;color:#fff;margin-bottom:2px">Mohammed Irfan Khan</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.55);margin-bottom:6px">KA-BLR-00421 · Member since 2019</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <span class="badge bg-green" style="font-size:9px">✓ Verified</span>
+          <span class="badge bg-gold" style="font-size:9px">O+ Blood</span>
+          <span class="badge" style="background:rgba(255,255,255,.15);color:#fff;font-size:9px">₹100 Fee Paid</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr"><div class="card-ico">👤</div><div><div class="card-title">Personal Details</div></div></div>
+      <div class="irow"><div class="il">Full Name</div><div class="ir">Mohammed Irfan Khan</div></div>
+      <div class="irow"><div class="il">Date of Birth</div><div class="ir">15 March 1985 · 40 yrs</div></div>
+      <div class="irow"><div class="il">Gender</div><div class="ir">Male</div></div>
+      <div class="irow"><div class="il">Education</div><div class="ir">Graduate — Engineering</div></div>
+      <div class="irow"><div class="il">Occupation</div><div class="ir">Software Engineer</div></div>
+      <div class="irow"><div class="il">Mobile</div><div class="ir">+91 98760 54321</div></div>
+      <div class="irow"><div class="il">Email</div><div class="ir">irfan.khan@email.com</div></div>
+      <div class="irow"><div class="il">Aadhaar</div><div class="ir">XXXX-XXXX-4821 ✓</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr"><div class="card-ico" style="background:var(--ambb)">🏘️</div><div><div class="card-title">Housing — Building Owner</div></div></div>
+      <div class="irow"><div class="il">Property</div><div class="ir">Al-Noor Apartments, 3rd Floor</div></div>
+      <div class="irow"><div class="il">Type</div><div class="ir">2 BHK Flat · 850 sq ft</div></div>
+      <div class="irow"><div class="il">Owned Since</div><div class="ir">2018</div></div>
+      <div class="irow"><div class="il">Address</div><div class="ir">Miller's Road, Shivajinagar, BLR</div></div>
+      <div class="irow"><div class="il">PIN</div><div class="ir">560 001</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr"><div class="card-ico">📊</div><div><div class="card-title">Admin Actions</div></div></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn-sm btn-g" style="height:36px">📜 View Services</button>
+        <button class="btn-sm btn-g" style="height:36px">📁 View Docs</button>
+        <button class="btn-sm btn-g" style="height:36px">🌳 Family Tree</button>
+        <button class="btn-sm btn-r" style="height:36px">🔒 Suspend Card</button>
+      </div>
+    </div>
+    <div class="spacer"></div>
+  </div>
+</div>
+<div class="sc-lbl">AD-01 · Member Full Profile</div>
+</div>
+
+<!-- AD-09 Stats Drilldown -->
+<div class="sc">
+<div class="sc-num">AD-09</div>
+<div class="phone">
+  <div class="sb sb-l"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="tbar"><div class="tb-back">←</div><div class="tb-title">Stats Drilldown</div><div class="tb-act">Q2 2025 ▾</div></div>
+  <div class="tabs">
+    <div class="tab on">Members</div>
+    <div class="tab">Services</div>
+    <div class="tab">Donations</div>
+    <div class="tab">NM</div>
+  </div>
+  <div class="scr" style="background:var(--bg);padding:14px 16px">
+    <div class="kpi-grid">
+      <div class="kpi"><div class="kpi-l">Total Members</div><div class="kpi-n">847</div><div class="kpi-ch">+28 this quarter</div></div>
+      <div class="kpi"><div class="kpi-l">New This Month</div><div class="kpi-n" style="color:var(--g600)">+12</div><div class="kpi-ch">July 2025</div></div>
+      <div class="kpi"><div class="kpi-l">Active Cards</div><div class="kpi-n">840</div><div class="kpi-ch">7 expired</div></div>
+      <div class="kpi"><div class="kpi-l">Fee Collected</div><div class="kpi-n" style="color:var(--gold)">₹84.7K</div><div class="kpi-ch">₹100 × 847</div></div>
+    </div>
+
+    <div style="font-size:13px;font-weight:700;margin-bottom:10px">Members by Housing Type</div>
+    <div style="background:var(--white);border-radius:var(--r16);border:1px solid var(--bdr);padding:16px;margin-bottom:14px">
+      <div style="display:flex;gap:10px;align-items:center;margin-bottom:12px">
+        <div style="font-size:20px">🏠</div>
+        <div style="flex:1"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><div style="font-size:13px;font-weight:600;color:var(--ink)">Building Owner</div><div style="font-size:12px;color:var(--ink3)">324 · 38%</div></div><div class="prog"><div class="prog-fill" style="width:38%"></div></div></div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;margin-bottom:12px">
+        <div style="font-size:20px">🏘️</div>
+        <div style="flex:1"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><div style="font-size:13px;font-weight:600;color:var(--ink)">Rent House</div><div style="font-size:12px;color:var(--ink3)">380 · 45%</div></div><div class="prog"><div class="prog-fill" style="width:45%;background:linear-gradient(90deg,var(--amber),#FBBF24)"></div></div></div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;margin-bottom:12px">
+        <div style="font-size:20px">📝</div>
+        <div style="flex:1"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><div style="font-size:13px;font-weight:600;color:var(--ink)">Lease House</div><div style="font-size:12px;color:var(--ink3)">98 · 11.5%</div></div><div class="prog"><div class="prog-fill" style="width:12%;background:linear-gradient(90deg,var(--blue),#60A5FA)"></div></div></div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <div style="font-size:20px">🏡</div>
+        <div style="flex:1"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><div style="font-size:13px;font-weight:600;color:var(--ink)">Family Property</div><div style="font-size:12px;color:var(--ink3)">45 · 5.5%</div></div><div class="prog"><div class="prog-fill" style="width:5.5%;background:linear-gradient(90deg,var(--ink3),var(--ink4))"></div></div></div>
+      </div>
+    </div>
+
+    <div style="font-size:13px;font-weight:700;margin-bottom:10px">Registration Fee Collection</div>
+    <div class="card" style="margin-bottom:14px">
+      <div class="irow"><div class="il">Total Members</div><div class="ir">847</div></div>
+      <div class="irow"><div class="il">Fee Paid (₹100 each)</div><div class="ir" style="color:var(--g600)">840 members</div></div>
+      <div class="irow"><div class="il">Fee Waived (admin)</div><div class="ir" style="color:var(--amber)">7 members</div></div>
+      <div class="irow"><div class="il">Total Collected</div><div class="ir" style="color:var(--g700);font-size:16px;font-weight:800">₹84,000</div></div>
+      <div class="irow"><div class="il">Remitted to Masjid Fund</div><div class="ir"><span class="badge bg-green" style="font-size:10px">₹84,000 ✓</span></div></div>
+    </div>
+
+    <button class="btn-p mb12">📄 Export Stats Report</button>
+    <button class="btn-s">📊 View Full Analytics</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+<div class="sc-lbl">AD-09 · Stats Drilldown</div>
+</div>
+
+<!-- AD-11 Record Donation -->
+<div class="sc">
+<div class="sc-num">AD-11</div>
+<div class="phone">
+  <div class="sb sb-l"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="tbar"><div class="tb-back">←</div><div class="tb-title">Record Donation</div></div>
+  <div class="scr" style="background:var(--bg);padding:16px">
+    <div class="fgroup"><label class="flabel">Donation Type <span class="req">*</span></label>
+      <div class="tag-row">
+        <span class="tag on">🌙 Zakat</span>
+        <span class="tag">💚 Sadaqah</span>
+        <span class="tag">🕌 Masjid Fund</span>
+        <span class="tag">🌊 Relief</span>
+        <span class="tag">📚 Education</span>
+      </div>
+    </div>
+    <div class="fgroup"><label class="flabel">Donor <span class="req">*</span></label>
+      <div style="background:var(--g50);border:1.5px solid var(--g400);border-radius:var(--r12);padding:12px 14px;display:flex;gap:10px;align-items:center">
+        <span style="font-size:22px">👤</span>
+        <div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--g800)">Mohammed Irfan Khan</div><div style="font-size:11px;color:var(--g600)">KA-BLR-00421</div></div>
+        <span style="color:var(--g500);font-size:18px">✓</span>
+      </div>
+    </div>
+    <div class="frow">
+      <div class="fgroup"><label class="flabel">Amount (₹) <span class="req">*</span></label><div class="finput on">₹ 15,113</div></div>
+      <div class="fgroup"><label class="flabel">Payment Mode</label><div class="finput on">UPI ▾</div></div>
+    </div>
+    <div class="fgroup"><label class="flabel">UPI Transaction ID / Ref</label><div class="finput on">UPI-2025-06-14-04829</div></div>
+    <div class="frow">
+      <div class="fgroup"><label class="flabel">Date <span class="req">*</span></label><div class="finput on">14 / 06 / 2025</div></div>
+      <div class="fgroup"><label class="flabel">Time</label><div class="finput on">11:32 AM</div></div>
+    </div>
+    <div class="fgroup"><label class="flabel">Purpose / Note</label><div class="ftxt">Zakat ul-Mal for the year 2025. Annual payment. 2.5% of zakatable wealth = ₹15,113.</div></div>
+
+    <!-- 80G -->
+    <div style="display:flex;justify-content:space-between;align-items:center;background:var(--white);border:1px solid var(--bdr);border-radius:var(--r12);padding:12px 14px;margin-bottom:14px">
+      <div><div style="font-size:13px;font-weight:600;color:var(--ink)">80G Tax Benefit Eligible</div><div style="font-size:11px;color:var(--ink3)">Issue 80G receipt to donor</div></div>
+      <div class="tog"></div>
+    </div>
+
+    <!-- Preview receipt -->
+    <div style="background:var(--g50);border:1.5px solid var(--g300);border-radius:var(--r12);padding:14px;margin-bottom:14px">
+      <div style="font-size:11px;font-weight:700;color:var(--g700);margin-bottom:8px">Receipt Preview</div>
+      <div class="irow" style="padding:7px 0"><div class="il">Receipt No.</div><div class="ir" style="color:var(--g600);font-family:monospace;font-size:11px">RCP-2025-06-14-0842</div></div>
+      <div class="irow" style="padding:7px 0"><div class="il">Amount</div><div class="ir">₹15,113</div></div>
+      <div class="irow" style="padding:7px 0"><div class="il">Type</div><div class="ir">Zakat ul-Mal 2025</div></div>
+      <div class="irow" style="padding:7px 0;border:none"><div class="il">80G</div><div class="ir"><span class="badge bg-green" style="font-size:10px">Eligible ✓</span></div></div>
+    </div>
+
+    <button class="btn-p mb12">💾 Record Donation &amp; Issue Receipt</button>
+    <button class="btn-s">📤 Send Receipt to Donor</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+<div class="sc-lbl">AD-11 · Record Donation</div>
+</div>
+
+<!-- AD-03 Issue Relocation NOC — Admin -->
+<div class="sc">
+<div class="sc-num">AD-03</div>
+<div class="phone">
+  <div class="sb sb-l"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="tbar"><div class="tb-back">←</div><div class="tb-title">Issue Relocation NOC</div></div>
+  <div class="ban ban-green"><span>🚚</span><span>Review member's relocation request. Coordinate with destination Masjid before issuing.</span></div>
+  <div class="scr" style="background:var(--bg);padding:16px">
+    <div class="card">
+      <div class="card-hdr"><div class="card-ico">👤</div><div><div class="card-title">Member</div></div></div>
+      <div class="irow"><div class="il">Name</div><div class="ir">Mohammed Irfan Khan</div></div>
+      <div class="irow"><div class="il">MIC ID</div><div class="ir">KA-BLR-00421</div></div>
+      <div class="irow"><div class="il">Current Masjid</div><div class="ir">Jama Masjid, Bengaluru</div></div>
+      <div class="irow"><div class="il">Member Since</div><div class="ir">January 2019</div></div>
+      <div class="irow"><div class="il">Complaints</div><div class="ir"><span class="badge bg-green" style="font-size:10px">None ✓</span></div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr"><div class="card-ico">📋</div><div><div class="card-title">Relocation Details</div></div></div>
+      <div class="irow"><div class="il">Reason</div><div class="ir">Job Transfer</div></div>
+      <div class="irow"><div class="il">Employer Letter</div><div class="ir"><span class="badge bg-green" style="font-size:10px">✓ Uploaded</span></div></div>
+      <div class="irow"><div class="il">Destination City</div><div class="ir">Mumbai, Maharashtra</div></div>
+      <div class="irow"><div class="il">New Address</div><div class="ir">Flat 4B, Andheri West</div></div>
+    </div>
+
+    <div class="fgroup"><label class="flabel">Destination Masjid <span class="req">*</span></label>
+      <div style="background:var(--g50);border:1.5px solid var(--g400);border-radius:var(--r12);padding:12px 14px;display:flex;gap:10px;align-items:center">
+        <span style="font-size:22px">🕌</span>
+        <div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--g800)">Al-Noor Masjid, Andheri</div><div style="font-size:11px;color:var(--g600)">Mumbai · Confirmed acceptance ✓</div></div>
+        <span style="color:var(--g500);font-size:18px">✓</span>
+      </div>
+    </div>
+
+    <div class="fgroup"><label class="flabel">NOC Valid Until <span class="req">*</span></label><div class="finput on">05 / 10 / 2025</div></div>
+    <div class="fgroup"><label class="flabel">Admin Notes</label><div class="ftxt">Member in good standing. No complaints or pending services. Job transfer verified via Infosys letter. Destination Masjid Al-Noor, Andheri confirmed. Issuing NOC.</div></div>
+
+    <button class="btn-p mb12">🚚 Issue NOC &amp; Notify Member</button>
+    <button class="btn-s">📞 Call Destination Masjid Admin</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+<div class="sc-lbl">AD-03 · Issue Relocation NOC</div>
+</div>
+
+</div>
+
+<!-- ══════════════════════════════════
+  PLATFORM SUMMARY — BATCH 5
+══════════════════════════════════ -->
+<div class="rl" style="margin-top:48px">Batch 5 Summary — All New Screens</div>
+<div style="max-width:1200px;width:100%;background:#111;border-radius:20px;padding:32px;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px">
+
+  <div>
+    <div style="font-size:12px;font-weight:700;color:#86EFAC;margin-bottom:12px">📱 NM Registration (Updated)</div>
+    <div style="font-size:11px;color:#555;line-height:2">
+      NM-02 Personal — all fields<br>
+      NM-03 Family + Address + Housing type<br>
+      NM-04 Docs + Interests + Consent<br>
+      NM-05 Full review screen + ₹0 note<br>
+      Housing: Owner / Rent / Lease for NM too<br>
+      Rent landlord details in NM flow<br>
+      <span style="color:#86EFAC;font-weight:700">4 screens updated</span>
+    </div>
+  </div>
+
+  <div>
+    <div style="font-size:12px;font-weight:700;color:#86EFAC;margin-bottom:12px">📱 User Service Screens</div>
+    <div style="font-size:11px;color:#555;line-height:2">
+      D-01 BG Check Status (timeline)<br>
+      D-03 Relocation NOC Issued (card + details)<br>
+      D-11 Service History (all 8 services)<br>
+      D-12 Notification Detail screen<br>
+      ₹100 fee shown in service history<br>
+      <span style="color:#86EFAC;font-weight:700">4 new screens</span>
+    </div>
+  </div>
+
+  <div>
+    <div style="font-size:12px;font-weight:700;color:#E8C96A;margin-bottom:12px">🛡️ Admin Deep Screens</div>
+    <div style="font-size:11px;color:#555;line-height:2">
+      AD-01 Member Full Profile (housing type shown)<br>
+      AD-03 Issue Relocation NOC flow<br>
+      AD-09 Stats Drilldown (housing breakdown)<br>
+      AD-11 Record Donation + 80G receipt<br>
+      Fee collection stats (₹100 × 847 members)<br>
+      <span style="color:#E8C96A;font-weight:700">4 new screens</span>
+    </div>
+  </div>
+
+  <div style="background:#181818;border-radius:14px;padding:22px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center">
+    <div style="font-size:11px;color:#444;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px">Batch 5 New</div>
+    <div style="font-family:'Lora',serif;font-size:52px;font-weight:700;color:#fff;line-height:1">16</div>
+    <div style="font-size:12px;color:#444;margin:6px 0 16px">screens this batch</div>
+    <div style="font-size:11px;color:#333;text-align:left;width:100%;line-height:1.9">
+      NM Registration: 4 updated<br>
+      User Services: 4 new<br>
+      Admin Deep: 4 new<br>
+      Registration (prev file): 9 screens<br>
+      <strong style="color:#555">All files combined: 175+ screens</strong>
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center;margin-top:40px;padding-bottom:60px;font-size:12px;color:#282828;line-height:2.2">
+  MIC Platform · Batch 5 · 16 screens<br>
+  NM flow updated with Housing (Owner/Rent/Lease) · Service detail screens completed<br>
+  Admin deep screens: Member Profile · Issue NOC · Stats with Housing Breakdown · Donation Record<br>
+  ₹100 fee reflected throughout: User history, Admin stats, Member profiles<br>
+  Zero JS template literals · Pure static HTML · 390px frame
+</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MIC User App — Registration Update Screens</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#090909;font-family:'Inter',sans-serif;padding:40px 24px 80px}
+:root{
+  --g900:#0D2B1A;--g800:#1A4731;--g700:#22593D;--g600:#2D6A4F;
+  --g500:#40916C;--g400:#52B788;--g300:#74C69D;--g200:#B7E4C7;--g100:#D8F3DC;--g50:#F0FAF3;
+  --gold:#C9A84C;--gold2:#E8C96A;--goldb:#FFF8E1;
+  --red:#DC2626;--redb:#FEF2F2;--amber:#D97706;--ambb:#FFFBEB;
+  --blue:#2563EB;--blueb:#EFF6FF;
+  --ink:#111827;--ink2:#374151;--ink3:#6B7280;--ink4:#9CA3AF;
+  --bg:#F2F4F2;--white:#FFFFFF;--bdr:#E5E7EB;--bdr2:#F3F4F6;
+  --r8:8px;--r12:12px;--r16:16px;--r20:20px;--r99:99px
+}
+.canvas{display:flex;flex-direction:column;align-items:center;gap:56px}
+.rl{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#444;
+    padding:7px 16px;border:1px solid #222;border-radius:99px;margin-bottom:-36px}
+.srow{display:flex;flex-wrap:wrap;gap:28px;justify-content:center;align-items:flex-start;width:100%}
+.sc{display:flex;flex-direction:column;align-items:center;gap:10px}
+.sc-num{font-size:10px;font-weight:700;color:#555;letter-spacing:1px;background:#1A1A1A;padding:3px 10px;border-radius:99px}
+.sc-lbl{font-size:11px;font-weight:600;color:#888;text-align:center;max-width:200px}
+.new-badge{font-size:9px;font-weight:700;background:#7C3AED;color:#fff;padding:2px 8px;border-radius:99px;margin-left:6px}
+.updated-badge{font-size:9px;font-weight:700;background:#D97706;color:#fff;padding:2px 8px;border-radius:99px;margin-left:6px}
+
+.phone{width:390px;background:var(--bg);border-radius:50px;overflow:hidden;
+       box-shadow:0 0 0 10px #1C1C1E,0 0 0 12px #3A3A3C,0 28px 60px rgba(0,0,0,.6);
+       display:flex;flex-direction:column;position:relative;min-height:900px}
+.phone::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
+               width:126px;height:34px;background:#1C1C1E;border-radius:0 0 20px 20px;z-index:100}
+
+/* Status bar */
+.sb{height:50px;padding:14px 24px 0;display:flex;justify-content:space-between;
+    align-items:center;font-size:12px;font-weight:700;flex-shrink:0;position:relative;z-index:10;
+    background:var(--white);color:var(--ink)}
+.sico{display:flex;gap:5px;font-size:11px}
+
+/* Reg header */
+.reg-header{background:var(--g800);padding:14px 20px 16px;flex-shrink:0}
+.reg-topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.reg-htitle{font-family:'Lora',serif;font-size:15px;font-weight:700;color:#fff}
+.reg-step{font-size:11px;color:rgba(255,255,255,.55);margin-top:2px}
+.reg-cancel{font-size:12px;color:rgba(255,255,255,.5);cursor:pointer}
+.steps-bar{display:flex;align-items:center;gap:0}
+.sdot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;
+      justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.sdot.done{background:var(--g400);color:#fff}
+.sdot.cur{background:#fff;color:var(--g800)}
+.sdot.pend{background:rgba(255,255,255,.15);color:rgba(255,255,255,.45)}
+.sline{flex:1;height:2px}
+.sline.done{background:var(--g400)}
+.sline.pend{background:rgba(255,255,255,.15)}
+
+/* Scroll area */
+.reg-body{flex:1;overflow-y:auto;padding:16px 16px 24px;background:var(--bg)}
+.reg-body::-webkit-scrollbar{display:none}
+
+/* Form */
+.fgroup{margin-bottom:14px}
+.fgroup:last-of-type{margin-bottom:0}
+.flabel{font-size:12px;font-weight:600;color:var(--ink2);margin-bottom:6px;display:block}
+.req{color:var(--red)}
+.flabel-opt{font-size:10px;font-weight:500;color:var(--ink4);margin-left:4px}
+.finput{width:100%;height:46px;background:var(--white);border:1.5px solid var(--bdr);
+        border-radius:var(--r12);padding:0 14px;font-size:14px;color:var(--ink);display:flex;align-items:center}
+.finput.filled{border-color:var(--g400)}
+.finput.ph{color:var(--ink4)}
+.finput.disabled{background:var(--bdr2);color:var(--ink3)}
+.finput.err{border-color:var(--red)}
+.ftextarea{width:100%;background:var(--white);border:1.5px solid var(--bdr);
+           border-radius:var(--r12);padding:12px 14px;font-size:13px;color:var(--ink);
+           line-height:1.55;min-height:76px}
+.frow{display:flex;gap:10px}
+.frow .fgroup{flex:1}
+
+/* Tag select */
+.tag-select{display:flex;flex-wrap:wrap;gap:8px}
+.tag{padding:7px 13px;border-radius:var(--r99);border:1.5px solid var(--bdr);
+     background:var(--white);font-size:12px;font-weight:600;color:var(--ink3);cursor:pointer}
+.tag.on{border-color:var(--g500);background:var(--g50);color:var(--g700)}
+.tag.on.rent{border-color:#D97706;background:var(--ambb);color:var(--amber)}
+.tag.on.lease{border-color:var(--blue);background:var(--blueb);color:var(--blue)}
+
+/* Buttons */
+.btn-p{width:100%;height:52px;background:linear-gradient(135deg,var(--g800),var(--g600));
+       color:#fff;border:none;border-radius:var(--r16);font-size:15px;font-weight:700;cursor:pointer}
+.btn-s{width:100%;height:48px;background:var(--white);color:var(--g800);
+       border:2px solid var(--g700);border-radius:var(--r16);font-size:14px;font-weight:700;cursor:pointer}
+.btn-pay{width:100%;height:56px;background:linear-gradient(135deg,#065F46,var(--g500));
+         color:#fff;border:none;border-radius:var(--r16);font-size:16px;font-weight:800;cursor:pointer;
+         box-shadow:0 6px 20px rgba(26,71,49,.45)}
+.btn-sm{height:34px;padding:0 14px;border-radius:var(--r8);border:none;font-size:12px;font-weight:700;cursor:pointer}
+.btn-g{background:var(--g100);color:var(--g800)}
+
+/* Upload */
+.upload-box{border:2px dashed var(--g400);border-radius:var(--r12);padding:16px;
+            text-align:center;background:var(--g50);cursor:pointer}
+.u-icon{font-size:24px;margin-bottom:6px}
+.u-main{font-size:13px;font-weight:600;color:var(--g700)}
+.u-sub{font-size:11px;color:var(--g500);margin-top:3px}
+.upload-done{border:2px solid var(--g400);border-radius:var(--r12);padding:12px 14px;
+             background:var(--g50);display:flex;gap:10px;align-items:center}
+
+/* Section divider */
+.sec-div{display:flex;align-items:center;gap:10px;margin:16px 0 14px}
+.sec-div-label{font-size:13px;font-weight:700;color:var(--ink);white-space:nowrap}
+.sec-div-line{flex:1;height:1px;background:var(--bdr)}
+
+/* Housing card */
+.housing-card{border-radius:var(--r16);border:2px solid var(--bdr);padding:14px;
+              margin-bottom:10px;cursor:pointer;background:var(--white);transition:all .15s}
+.housing-card.active-own{border-color:var(--g500);background:var(--g50)}
+.housing-card.active-rent{border-color:var(--amber);background:var(--ambb)}
+.housing-card.active-lease{border-color:var(--blue);background:var(--blueb)}
+.hcard-top{display:flex;gap:12px;align-items:center}
+.hcard-ico{width:44px;height:44px;border-radius:13px;display:flex;align-items:center;
+           justify-content:center;font-size:22px;flex-shrink:0}
+.hcard-ico.own{background:var(--g100)}
+.hcard-ico.rent{background:var(--ambb)}
+.hcard-ico.lease{background:var(--blueb)}
+.hcard-title{font-size:14px;font-weight:700;color:var(--ink)}
+.hcard-sub{font-size:11px;color:var(--ink3);margin-top:2px}
+.hcard-body{margin-top:14px;padding-top:14px;border-top:1px solid var(--bdr)}
+
+/* Info card */
+.info-card{background:var(--g50);border:1px solid var(--g200);border-radius:var(--r12);
+           padding:12px 14px;margin-bottom:14px;display:flex;gap:8px}
+.info-card.amber{background:var(--ambb);border-color:#FFE082}
+.info-card.blue{background:var(--blueb);border-color:#BFDBFE}
+.info-card.red{background:var(--redb);border-color:#FECACA}
+
+/* Fee card */
+.fee-card{background:linear-gradient(135deg,var(--g900),var(--g800));
+          border-radius:var(--r20);padding:22px;margin-bottom:14px;text-align:center}
+.fee-rupee{font-family:'Lora',serif;font-size:52px;font-weight:700;color:#fff;line-height:1}
+.fee-label{font-size:12px;color:rgba(255,255,255,.5);margin-top:4px}
+
+/* Payment method option */
+.pay-opt{display:flex;gap:12px;align-items:center;border:1.5px solid var(--bdr);
+         border-radius:var(--r12);padding:12px 14px;background:var(--white);cursor:pointer;margin-bottom:8px}
+.pay-opt.active{border-color:var(--g500);background:var(--g50)}
+.pay-ico-wrap{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.pay-title{font-size:13px;font-weight:700;color:var(--ink)}
+.pay-sub{font-size:11px;color:var(--ink3);margin-top:2px}
+.pay-check{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;
+           justify-content:center;margin-left:auto;flex-shrink:0;font-size:12px;font-weight:700}
+.pay-check.on{background:var(--g500);color:#fff}
+.pay-check.off{border:2px solid var(--bdr)}
+
+/* Field detail row */
+.detail-row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--bdr2)}
+.detail-row:last-child{border:none}
+.dr-l{font-size:13px;color:var(--ink3)}
+.dr-r{font-size:13px;font-weight:600;color:var(--ink)}
+
+/* Progress bar */
+.prog{height:6px;background:var(--bdr2);border-radius:99px;overflow:hidden;margin-bottom:2px}
+.prog-fill{height:100%;border-radius:99px}
+
+/* Badge */
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:700}
+.bg-green{background:var(--g100);color:var(--g700)}
+.bg-gold{background:var(--goldb);color:var(--amber)}
+.bg-red{background:var(--redb);color:var(--red)}
+.bg-blue{background:var(--blueb);color:var(--blue)}
+
+.spacer{height:100px}
+.mt8{margin-top:8px}
+.mt12{margin-top:12px}
+.mt16{margin-top:16px}
+.mb12{margin-bottom:12px}
+</style>
+</head>
+<body>
+<div class="canvas">
+
+<div style="text-align:center;padding:20px 0 4px">
+  <div style="font-family:'Lora',serif;font-size:28px;font-weight:700;color:#fff;margin-bottom:6px">MIC User App — Registration Update</div>
+  <div style="font-size:13px;color:#555">New: ₹100 Fee · Housing Details (Own / Rent / Lease) · Owner Info · All Missing Fields</div>
+</div>
+
+<!-- ══════════════════════════════════════
+     UPDATED STEP 1 — PERSONAL DETAILS
+══════════════════════════════════════ -->
+<div class="rl">Step 1 — Personal Details (Updated with missing fields)</div>
+<div class="srow">
+
+<!-- S-05 Updated Personal Step -->
+<div class="sc">
+<div class="sc-num">S-05 <span class="updated-badge">UPDATED</span></div>
+<div class="phone">
+  <div class="sb"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="reg-header">
+    <div class="reg-topbar">
+      <div><div class="reg-htitle">Create your MIC profile</div><div class="reg-step">Step 1 of 5 — Personal Details</div></div>
+      <div class="reg-cancel">Save &amp; Exit</div>
+    </div>
+    <div class="steps-bar">
+      <div class="sdot cur">1</div><div class="sline pend"></div>
+      <div class="sdot pend">2</div><div class="sline pend"></div>
+      <div class="sdot pend">3</div><div class="sline pend"></div>
+      <div class="sdot pend">4</div><div class="sline pend"></div>
+      <div class="sdot pend">5</div>
+    </div>
+  </div>
+  <div class="reg-body">
+    <!-- Progress -->
+    <div class="prog mb12"><div class="prog-fill" style="width:20%;background:linear-gradient(90deg,var(--g500),var(--g400))"></div></div>
+
+    <div class="fgroup">
+      <label class="flabel">Full Name (as per Aadhaar) <span class="req">*</span></label>
+      <div class="finput filled">Muhammad Arshad Khan</div>
+    </div>
+
+    <div class="frow">
+      <div class="fgroup"><label class="flabel">Date of Birth <span class="req">*</span></label><div class="finput filled">14 / 03 / 1985</div></div>
+      <div class="fgroup"><label class="flabel">Gender <span class="req">*</span></label><div class="finput filled">Male ▾</div></div>
+    </div>
+
+    <div class="fgroup">
+      <label class="flabel">Blood Group</label>
+      <div class="tag-select">
+        <span class="tag on">O+</span><span class="tag">O−</span><span class="tag">A+</span><span class="tag">A−</span>
+        <span class="tag">B+</span><span class="tag">B−</span><span class="tag">AB+</span><span class="tag">AB−</span>
+      </div>
+    </div>
+
+    <div class="fgroup"><label class="flabel">Education Qualification <span class="req">*</span></label><div class="finput filled">Graduate ▾</div></div>
+
+    <div class="fgroup"><label class="flabel">Occupation <span class="req">*</span></label><div class="finput filled">Business ▾</div></div>
+
+    <div class="fgroup"><label class="flabel">Annual Income <span class="flabel-opt">(optional)</span></label><div class="finput ph">Select range ▾</div></div>
+
+    <div class="fgroup"><label class="flabel">Mobile Number <span class="req">*</span></label><div class="finput filled">+91 98765 43210</div></div>
+    <div class="fgroup"><label class="flabel">Alternate Mobile <span class="flabel-opt">(optional)</span></label><div class="finput ph">+91 XXXXX XXXXX</div></div>
+    <div class="fgroup"><label class="flabel">Email <span class="flabel-opt">(optional)</span></label><div class="finput ph">arshad@email.com</div></div>
+
+    <div class="sec-div"><div class="sec-div-line"></div><div class="sec-div-label">Identity</div><div class="sec-div-line"></div></div>
+
+    <div class="fgroup"><label class="flabel">Aadhaar Number <span class="req">*</span></label><div class="finput filled">XXXX XXXX 3421</div></div>
+    <div class="fgroup"><label class="flabel">PAN Number <span class="flabel-opt">(optional)</span></label><div class="finput ph">ABCDE1234F</div></div>
+    <div class="fgroup"><label class="flabel">Voter ID <span class="flabel-opt">(optional)</span></label><div class="finput ph">XXXXXXXXXX</div></div>
+    <div class="fgroup"><label class="flabel">Passport Number <span class="flabel-opt">(optional)</span></label><div class="finput ph">Leave blank if none</div></div>
+
+    <div class="fgroup">
+      <label class="flabel">Profile Photo <span class="req">*</span></label>
+      <div class="upload-box"><div class="u-icon">📷</div><div class="u-main">Upload clear face photo</div><div class="u-sub">JPEG or PNG · Max 5 MB · Passport size preferred</div></div>
+    </div>
+
+    <button class="btn-p mt12">Continue to Family Details →</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+<div class="sc-lbl">S-05 · Personal Details (Updated)</div>
+</div>
+
+<!-- S-06 Updated Family Step -->
+<div class="sc">
+<div class="sc-num">S-06 <span class="updated-badge">UPDATED</span></div>
+<div class="phone">
+  <div class="sb"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="reg-header">
+    <div class="reg-topbar">
+      <div><div class="reg-htitle">Create your MIC profile</div><div class="reg-step">Step 2 of 5 — Family Details</div></div>
+      <div class="reg-cancel">Save &amp; Exit</div>
+    </div>
+    <div class="steps-bar">
+      <div class="sdot done">✓</div><div class="sline done"></div>
+      <div class="sdot cur">2</div><div class="sline pend"></div>
+      <div class="sdot pend">3</div><div class="sline pend"></div>
+      <div class="sdot pend">4</div><div class="sline pend"></div>
+      <div class="sdot pend">5</div>
+    </div>
+  </div>
+  <div class="reg-body">
+    <div class="prog mb12"><div class="prog-fill" style="width:40%;background:linear-gradient(90deg,var(--g500),var(--g400))"></div></div>
+
+    <div class="sec-div"><div class="sec-div-line"></div><div class="sec-div-label">Parents</div><div class="sec-div-line"></div></div>
+    <div class="fgroup"><label class="flabel">Father's Full Name <span class="req">*</span></label><div class="finput filled">Abdul Rahman Khan</div></div>
+    <div class="fgroup"><label class="flabel">Father's Mobile <span class="flabel-opt">(if alive)</span></label><div class="finput ph">+91 XXXXX XXXXX</div></div>
+    <div class="fgroup"><label class="flabel">Mother's Full Name <span class="req">*</span></label><div class="finput filled">Fatima Begum</div></div>
+    <div class="fgroup"><label class="flabel">Mother's Mobile <span class="flabel-opt">(if alive)</span></label><div class="finput ph">+91 XXXXX XXXXX</div></div>
+
+    <div class="sec-div"><div class="sec-div-line"></div><div class="sec-div-label">Marital Status</div><div class="sec-div-line"></div></div>
+    <div class="fgroup">
+      <div class="tag-select">
+        <span class="tag on">Married</span><span class="tag">Single</span>
+        <span class="tag">Widowed</span><span class="tag">Divorced</span>
+      </div>
+    </div>
+
+    <div class="fgroup"><label class="flabel">Spouse Full Name</label><div class="finput filled">Zainab Bano</div></div>
+    <div class="frow">
+      <div class="fgroup"><label class="flabel">Spouse Aadhaar</label><div class="finput ph">XXXX XXXX XXXX</div></div>
+      <div class="fgroup"><label class="flabel">Nikah Date</label><div class="finput ph">DD / MM / YYYY</div></div>
+    </div>
+    <div class="fgroup"><label class="flabel">Spouse MIC ID <span class="flabel-opt">(if registered)</span></label><div class="finput ph">KA-BLR-XXXXX</div></div>
+
+    <div class="sec-div"><div class="sec-div-line"></div><div class="sec-div-label">Children</div><div class="sec-div-line"></div></div>
+
+    <!-- Child 1 -->
+    <div style="background:var(--white);border:1px solid var(--bdr);border-radius:var(--r12);padding:12px 14px;margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div style="font-size:12px;font-weight:700;color:var(--ink)">Child 1</div>
+        <button class="btn-sm btn-g" style="height:26px;font-size:10px">Remove</button>
+      </div>
+      <div class="frow">
+        <div class="fgroup"><label class="flabel">Name</label><div class="finput filled">Zaid Khan</div></div>
+        <div class="fgroup"><label class="flabel">Age</label><div class="finput filled">8</div></div>
+      </div>
+      <div class="frow">
+        <div class="fgroup"><label class="flabel">Gender</label><div class="finput filled">Male ▾</div></div>
+        <div class="fgroup"><label class="flabel">School / Maktab</label><div class="finput ph">Optional</div></div>
+      </div>
+    </div>
+
+    <!-- Child 2 -->
+    <div style="background:var(--white);border:1px solid var(--bdr);border-radius:var(--r12);padding:12px 14px;margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div style="font-size:12px;font-weight:700;color:var(--ink)">Child 2</div>
+        <button class="btn-sm btn-g" style="height:26px;font-size:10px">Remove</button>
+      </div>
+      <div class="frow">
+        <div class="fgroup"><label class="flabel">Name</label><div class="finput filled">Maryam Khan</div></div>
+        <div class="fgroup"><label class="flabel">Age</label><div class="finput filled">5</div></div>
+      </div>
+      <div class="frow">
+        <div class="fgroup"><label class="flabel">Gender</label><div class="finput filled">Female ▾</div></div>
+        <div class="fgroup"><label class="flabel">School / Maktab</label><div class="finput ph">Optional</div></div>
+      </div>
+    </div>
+
+    <button style="width:100%;height:40px;border:2px dashed var(--g400);border-radius:var(--r12);background:var(--g50);color:var(--g700);font-size:13px;font-weight:600;cursor:pointer" class="mb12">+ Add Child</button>
+
+    <div class="sec-div"><div class="sec-div-line"></div><div class="sec-div-label">Emergency Contact</div><div class="sec-div-line"></div></div>
+    <div class="fgroup"><label class="flabel">Emergency Contact Name <span class="req">*</span></label><div class="finput filled">Abdul Rahman Khan (Father)</div></div>
+    <div class="fgroup"><label class="flabel">Emergency Contact Mobile <span class="req">*</span></label><div class="finput filled">+91 98760 00099</div></div>
+    <div class="fgroup"><label class="flabel">Relationship</label><div class="finput filled">Father ▾</div></div>
+
+    <button class="btn-p mt12">Continue to Address &amp; Housing →</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+<div class="sc-lbl">S-06 · Family Details (Updated)</div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════
+     UPDATED STEP 3 — ADDRESS & HOUSING
+     (This is the big new screen)
+══════════════════════════════════════ -->
+<div class="rl">Step 3 — Address &amp; Housing Details (NEW — Owner / Rent / Lease)</div>
+<div class="srow">
+
+<!-- S-07A Address & Housing Type -->
+<div class="sc">
+<div class="sc-num">S-07 <span class="updated-badge">UPDATED</span></div>
+<div class="phone" style="min-height:1100px">
+  <div class="sb"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="reg-header">
+    <div class="reg-topbar">
+      <div><div class="reg-htitle">Create your MIC profile</div><div class="reg-step">Step 3 of 5 — Address &amp; Housing</div></div>
+      <div class="reg-cancel">Save &amp; Exit</div>
+    </div>
+    <div class="steps-bar">
+      <div class="sdot done">✓</div><div class="sline done"></div>
+      <div class="sdot done">✓</div><div class="sline done"></div>
+      <div class="sdot cur">3</div><div class="sline pend"></div>
+      <div class="sdot pend">4</div><div class="sline pend"></div>
+      <div class="sdot pend">5</div>
+    </div>
+  </div>
+  <div class="reg-body">
+    <div class="prog mb12"><div class="prog-fill" style="width:60%;background:linear-gradient(90deg,var(--g500),var(--g400))"></div></div>
+
+    <div class="sec-div"><div class="sec-div-line"></div><div class="sec-div-label">Current Address</div><div class="sec-div-line"></div></div>
+
+    <div class="fgroup"><label class="flabel">Flat / House No. &amp; Building Name <span class="req">*</span></label><div class="finput filled">42, Al-Noor Apartments</div></div>
+    <div class="fgroup"><label class="flabel">Street / Road Name <span class="req">*</span></label><div class="finput filled">Miller's Road</div></div>
+    <div class="frow">
+      <div class="fgroup"><label class="flabel">Area / Locality <span class="req">*</span></label><div class="finput filled">Shivajinagar</div></div>
+      <div class="fgroup"><label class="flabel">Landmark</label><div class="finput ph">Near Masjid</div></div>
+    </div>
+    <div class="frow">
+      <div class="fgroup"><label class="flabel">City <span class="req">*</span></label><div class="finput filled">Bengaluru</div></div>
+      <div class="fgroup"><label class="flabel">PIN Code <span class="req">*</span></label><div class="finput filled">560 001</div></div>
+    </div>
+    <div class="frow">
+      <div class="fgroup"><label class="flabel">District <span class="req">*</span></label><div class="finput filled">Bengaluru Urban</div></div>
+      <div class="fgroup"><label class="flabel">State <span class="req">*</span></label><div class="finput filled">Karnataka ▾</div></div>
+    </div>
+    <div class="fgroup"><label class="flabel">How many years at this address?</label><div class="finput filled">6 years ▾</div></div>
+
+    <div class="sec-div"><div class="sec-div-line"></div><div class="sec-div-label">Housing Type <span class="req">*</span></div><div class="sec-div-line"></div></div>
+
+    <!-- OWNER selected -->
+    <div class="housing-card active-own">
+      <div class="hcard-top">
+        <div class="hcard-ico own">🏠</div>
+        <div style="flex:1">
+          <div class="hcard-title">Building Owner</div>
+          <div class="hcard-sub">I own this property</div>
+        </div>
+        <div style="width:22px;height:22px;border-radius:50%;background:var(--g500);display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;flex-shrink:0">✓</div>
+      </div>
+    </div>
+
+    <div class="housing-card" style="border-color:var(--bdr)">
+      <div class="hcard-top">
+        <div class="hcard-ico rent">🏘️</div>
+        <div style="flex:1">
+          <div class="hcard-title">Rent House</div>
+          <div class="hcard-sub">I pay monthly rent to a landlord</div>
+        </div>
+        <div style="width:22px;height:22px;border-radius:50%;border:2px solid var(--bdr);flex-shrink:0"></div>
+      </div>
+    </div>
+
+    <div class="housing-card" style="border-color:var(--bdr)">
+      <div class="hcard-top">
+        <div class="hcard-ico lease">📝</div>
+        <div style="flex:1">
+          <div class="hcard-title">Lease House</div>
+          <div class="hcard-sub">Long-term lease / deposit agreement</div>
+        </div>
+        <div style="width:22px;height:22px;border-radius:50%;border:2px solid var(--bdr);flex-shrink:0"></div>
+      </div>
+    </div>
+
+    <div class="housing-card" style="border-color:var(--bdr)">
+      <div class="hcard-top">
+        <div class="hcard-ico" style="background:var(--bdr2)">🏡</div>
+        <div style="flex:1">
+          <div class="hcard-title">Family Property</div>
+          <div class="hcard-sub">Living with parents / family-owned home</div>
+        </div>
+        <div style="width:22px;height:22px;border-radius:50%;border:2px solid var(--bdr);flex-shrink:0"></div>
+      </div>
+    </div>
+
+    <!-- Building Owner expanded fields (shown when owner selected) -->
+    <div style="background:var(--g50);border:1.5px solid var(--g300);border-radius:var(--r16);padding:16px;margin-top:4px">
+      <div style="font-size:12px;font-weight:700;color:var(--g700);margin-bottom:12px">🏠 Building Owner Details</div>
+
+      <div class="fgroup"><label class="flabel">Property / Building Name <span class="req">*</span></label><div class="finput filled">Al-Noor Apartments</div></div>
+      <div class="fgroup"><label class="flabel">Type of Property <span class="req">*</span></label><div class="finput filled">Flat / Apartment ▾</div></div>
+      <div class="frow">
+        <div class="fgroup"><label class="flabel">Floor</label><div class="finput filled">3rd</div></div>
+        <div class="fgroup"><label class="flabel">Total Floors in Building</label><div class="finput filled">5</div></div>
+      </div>
+      <div class="frow">
+        <div class="fgroup"><label class="flabel">Carpet Area (sq ft)</label><div class="finput filled">850 sq ft</div></div>
+        <div class="fgroup"><label class="flabel">BHK Configuration</label><div class="finput filled">2 BHK</div></div>
+      </div>
+      <div class="fgroup"><label class="flabel">Property Registration Number</label><div class="finput ph">EC-XXX-XXXX (optional)</div></div>
+      <div class="fgroup"><label class="flabel">Survey / Khasra Number</label><div class="finput ph">Optional</div></div>
+      <div class="fgroup"><label class="flabel">Year of Purchase / Possession</label><div class="finput filled">2018</div></div>
+      <div class="fgroup" style="margin-bottom:0">
+        <label class="flabel">Is this property in your name?</label>
+        <div class="tag-select">
+          <span class="tag on">Yes — Sole owner</span>
+          <span class="tag">Joint ownership</span>
+          <span class="tag">Family name</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-div"><div class="sec-div-line"></div><div class="sec-div-label">Masjid Link</div><div class="sec-div-line"></div></div>
+    <div class="fgroup"><label class="flabel">Select Area Masjid <span class="req">*</span></label>
+      <div style="background:var(--g50);border:1.5px solid var(--g400);border-radius:var(--r12);padding:12px 14px;display:flex;align-items:center;gap:10px">
+        <span style="font-size:20px">🕌</span>
+        <div><div style="font-size:14px;font-weight:700;color:var(--g800)">Jama Masjid, Shivajinagar</div><div style="font-size:11px;color:var(--g600)">Miller's Road, Bengaluru 560 001</div></div>
+        <span style="margin-left:auto;font-size:18px;color:var(--g500)">✓</span>
+      </div>
+    </div>
+
+    <button class="btn-p mt12">Continue to Documents →</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+<div class="sc-lbl">S-07A · Address + Owner (Step 3)</div>
+</div>
+
+<!-- S-07B Rent House expanded -->
+<div class="sc">
+<div class="sc-num">S-07B <span class="new-badge">NEW</span></div>
+<div class="phone" style="min-height:1100px">
+  <div class="sb"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="reg-header">
+    <div class="reg-topbar">
+      <div><div class="reg-htitle">Create your MIC profile</div><div class="reg-step">Step 3 of 5 — Address &amp; Housing</div></div>
+      <div class="reg-cancel">Save &amp; Exit</div>
+    </div>
+    <div class="steps-bar">
+      <div class="sdot done">✓</div><div class="sline done"></div>
+      <div class="sdot done">✓</div><div class="sline done"></div>
+      <div class="sdot cur">3</div><div class="sline pend"></div>
+      <div class="sdot pend">4</div><div class="sline pend"></div>
+      <div class="sdot pend">5</div>
+    </div>
+  </div>
+  <div class="reg-body">
+    <div class="prog mb12"><div class="prog-fill" style="width:60%;background:linear-gradient(90deg,var(--g500),var(--g400))"></div></div>
+
+    <!-- Housing type pills - Rent selected -->
+    <div style="display:flex;gap:8px;margin-bottom:16px">
+      <div style="flex:1;border:1.5px solid var(--bdr);border-radius:var(--r12);padding:10px;text-align:center;cursor:pointer">
+        <div style="font-size:18px">🏠</div><div style="font-size:11px;color:var(--ink3);margin-top:3px">Owner</div>
+      </div>
+      <div style="flex:1;border:2px solid var(--amber);background:var(--ambb);border-radius:var(--r12);padding:10px;text-align:center">
+        <div style="font-size:18px">🏘️</div><div style="font-size:11px;color:var(--amber);font-weight:700;margin-top:3px">Rent ✓</div>
+      </div>
+      <div style="flex:1;border:1.5px solid var(--bdr);border-radius:var(--r12);padding:10px;text-align:center;cursor:pointer">
+        <div style="font-size:18px">📝</div><div style="font-size:11px;color:var(--ink3);margin-top:3px">Lease</div>
+      </div>
+      <div style="flex:1;border:1.5px solid var(--bdr);border-radius:var(--r12);padding:10px;text-align:center;cursor:pointer">
+        <div style="font-size:18px">🏡</div><div style="font-size:11px;color:var(--ink3);margin-top:3px">Family</div>
+      </div>
+    </div>
+
+    <!-- Rent fields -->
+    <div style="background:var(--ambb);border:1.5px solid #FFE082;border-radius:var(--r16);padding:16px;margin-bottom:14px">
+      <div style="font-size:12px;font-weight:700;color:var(--amber);margin-bottom:14px">🏘️ Rent House Details</div>
+
+      <div class="sec-div" style="margin-top:0"><div class="sec-div-line"></div><div class="sec-div-label" style="font-size:11px">Landlord / Building Owner</div><div class="sec-div-line"></div></div>
+
+      <div class="fgroup"><label class="flabel">Landlord Full Name <span class="req">*</span></label><div class="finput filled">Ramesh Kumar Sharma</div></div>
+      <div class="fgroup"><label class="flabel">Landlord Mobile <span class="req">*</span></label><div class="finput filled">+91 99870 12345</div></div>
+      <div class="fgroup"><label class="flabel">Landlord Address <span class="flabel-opt">(if different)</span></label><div class="ftextarea" style="min-height:60px">14, Residency Road, Bengaluru</div></div>
+      <div class="fgroup"><label class="flabel">Landlord Aadhaar / PAN <span class="flabel-opt">(optional)</span></label><div class="finput ph">For identity verification</div></div>
+
+      <div class="sec-div"><div class="sec-div-line"></div><div class="sec-div-label" style="font-size:11px">Rent Agreement</div><div class="sec-div-line"></div></div>
+
+      <div class="frow">
+        <div class="fgroup"><label class="flabel">Monthly Rent (₹) <span class="req">*</span></label><div class="finput filled">₹ 12,000</div></div>
+        <div class="fgroup"><label class="flabel">Security Deposit (₹)</label><div class="finput filled">₹ 24,000</div></div>
+      </div>
+      <div class="frow">
+        <div class="fgroup"><label class="flabel">Rent Start Date <span class="req">*</span></label><div class="finput filled">01 / 06 / 2021</div></div>
+        <div class="fgroup"><label class="flabel">Agreement Valid Till</label><div class="finput filled">31 / 05 / 2026</div></div>
+      </div>
+      <div class="fgroup"><label class="flabel">Rent Agreement Registered?</label>
+        <div class="tag-select">
+          <span class="tag on">Yes — Registered</span>
+          <span class="tag">Unregistered</span>
+          <span class="tag">No agreement</span>
+        </div>
+      </div>
+      <div class="fgroup">
+        <label class="flabel">Upload Rent Agreement <span class="req">*</span></label>
+        <div class="upload-box"><div class="u-icon">📄</div><div class="u-main">Rent agreement / lease deed</div><div class="u-sub">PDF, JPEG · Max 10 MB</div></div>
+      </div>
+      <div class="fgroup" style="margin-bottom:0">
+        <label class="flabel">Property Type</label>
+        <div class="finput filled">Flat / Apartment ▾</div>
+      </div>
+    </div>
+
+    <div class="info-card amber">
+      <span>ℹ️</span>
+      <div style="font-size:12px;color:#7C5C00;line-height:1.55">Landlord details help Masjid admin verify your residence. Your landlord will not be contacted unless you relocate and apply for a NOC.</div>
+    </div>
+
+    <div class="fgroup"><label class="flabel">Select Area Masjid <span class="req">*</span></label>
+      <div style="background:var(--g50);border:1.5px solid var(--g400);border-radius:var(--r12);padding:12px 14px;display:flex;align-items:center;gap:10px">
+        <span style="font-size:20px">🕌</span>
+        <div><div style="font-size:14px;font-weight:700;color:var(--g800)">Jama Masjid, Shivajinagar</div><div style="font-size:11px;color:var(--g600)">Miller's Road, Bengaluru 560 001</div></div>
+        <span style="margin-left:auto;font-size:18px;color:var(--g500)">✓</span>
+      </div>
+    </div>
+
+    <button class="btn-p mt12">Continue to Documents →</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+<div class="sc-lbl">S-07B · Rent House Details</div>
+</div>
+
+<!-- S-07C Lease House expanded -->
+<div class="sc">
+<div class="sc-num">S-07C <span class="new-badge">NEW</span></div>
+<div class="phone" style="min-height:1100px">
+  <div class="sb"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="reg-header">
+    <div class="reg-topbar">
+      <div><div class="reg-htitle">Create your MIC profile</div><div class="reg-step">Step 3 of 5 — Address &amp; Housing</div></div>
+      <div class="reg-cancel">Save &amp; Exit</div>
+    </div>
+    <div class="steps-bar">
+      <div class="sdot done">✓</div><div class="sline done"></div>
+      <div class="sdot done">✓</div><div class="sline done"></div>
+      <div class="sdot cur">3</div><div class="sline pend"></div>
+      <div class="sdot pend">4</div><div class="sline pend"></div>
+      <div class="sdot pend">5</div>
+    </div>
+  </div>
+  <div class="reg-body">
+    <div class="prog mb12"><div class="prog-fill" style="width:60%;background:linear-gradient(90deg,var(--g500),var(--g400))"></div></div>
+
+    <!-- Housing type pills - Lease selected -->
+    <div style="display:flex;gap:8px;margin-bottom:16px">
+      <div style="flex:1;border:1.5px solid var(--bdr);border-radius:var(--r12);padding:10px;text-align:center;cursor:pointer"><div style="font-size:18px">🏠</div><div style="font-size:11px;color:var(--ink3);margin-top:3px">Owner</div></div>
+      <div style="flex:1;border:1.5px solid var(--bdr);border-radius:var(--r12);padding:10px;text-align:center;cursor:pointer"><div style="font-size:18px">🏘️</div><div style="font-size:11px;color:var(--ink3);margin-top:3px">Rent</div></div>
+      <div style="flex:1;border:2px solid var(--blue);background:var(--blueb);border-radius:var(--r12);padding:10px;text-align:center"><div style="font-size:18px">📝</div><div style="font-size:11px;color:var(--blue);font-weight:700;margin-top:3px">Lease ✓</div></div>
+      <div style="flex:1;border:1.5px solid var(--bdr);border-radius:var(--r12);padding:10px;text-align:center;cursor:pointer"><div style="font-size:18px">🏡</div><div style="font-size:11px;color:var(--ink3);margin-top:3px">Family</div></div>
+    </div>
+
+    <!-- Lease fields -->
+    <div style="background:var(--blueb);border:1.5px solid #BFDBFE;border-radius:var(--r16);padding:16px;margin-bottom:14px">
+      <div style="font-size:12px;font-weight:700;color:var(--blue);margin-bottom:14px">📝 Lease House Details</div>
+
+      <div class="sec-div" style="margin-top:0"><div class="sec-div-line" style="background:#BFDBFE"></div><div class="sec-div-label" style="font-size:11px;color:var(--blue)">Property Owner / Lessor</div><div class="sec-div-line" style="background:#BFDBFE"></div></div>
+
+      <div class="fgroup"><label class="flabel">Owner / Lessor Full Name <span class="req">*</span></label><div class="finput filled">Suresh Nair</div></div>
+      <div class="fgroup"><label class="flabel">Owner Mobile <span class="req">*</span></label><div class="finput filled">+91 98001 22334</div></div>
+      <div class="fgroup"><label class="flabel">Owner Permanent Address</label><div class="ftextarea" style="min-height:60px">22, MG Road, Bengaluru 560 001</div></div>
+
+      <div class="sec-div"><div class="sec-div-line" style="background:#BFDBFE"></div><div class="sec-div-label" style="font-size:11px;color:var(--blue)">Lease Agreement</div><div class="sec-div-line" style="background:#BFDBFE"></div></div>
+
+      <div class="frow">
+        <div class="fgroup"><label class="flabel">Lease Amount / Deposit (₹) <span class="req">*</span></label><div class="finput filled">₹ 5,00,000</div></div>
+        <div class="fgroup"><label class="flabel">Monthly Maintenance (₹)</label><div class="finput filled">₹ 1,500</div></div>
+      </div>
+      <div class="frow">
+        <div class="fgroup"><label class="flabel">Lease Start Date <span class="req">*</span></label><div class="finput filled">01 / 01 / 2020</div></div>
+        <div class="fgroup"><label class="flabel">Lease End Date <span class="req">*</span></label><div class="finput filled">31 / 12 / 2025</div></div>
+      </div>
+      <div class="fgroup"><label class="flabel">Lease Period</label><div class="finput filled">6 Years</div></div>
+      <div class="fgroup"><label class="flabel">Lease Registration Number</label><div class="finput ph">Doc. No. (if registered)</div></div>
+      <div class="fgroup">
+        <label class="flabel">Upload Lease Agreement <span class="req">*</span></label>
+        <div class="upload-box" style="background:rgba(37,99,235,.06);border-color:var(--blue)"><div class="u-icon">📄</div><div class="u-main" style="color:var(--blue)">Lease deed / agreement</div><div class="u-sub">PDF, JPEG · Max 10 MB</div></div>
+      </div>
+      <div class="frow">
+        <div class="fgroup"><label class="flabel">Property Type</label><div class="finput filled">House ▾</div></div>
+        <div class="fgroup"><label class="flabel">Property Area (sq ft)</label><div class="finput filled">1,200 sq ft</div></div>
+      </div>
+      <div class="fgroup" style="margin-bottom:0"><label class="flabel">Renewal Option?</label>
+        <div class="tag-select"><span class="tag on">Yes — Renewal clause</span><span class="tag">No — Fixed term</span></div>
+      </div>
+    </div>
+
+    <div class="info-card blue">
+      <span>ℹ️</span>
+      <div style="font-size:12px;color:var(--blue);line-height:1.55">Lease details are used to verify your current residence address. When relocating, your Masjid admin will use these to issue your Relocation NOC.</div>
+    </div>
+
+    <div class="fgroup"><label class="flabel">Select Area Masjid <span class="req">*</span></label>
+      <div style="background:var(--g50);border:1.5px solid var(--g400);border-radius:var(--r12);padding:12px 14px;display:flex;align-items:center;gap:10px">
+        <span style="font-size:20px">🕌</span>
+        <div><div style="font-size:14px;font-weight:700;color:var(--g800)">Jama Masjid, Shivajinagar</div><div style="font-size:11px;color:var(--g600)">Miller's Road, Bengaluru 560 001</div></div>
+        <span style="margin-left:auto;font-size:18px;color:var(--g500)">✓</span>
+      </div>
+    </div>
+
+    <button class="btn-p mt12">Continue to Documents →</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+<div class="sc-lbl">S-07C · Lease House Details</div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════
+     NEW STEP 4A — DOCUMENTS (Updated)
+══════════════════════════════════════ -->
+<div class="rl">Step 4 — Documents Upload (Updated)</div>
+<div class="srow">
+
+<div class="sc">
+<div class="sc-num">S-08 <span class="updated-badge">UPDATED</span></div>
+<div class="phone" style="min-height:1000px">
+  <div class="sb"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="reg-header">
+    <div class="reg-topbar">
+      <div><div class="reg-htitle">Create your MIC profile</div><div class="reg-step">Step 4 of 5 — Upload Documents</div></div>
+      <div class="reg-cancel">Save &amp; Exit</div>
+    </div>
+    <div class="steps-bar">
+      <div class="sdot done">✓</div><div class="sline done"></div>
+      <div class="sdot done">✓</div><div class="sline done"></div>
+      <div class="sdot done">✓</div><div class="sline done"></div>
+      <div class="sdot cur">4</div><div class="sline pend"></div>
+      <div class="sdot pend">5</div>
+    </div>
+  </div>
+  <div class="reg-body">
+    <div class="prog mb12"><div class="prog-fill" style="width:80%;background:linear-gradient(90deg,var(--g500),var(--g400))"></div></div>
+
+    <div class="info-card">
+      <span>📋</span>
+      <div style="font-size:12px;color:var(--g800);line-height:1.55"><strong>Required:</strong> Aadhaar + Address Proof. <strong>Optional but recommended:</strong> Photo, Nikah cert, property docs. Upload clear, well-lit scans only.</div>
+    </div>
+
+    <!-- Required docs -->
+    <div class="sec-div"><div class="sec-div-line"></div><div class="sec-div-label">Required Documents</div><div class="sec-div-line"></div></div>
+
+    <div class="fgroup">
+      <label class="flabel">Aadhaar Card — Front &amp; Back <span class="req">*</span></label>
+      <div class="upload-done">
+        <span style="font-size:22px">✅</span>
+        <div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--g800)">aadhaar_front.jpg</div><div style="font-size:11px;color:var(--g600)">Uploaded · 1.2 MB</div></div>
+        <button class="btn-sm btn-g" style="font-size:10px;height:28px">Replace</button>
+      </div>
+    </div>
+
+    <div class="fgroup">
+      <label class="flabel">Address Proof <span class="req">*</span> <span style="font-size:10px;color:var(--ink3)">(rent agr / utility bill / ration card)</span></label>
+      <div class="upload-done">
+        <span style="font-size:22px">✅</span>
+        <div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--g800)">rent_agreement.pdf</div><div style="font-size:11px;color:var(--g600)">Uploaded · 3.4 MB</div></div>
+        <button class="btn-sm btn-g" style="font-size:10px;height:28px">Replace</button>
+      </div>
+    </div>
+
+    <!-- Optional docs -->
+    <div class="sec-div"><div class="sec-div-line"></div><div class="sec-div-label">Optional Documents</div><div class="sec-div-line"></div></div>
+
+    <div class="fgroup">
+      <label class="flabel">Nikah Certificate <span class="flabel-opt">(if married)</span></label>
+      <div class="upload-box"><div class="u-icon">💒</div><div class="u-main">Upload Nikah cert</div><div class="u-sub">PDF or JPEG · Max 5 MB</div></div>
+    </div>
+
+    <div class="fgroup">
+      <label class="flabel">Children's Birth Certificates <span class="flabel-opt">(optional)</span></label>
+      <div class="upload-box"><div class="u-icon">👶</div><div class="u-main">Upload birth certificates</div><div class="u-sub">PDF or JPEG · Multiple files allowed</div></div>
+    </div>
+
+    <div class="fgroup">
+      <label class="flabel">Property Document <span class="flabel-opt">(owner only)</span></label>
+      <div class="upload-box"><div class="u-icon">🏠</div><div class="u-main">Sale deed / title deed</div><div class="u-sub">PDF · Max 10 MB</div></div>
+    </div>
+
+    <div class="fgroup">
+      <label class="flabel">Educational Certificate</label>
+      <div class="upload-box"><div class="u-icon">🎓</div><div class="u-main">Degree / SSC / HSC certificate</div><div class="u-sub">PDF or JPEG · Max 5 MB</div></div>
+    </div>
+
+    <div class="fgroup">
+      <label class="flabel">Family Photograph <span class="flabel-opt">(optional)</span></label>
+      <div class="upload-box"><div class="u-icon">👨‍👩‍👧</div><div class="u-main">Recent family photo</div><div class="u-sub">JPEG · Max 5 MB</div></div>
+    </div>
+
+    <button class="btn-p mt12">Continue to Registration Fee →</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+<div class="sc-lbl">S-08 · Documents (Updated)</div>
+</div>
+
+<!-- ══ NEW STEP 5 — REGISTRATION FEE ══ -->
+<div class="sc">
+<div class="sc-num">S-09 <span class="new-badge">NEW</span></div>
+<div class="phone" style="min-height:960px">
+  <div class="sb"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="reg-header">
+    <div class="reg-topbar">
+      <div><div class="reg-htitle">Create your MIC profile</div><div class="reg-step">Step 5 of 5 — Registration Fee</div></div>
+      <div class="reg-cancel">Save &amp; Exit</div>
+    </div>
+    <div class="steps-bar">
+      <div class="sdot done">✓</div><div class="sline done"></div>
+      <div class="sdot done">✓</div><div class="sline done"></div>
+      <div class="sdot done">✓</div><div class="sline done"></div>
+      <div class="sdot done">✓</div><div class="sline done"></div>
+      <div class="sdot cur">5</div>
+    </div>
+  </div>
+  <div class="reg-body">
+    <div class="prog mb12"><div class="prog-fill" style="width:100%;background:linear-gradient(90deg,var(--g500),var(--g400))"></div></div>
+
+    <!-- Fee hero -->
+    <div class="fee-card">
+      <div style="font-size:11px;font-weight:700;letter-spacing:2px;color:rgba(201,168,76,.8);text-transform:uppercase;margin-bottom:14px">One-Time Registration Fee</div>
+      <div style="font-size:52px">₹</div>
+      <div class="fee-rupee">100</div>
+      <div class="fee-label">Lifetime MIC membership · No annual renewal fee</div>
+      <div style="display:flex;justify-content:center;gap:16px;margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,.1)">
+        <div style="text-align:center"><div style="font-size:18px">🪪</div><div style="font-size:10px;color:rgba(255,255,255,.45);margin-top:3px">MIC Card</div></div>
+        <div style="text-align:center"><div style="font-size:18px">🛎️</div><div style="font-size:10px;color:rgba(255,255,255,.45);margin-top:3px">All Services</div></div>
+        <div style="text-align:center"><div style="font-size:18px">🔔</div><div style="font-size:10px;color:rgba(255,255,255,.45);margin-top:3px">Notifications</div></div>
+        <div style="text-align:center"><div style="font-size:18px">🌐</div><div style="font-size:10px;color:rgba(255,255,255,.45);margin-top:3px">22 Languages</div></div>
+      </div>
+    </div>
+
+    <!-- What's included -->
+    <div style="background:var(--white);border:1px solid var(--bdr);border-radius:var(--r16);padding:14px 16px;margin-bottom:14px">
+      <div style="font-size:12px;font-weight:700;color:var(--ink);margin-bottom:10px">What ₹100 covers:</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;gap:10px;align-items:center"><span style="color:var(--g500);font-size:15px;flex-shrink:0">✓</span><span style="font-size:13px;color:var(--ink2)">Lifetime MIC Identity Card (KA-BLR-XXXXX)</span></div>
+        <div style="display:flex;gap:10px;align-items:center"><span style="color:var(--g500);font-size:15px;flex-shrink:0">✓</span><span style="font-size:13px;color:var(--ink2)">Access to all 8 community services</span></div>
+        <div style="display:flex;gap:10px;align-items:center"><span style="color:var(--g500);font-size:15px;flex-shrink:0">✓</span><span style="font-size:13px;color:var(--ink2)">Masjid events &amp; announcements</span></div>
+        <div style="display:flex;gap:10px;align-items:center"><span style="color:var(--g500);font-size:15px;flex-shrink:0">✓</span><span style="font-size:13px;color:var(--ink2)">Complaint filing &amp; mediation</span></div>
+        <div style="display:flex;gap:10px;align-items:center"><span style="color:var(--g500);font-size:15px;flex-shrink:0">✓</span><span style="font-size:13px;color:var(--ink2)">Death &amp; burial service coordination</span></div>
+        <div style="display:flex;gap:10px;align-items:center"><span style="color:var(--g500);font-size:15px;flex-shrink:0">✓</span><span style="font-size:13px;color:var(--ink2)">Welfare &amp; Zakat eligibility</span></div>
+        <div style="display:flex;gap:10px;align-items:center"><span style="color:var(--g500);font-size:15px;flex-shrink:0">✓</span><span style="font-size:13px;color:var(--ink2)">Card valid until renewed annually (free)</span></div>
+      </div>
+    </div>
+
+    <!-- Payment methods -->
+    <div style="font-size:13px;font-weight:700;color:var(--ink);margin-bottom:10px">Select Payment Method</div>
+
+    <div class="pay-opt active">
+      <div class="pay-ico-wrap" style="background:var(--g50)">📱</div>
+      <div>
+        <div class="pay-title">UPI</div>
+        <div class="pay-sub">GPay · PhonePe · Paytm · Any UPI</div>
+      </div>
+      <div class="pay-check on">✓</div>
+    </div>
+
+    <div class="pay-opt">
+      <div class="pay-ico-wrap" style="background:var(--blueb)">💳</div>
+      <div>
+        <div class="pay-title">Debit / Credit Card</div>
+        <div class="pay-sub">Visa · Mastercard · RuPay</div>
+      </div>
+      <div class="pay-check off"></div>
+    </div>
+
+    <div class="pay-opt">
+      <div class="pay-ico-wrap" style="background:var(--ambb)">🏦</div>
+      <div>
+        <div class="pay-title">Net Banking</div>
+        <div class="pay-sub">All major Indian banks</div>
+      </div>
+      <div class="pay-check off"></div>
+    </div>
+
+    <div class="pay-opt">
+      <div class="pay-ico-wrap" style="background:var(--bdr2)">💵</div>
+      <div>
+        <div class="pay-title">Pay Cash at Masjid</div>
+        <div class="pay-sub">Pay ₹100 directly at Jama Masjid office</div>
+      </div>
+      <div class="pay-check off"></div>
+    </div>
+
+    <!-- UPI ID input (expanded for UPI selected) -->
+    <div style="background:var(--g50);border:1.5px solid var(--g300);border-radius:var(--r12);padding:14px;margin-top:10px;margin-bottom:14px">
+      <div class="fgroup" style="margin-bottom:10px">
+        <label class="flabel">Your UPI ID <span class="req">*</span></label>
+        <div class="finput filled">arshad@okaxis</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:16px;color:var(--g500)">✓</span>
+        <div style="font-size:12px;color:var(--g700)">UPI ID verified · arshad@okaxis</div>
+      </div>
+    </div>
+
+    <!-- Summary box -->
+    <div style="background:var(--white);border:1px solid var(--bdr);border-radius:var(--r12);padding:14px;margin-bottom:16px">
+      <div class="detail-row"><div class="dr-l">Registration Fee</div><div class="dr-r">₹100.00</div></div>
+      <div class="detail-row"><div class="dr-l">Platform Processing</div><div class="dr-r" style="color:var(--g600)">Free</div></div>
+      <div class="detail-row" style="border:none"><div class="dr-l" style="font-weight:700;color:var(--ink)">Total</div><div class="dr-r" style="font-size:16px;font-weight:800;color:var(--g800)">₹100.00</div></div>
+    </div>
+
+    <!-- Fee waiver -->
+    <div class="info-card amber" style="margin-bottom:16px">
+      <span>💚</span>
+      <div style="font-size:12px;color:#7C5C00;line-height:1.55"><strong>Fee waiver available</strong> for those who cannot afford it. Speak with your area Masjid admin — fee can be waived on a case-by-case basis. No one should be excluded for financial reasons.</div>
+    </div>
+
+    <button class="btn-pay">💳 Pay ₹100 &amp; Complete Registration</button>
+    <button class="btn-s" style="margin-top:10px">🕌 Request Fee Waiver from Admin</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+<div class="sc-lbl">S-09 · ₹100 Registration Fee</div>
+</div>
+
+<!-- ══ FEE PAYMENT PROCESSING ══ -->
+<div class="sc">
+<div class="sc-num">S-09B <span class="new-badge">NEW</span></div>
+<div class="phone" style="min-height:860px">
+  <div class="sb"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div style="flex:1;background:linear-gradient(180deg,var(--g900) 0%,#06150D 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 28px;gap:20px">
+
+    <!-- Spinner placeholder -->
+    <div style="width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,.08);border:3px solid rgba(82,183,136,.4);display:flex;align-items:center;justify-content:center;font-size:50px">⏳</div>
+
+    <div style="text-align:center">
+      <div style="font-family:'Lora',serif;font-size:20px;font-weight:700;color:#fff;margin-bottom:6px">Processing Payment</div>
+      <div style="font-size:13px;color:rgba(255,255,255,.55)">Please wait. Do not press back or close the app.</div>
+    </div>
+
+    <div style="background:rgba(255,255,255,.07);border-radius:var(--r16);padding:16px 24px;width:100%;text-align:center">
+      <div style="font-size:10px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Payment Details</div>
+      <div style="font-size:28px;font-weight:800;color:#fff;margin-bottom:4px">₹100</div>
+      <div style="font-size:12px;color:rgba(255,255,255,.5)">MIC Registration Fee · arshad@okaxis</div>
+    </div>
+
+    <div style="width:100%;background:rgba(255,255,255,.06);border-radius:var(--r12);padding:14px 16px">
+      <div style="display:flex;gap:10px;align-items:center;margin-bottom:8px">
+        <div style="width:20px;height:20px;border-radius:50%;background:var(--g500);display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;flex-shrink:0">✓</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.7)">Registration details verified</div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;margin-bottom:8px">
+        <div style="width:20px;height:20px;border-radius:50%;background:var(--g500);display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;flex-shrink:0">✓</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.7)">Documents uploaded</div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <div style="width:20px;height:20px;border-radius:50%;border:2px solid rgba(255,255,255,.2);flex-shrink:0;display:flex;align-items:center;justify-content:center">
+          <div style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.3);animation:none">⋯</div>
+        </div>
+        <div style="font-size:12px;color:rgba(255,255,255,.4)">Awaiting payment confirmation…</div>
+      </div>
+    </div>
+
+    <div style="font-size:11px;color:rgba(255,255,255,.3);text-align:center">Secured by RazorPay · 256-bit SSL encryption</div>
+  </div>
+</div>
+<div class="sc-lbl">S-09B · Payment Processing</div>
+</div>
+
+<!-- ══ PAYMENT SUCCESS → REGISTRATION COMPLETE ══ -->
+<div class="sc">
+<div class="sc-num">S-10 <span class="new-badge">NEW</span></div>
+<div class="phone" style="min-height:920px">
+  <div class="sb"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div style="flex:1;background:linear-gradient(180deg,var(--g900) 0%,#06150D 100%);display:flex;flex-direction:column;align-items:center;padding:36px 24px">
+
+    <!-- Success icon -->
+    <div style="width:110px;height:110px;background:rgba(82,183,136,.15);border:3px solid var(--g400);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:56px;margin-bottom:16px;box-shadow:0 0 40px rgba(82,183,136,.2)">✅</div>
+
+    <div style="font-family:'Lora',serif;font-size:26px;font-weight:700;color:#fff;margin-bottom:4px;text-align:center">Alhamdulillah!</div>
+    <div style="font-size:13px;color:rgba(255,255,255,.55);text-align:center;margin-bottom:24px">Registration submitted. Payment received.</div>
+
+    <!-- Payment receipt mini -->
+    <div style="width:100%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:var(--r16);padding:16px;margin-bottom:20px">
+      <div style="font-size:10px;color:rgba(201,168,76,.7);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">Payment Confirmed</div>
+      <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.08)"><div style="font-size:12px;color:rgba(255,255,255,.45)">Amount Paid</div><div style="font-size:14px;font-weight:800;color:var(--gold2)">₹100</div></div>
+      <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.08)"><div style="font-size:12px;color:rgba(255,255,255,.45)">Transaction ID</div><div style="font-size:11px;font-weight:600;color:#fff;font-family:monospace">TXN-2025-07-05-04829</div></div>
+      <div style="display:flex;justify-content:space-between;padding:8px 0"><div style="font-size:12px;color:rgba(255,255,255,.45)">Date &amp; Time</div><div style="font-size:12px;color:#fff">July 5, 2025 · 10:42 AM</div></div>
+    </div>
+
+    <!-- What happens next -->
+    <div style="width:100%;background:rgba(255,255,255,.05);border-radius:var(--r16);padding:16px;margin-bottom:20px">
+      <div style="font-size:12px;font-weight:700;color:rgba(255,255,255,.55);margin-bottom:12px;text-transform:uppercase;letter-spacing:.5px">What happens next?</div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px"><span style="font-size:15px;flex-shrink:0">📋</span><span style="font-size:12px;color:rgba(255,255,255,.6);line-height:1.55">Admin reviews your registration within 3–5 working days</span></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px"><span style="font-size:15px;flex-shrink:0">✅</span><span style="font-size:12px;color:rgba(255,255,255,.6);line-height:1.55">Your MIC ID (KA-BLR-XXXXX) will be assigned on approval</span></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px"><span style="font-size:15px;flex-shrink:0">📱</span><span style="font-size:12px;color:rgba(255,255,255,.6);line-height:1.55">SMS and app notification will be sent once verified</span></div>
+      <div style="display:flex;gap:10px;align-items:flex-start"><span style="font-size:15px;flex-shrink:0">⬇</span><span style="font-size:12px;color:rgba(255,255,255,.6);line-height:1.55">Download your MIC Card PDF from My Documents</span></div>
+    </div>
+
+    <button class="btn-p" style="width:100%;margin-bottom:12px">🏠 Go to Home</button>
+    <button style="width:100%;height:48px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);border-radius:var(--r16);color:rgba(255,255,255,.7);font-size:14px;font-weight:600;cursor:pointer">📥 Download Payment Receipt</button>
+  </div>
+</div>
+<div class="sc-lbl">S-10 · Registration Complete</div>
+</div>
+
+</div>
+
+<!-- ══════════════════════════════════════
+     SUMMARY OF ALL CHANGES
+══════════════════════════════════════ -->
+<div class="rl" style="margin-top:40px">Summary of all additions &amp; field updates</div>
+<div style="max-width:1400px;width:100%;background:#111;border-radius:20px;padding:32px;display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px">
+  <div>
+    <div style="font-size:12px;font-weight:700;color:#E8C96A;margin-bottom:12px">💳 NEW — ₹100 Registration Fee</div>
+    <div style="font-size:11px;color:#555;line-height:2">
+      Step 5 added to registration flow<br>
+      One-time lifetime fee · No renewals<br>
+      Payment options: UPI · Card · Net Banking · Cash<br>
+      Fee waiver available via Masjid admin<br>
+      Payment processing screen with status<br>
+      Confirmation screen with transaction receipt<br>
+      Secured via RazorPay · 256-bit SSL
+    </div>
+  </div>
+  <div>
+    <div style="font-size:12px;font-weight:700;color:#86EFAC;margin-bottom:12px">🏠 NEW — Building Owner Fields</div>
+    <div style="font-size:11px;color:#555;line-height:2">
+      Property / Building Name<br>
+      Type of property (Flat / House / Villa)<br>
+      Floor number &amp; total floors<br>
+      Carpet area (sq ft) &amp; BHK config<br>
+      Property registration number<br>
+      Survey / Khasra number<br>
+      Year of purchase / possession<br>
+      Ownership type (sole / joint / family)
+    </div>
+  </div>
+  <div>
+    <div style="font-size:12px;font-weight:700;color:#93C5FD;margin-bottom:12px">🏘️ NEW — Rent House Fields</div>
+    <div style="font-size:11px;color:#555;line-height:2">
+      Landlord full name<br>
+      Landlord mobile number<br>
+      Landlord permanent address<br>
+      Landlord Aadhaar / PAN (optional)<br>
+      Monthly rent amount<br>
+      Security deposit amount<br>
+      Rent start date &amp; end date<br>
+      Rent agreement registered? (Y/N)<br>
+      Upload rent agreement (required)<br>
+      Property type selector
+    </div>
+  </div>
+  <div>
+    <div style="font-size:12px;font-weight:700;color:#C4B5FD;margin-bottom:12px">📝 NEW — Lease House Fields</div>
+    <div style="font-size:11px;color:#555;line-height:2">
+      Owner / Lessor full name<br>
+      Owner mobile number<br>
+      Owner permanent address<br>
+      Lease deposit amount<br>
+      Monthly maintenance<br>
+      Lease start &amp; end dates<br>
+      Lease period<br>
+      Lease registration number<br>
+      Upload lease deed (required)<br>
+      Property area (sq ft)<br>
+      Renewal option (Y/N)
+    </div>
+  </div>
+  <div>
+    <div style="font-size:12px;font-weight:700;color:#FCA5A5;margin-bottom:12px">✏️ UPDATED — Missing Fields Added</div>
+    <div style="font-size:11px;color:#555;line-height:2">
+      Step 1: Education qualification, Annual income<br>
+      Step 1: Alternate mobile, PAN, Voter ID, Passport<br>
+      Step 2: Father's &amp; Mother's mobile numbers<br>
+      Step 2: Spouse Aadhaar, Nikah date<br>
+      Step 2: Spouse MIC ID (if registered)<br>
+      Step 2: Child gender &amp; school / Maktab<br>
+      Step 2: Emergency contact name, mobile, relation<br>
+      Step 3: Building name, street, landmark separate<br>
+      Step 3: Years at current address<br>
+      Step 4: Children's birth certs, education cert<br>
+      Registration flow expanded from 4 to 5 steps
+    </div>
+  </div>
+  <div style="background:#181818;border-radius:14px;padding:22px;display:flex;flex-direction:column;justify-content:center">
+    <div style="font-size:11px;color:#444;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px">New Screens in this file</div>
+    <div style="font-size:48px;font-weight:700;color:#fff;font-family:'Lora',serif;line-height:1;margin-bottom:6px">10</div>
+    <div style="font-size:12px;color:#444;margin-bottom:16px">screens across registration flow</div>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="background:#1A2A1A;border-radius:8px;padding:8px 12px;display:flex;justify-content:space-between"><span style="font-size:11px;color:#86EFAC">Updated Steps</span><span style="font-size:13px;font-weight:700;color:#fff">S-05, S-06, S-07, S-08</span></div>
+      <div style="background:#1A1000;border-radius:8px;padding:8px 12px;display:flex;justify-content:space-between"><span style="font-size:11px;color:#E8C96A">New Housing</span><span style="font-size:13px;font-weight:700;color:#fff">S-07A, S-07B, S-07C</span></div>
+      <div style="background:#0A1A2E;border-radius:8px;padding:8px 12px;display:flex;justify-content:space-between"><span style="font-size:11px;color:#93C5FD">Fee Payment</span><span style="font-size:13px;font-weight:700;color:#fff">S-09, S-09B, S-10</span></div>
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center;margin-top:36px;padding-bottom:60px;font-size:12px;color:#282828;line-height:2">
+  MIC User App · Registration Flow Update · 10 screens<br>
+  ₹100 One-Time Fee · Building Owner / Rent / Lease Housing Details · All Missing Fields Added<br>
+  5-step registration (was 4-step) · Housing type selector with conditional expanding fields
+</div>
+
+</div><!-- canvas -->
+</body>
+</html>
+<!-- NOTE: appending to wrong file - need fresh append approach -->

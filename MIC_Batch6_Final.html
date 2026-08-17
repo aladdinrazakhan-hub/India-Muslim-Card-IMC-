@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MIC Platform — Batch 6 Final</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#080808;font-family:'Inter',sans-serif;padding:40px 24px 80px}
+:root{
+  --g900:#0D2B1A;--g800:#1A4731;--g700:#22593D;--g600:#2D6A4F;--g500:#40916C;--g400:#52B788;--g300:#74C69D;--g200:#B7E4C7;--g100:#D8F3DC;--g50:#F0FAF3;
+  --gold:#C9A84C;--gold2:#E8C96A;--goldb:#FFF8E1;
+  --red:#DC2626;--redb:#FEF2F2;--amber:#D97706;--ambb:#FFFBEB;
+  --blue:#2563EB;--blueb:#EFF6FF;--purple:#7C3AED;--purb:#F5F3FF;--purdark:#6D28D9;
+  --ink:#111827;--ink2:#374151;--ink3:#6B7280;--ink4:#9CA3AF;
+  --bg:#F2F4F2;--white:#FFFFFF;--bdr:#E5E7EB;--bdr2:#F3F4F6;
+  --r8:8px;--r12:12px;--r16:16px;--r20:20px;--r99:99px
+}
+.canvas{display:flex;flex-direction:column;align-items:center;gap:56px}
+.rl{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#444;padding:7px 16px;border:1px solid #222;border-radius:99px;margin-bottom:-36px}
+.srow{display:flex;flex-wrap:wrap;gap:28px;justify-content:center;align-items:flex-start;width:100%}
+.sc{display:flex;flex-direction:column;align-items:center;gap:10px}
+.sc-num{font-size:10px;font-weight:700;color:#555;letter-spacing:1px;background:#1A1A1A;padding:3px 10px;border-radius:99px}
+.sc-lbl{font-size:11px;font-weight:600;color:#888;text-align:center;max-width:200px}
+.phone{width:390px;background:var(--bg);border-radius:50px;overflow:hidden;box-shadow:0 0 0 10px #1C1C1E,0 0 0 12px #3A3A3C,0 28px 60px rgba(0,0,0,.6);display:flex;flex-direction:column;position:relative;min-height:900px}
+.phone::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:126px;height:34px;background:#1C1C1E;border-radius:0 0 20px 20px;z-index:100}
+.sb{height:50px;padding:14px 24px 0;display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:700;flex-shrink:0;position:relative;z-index:10}
+.sb-l{background:var(--white);color:var(--ink)}
+.sb-d{background:var(--g800);color:#fff}
+.sb-sa{background:#06150D;color:#fff}
+.sico{display:flex;gap:5px;font-size:11px}
+.tbar{height:54px;padding:0 20px;display:flex;align-items:center;justify-content:space-between;background:var(--white);border-bottom:1px solid var(--bdr);flex-shrink:0}
+.tb-back{font-size:22px;color:var(--ink3)}
+.tb-title{font-family:'Lora',serif;font-size:16px;font-weight:700;color:var(--ink)}
+.tb-act{font-size:13px;font-weight:600;color:var(--g600)}
+.sa-tbar{height:54px;padding:0 20px;display:flex;align-items:center;justify-content:space-between;background:#06150D;flex-shrink:0}
+.tabs{display:flex;border-bottom:1px solid var(--bdr);background:var(--white);flex-shrink:0;overflow-x:auto}
+.tab{padding:12px 14px;font-size:12px;font-weight:600;color:var(--ink3);white-space:nowrap;cursor:pointer;border-bottom:2.5px solid transparent;flex-shrink:0}
+.tab.on{color:var(--g700);border-bottom-color:var(--g600)}
+.scr{flex:1;overflow-y:auto;padding:16px}
+.scr::-webkit-scrollbar{display:none}
+.card{background:var(--white);border-radius:var(--r16);border:1px solid var(--bdr);padding:16px;margin-bottom:12px}
+.card-hdr{display:flex;gap:10px;align-items:center;margin-bottom:12px}
+.card-ico{width:36px;height:36px;border-radius:10px;background:var(--g100);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.card-ico.gold{background:var(--goldb)}.card-ico.red{background:var(--redb)}.card-ico.blue{background:var(--blueb)}.card-ico.purple{background:var(--purb)}.card-ico.amber{background:var(--ambb)}
+.card-title{font-size:14px;font-weight:700;color:var(--ink)}
+.card-sub{font-size:11px;color:var(--ink3);margin-top:2px}
+.irow{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--bdr2)}
+.irow:last-child{border:none}
+.il{font-size:13px;color:var(--ink3)}
+.ir{font-size:13px;font-weight:600;color:var(--ink);text-align:right;max-width:55%}
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:var(--r99);font-size:11px;font-weight:700}
+.bg-green{background:var(--g100);color:var(--g700)}.bg-gold{background:var(--goldb);color:var(--amber)}.bg-red{background:var(--redb);color:var(--red)}.bg-blue{background:var(--blueb);color:var(--blue)}.bg-gray{background:var(--bdr2);color:var(--ink3)}.bg-purple{background:var(--purb);color:var(--purple)}
+.fgroup{margin-bottom:14px}
+.flabel{font-size:12px;font-weight:600;color:var(--ink2);margin-bottom:6px;display:block}
+.req{color:var(--red)}
+.finput{width:100%;height:46px;background:var(--white);border:1.5px solid var(--bdr);border-radius:var(--r12);padding:0 14px;font-size:14px;color:var(--ink);display:flex;align-items:center}
+.finput.on{border-color:var(--g400)}.finput.ph{color:var(--ink4)}
+.ftxt{width:100%;background:var(--white);border:1.5px solid var(--bdr);border-radius:var(--r12);padding:12px 14px;font-size:13px;color:var(--ink);line-height:1.55;min-height:80px}
+.frow{display:flex;gap:10px}.frow .fgroup{flex:1}
+.tag{padding:7px 13px;border-radius:var(--r99);border:1.5px solid var(--bdr);background:var(--white);font-size:12px;font-weight:600;color:var(--ink3);cursor:pointer}
+.tag.on{border-color:var(--g500);background:var(--g50);color:var(--g700)}
+.tag-row{display:flex;flex-wrap:wrap;gap:8px}
+.tog{width:44px;height:26px;border-radius:13px;background:var(--g500);position:relative;flex-shrink:0}
+.tog::after{content:'';position:absolute;right:3px;top:3px;width:20px;height:20px;border-radius:50%;background:#fff}
+.tog.off{background:var(--bdr)}.tog.off::after{right:auto;left:3px}
+.ban{display:flex;gap:10px;align-items:flex-start;padding:12px 16px;font-size:12px;line-height:1.55;flex-shrink:0}
+.ban-green{background:var(--g50);border-bottom:1px solid var(--g200);color:var(--g800)}
+.ban-gold{background:var(--goldb);border-bottom:1px solid #FFE082;color:#7C5C00}
+.ban-red{background:var(--redb);border-bottom:1px solid #FECACA;color:var(--red)}
+.ban-blue{background:var(--blueb);border-bottom:1px solid #BFDBFE;color:var(--blue)}
+.ban-purple{background:var(--purb);border-bottom:1px solid #DDD6FE;color:var(--purple)}
+.btn-p{width:100%;height:52px;background:linear-gradient(135deg,var(--g800),var(--g600));color:#fff;border:none;border-radius:var(--r16);font-size:15px;font-weight:700;cursor:pointer}
+.btn-s{width:100%;height:48px;background:var(--white);color:var(--g800);border:2px solid var(--g700);border-radius:var(--r16);font-size:14px;font-weight:700;cursor:pointer}
+.btn-pur{width:100%;height:52px;background:linear-gradient(135deg,var(--purple),var(--purdark));color:#fff;border:none;border-radius:var(--r16);font-size:15px;font-weight:700;cursor:pointer}
+.btn-red{width:100%;height:48px;background:linear-gradient(135deg,#991B1B,var(--red));color:#fff;border:none;border-radius:var(--r16);font-size:14px;font-weight:700;cursor:pointer}
+.btn-amber{width:100%;height:48px;background:var(--ambb);color:var(--amber);border:none;border-radius:var(--r12);font-size:14px;font-weight:700;cursor:pointer}
+.btn-sm{height:34px;padding:0 14px;border-radius:var(--r8);border:none;font-size:12px;font-weight:700;cursor:pointer}
+.btn-g{background:var(--g100);color:var(--g800)}.btn-r{background:var(--redb);color:var(--red)}.btn-gr{background:var(--bdr2);color:var(--ink3)}.btn-gold{background:var(--goldb);color:var(--amber)}
+.ucard{display:flex;gap:12px;align-items:center;background:var(--white);border-radius:var(--r16);border:1px solid var(--bdr);padding:12px 14px;margin-bottom:8px}
+.uava{width:46px;height:46px;border-radius:50%;background:var(--g100);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.li{display:flex;align-items:center;gap:12px;padding:13px 16px;background:var(--white);border-bottom:1px solid var(--bdr2);cursor:pointer}
+.li:last-child{border-bottom:none}
+.li-ava{width:44px;height:44px;border-radius:50%;background:var(--g100);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.li-name{font-size:14px;font-weight:600;color:var(--ink)}
+.li-det{font-size:12px;color:var(--ink3);margin-top:2px}
+.shdr{background:linear-gradient(150deg,#06150D,var(--g900));padding:14px 20px 20px;flex-shrink:0}
+.nsg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px}
+.nsg-box{background:rgba(255,255,255,.08);border-radius:var(--r12);padding:10px;text-align:center}
+.nsg-n{font-size:15px;font-weight:800;color:#fff;line-height:1}
+.nsg-n.g{color:#86EFAC}.nsg-n.gold{color:var(--gold2)}.nsg-n.b{color:#93C5FD}.nsg-n.p{color:#C4B5FD}
+.nsg-l{font-size:9px;color:rgba(255,255,255,.4);margin-top:3px;text-transform:uppercase;letter-spacing:.4px}
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.kpi{background:var(--white);border-radius:var(--r12);padding:14px;border:1px solid var(--bdr)}
+.kpi-l{font-size:11px;color:var(--ink3);margin-bottom:4px}
+.kpi-n{font-size:22px;font-weight:800;color:var(--ink);line-height:1}
+.kpi-ch{font-size:10px;color:var(--ink4);margin-top:3px}
+.prog{height:6px;background:var(--bdr2);border-radius:99px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--g500),var(--g400));border-radius:99px}
+.sett-list{background:var(--white);border-radius:var(--r16);border:1px solid var(--bdr);overflow:hidden;margin-bottom:14px}
+.sett-item{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--bdr2)}
+.sett-item:last-child{border:none}
+.sett-ico{font-size:20px;flex-shrink:0;width:32px;text-align:center}
+.sett-name{font-size:14px;color:var(--ink);flex:1}
+.bnav{height:82px;background:var(--white);border-top:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-around;padding:0 10px;flex-shrink:0}
+.bni{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:8px 12px;border-radius:12px}
+.bni.on{background:var(--g50)}
+.bni-ico{font-size:22px}
+.bni-lbl{font-size:10px;font-weight:600;color:var(--ink3)}
+.bni.on .bni-lbl{color:var(--g700)}
+.info{background:var(--g50);border:1px solid var(--g200);border-radius:var(--r12);padding:12px 14px;margin-bottom:12px;display:flex;gap:8px;font-size:12px;color:var(--g800);line-height:1.55}
+.info.amber{background:var(--ambb);border-color:#FFE082;color:#7C5C00}
+.info.blue{background:var(--blueb);border-color:#BFDBFE;color:var(--blue)}
+.info.red{background:var(--redb);border-color:#FECACA;color:var(--red)}
+.info.purple{background:var(--purb);border-color:#DDD6FE;color:var(--purple)}
+.tl-item{display:flex;gap:12px;align-items:flex-start;padding-bottom:16px;position:relative}
+.tl-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.tl-dot.done{background:var(--g500);color:#fff}
+.tl-dot.cur{background:var(--g800);color:#fff;box-shadow:0 0 0 4px rgba(26,71,49,.18)}
+.tl-dot.pend{background:var(--bdr2);color:var(--ink4)}
+.upload-done{border:2px solid var(--g400);border-radius:var(--r12);padding:12px 14px;background:var(--g50);display:flex;gap:10px;align-items:center;margin-bottom:8px}
+.upload-box{border:2px dashed var(--g400);border-radius:var(--r12);padding:16px;text-align:center;background:var(--g50);cursor:pointer;margin-bottom:8px}
+.sec-div{display:flex;align-items:center;gap:10px;margin:16px 0 12px}
+.sec-label{font-size:12px;font-weight:700;color:var(--ink);white-space:nowrap}
+.sec-line{flex:1;height:1px;background:var(--bdr)}
+.sa-only{background:var(--purb);border:1px solid #DDD6FE;border-radius:6px;padding:2px 8px;font-size:10px;font-weight:700;color:var(--purple)}
+.pcard{background:var(--white);border-radius:var(--r16);border:1px solid var(--bdr);padding:14px;margin-bottom:10px}
+.searchbar{display:flex;align-items:center;gap:10px;background:var(--bg);border-radius:var(--r12);padding:0 14px;height:44px;border:1px solid var(--bdr)}
+.cert-card{background:var(--white);border-radius:var(--r20);border:1px solid var(--bdr);overflow:hidden;margin-bottom:14px}
+.spacer{height:100px}
+.mb8{margin-bottom:8px}.mb12{margin-bottom:12px}.mb14{margin-bottom:14px}.mb16{margin-bottom:16px}
+.mt8{margin-top:8px}.mt12{margin-top:12px}.mt16{margin-top:16px}
+</style>
+</head>
+<body>
+<div class="canvas">
+
+<div style="text-align:center;padding:20px 0 4px">
+  <div style="font-family:'Lora',serif;font-size:28px;font-weight:700;color:#fff;margin-bottom:6px">MIC Platform — Batch 6 Final</div>
+  <div style="font-size:13px;color:#555">User Detail Screens · Admin Deep Flows · Super Admin Remaining · Platform Complete</div>
+</div>
+
+<!-- ══════════════════════════════════
+  USER APP — MISSING DETAIL SCREENS
+══════════════════════════════════ -->
+<div class="rl">User App · Missing Screens — Nikaah Certificate, Maktab, My Documents</div>
+<div class="srow">
+
+<!-- D-02 Nikaah Certificate -->
+<div class="sc">
+<div class="sc-num">D-02</div>
+<div class="phone">
+  <div class="sb sb-l"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="tbar"><div class="tb-back">←</div><div class="tb-title">Nikaah Certificate</div><div class="tb-act">Share</div></div>
+  <div class="scr" style="background:var(--bg);padding:16px">
+
+    <div class="cert-card">
+      <div style="background:linear-gradient(135deg,var(--g900),var(--g700));padding:22px;text-align:center">
+        <div style="font-size:10px;font-weight:700;letter-spacing:2.5px;color:rgba(201,168,76,.8);text-transform:uppercase;margin-bottom:10px">Muslim India Card — Nikaah Certificate</div>
+        <div style="font-size:36px;margin-bottom:10px">💒</div>
+        <div style="font-family:'Lora',serif;font-size:18px;font-weight:700;color:#fff;margin-bottom:4px">Mohammed Irfan Khan</div>
+        <div style="font-size:13px;color:rgba(255,255,255,.6);margin-bottom:4px">&amp;</div>
+        <div style="font-family:'Lora',serif;font-size:18px;font-weight:700;color:#fff;margin-bottom:4px">Zainab Banu</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.55)">Nikaah solemnised — August 20, 2025</div>
+      </div>
+      <div style="padding:18px 20px">
+        <div class="irow"><div class="il">Groom</div><div class="ir">Mohammed Irfan Khan · KA-BLR-00421</div></div>
+        <div class="irow"><div class="il">Bride</div><div class="ir">Zainab Banu · KA-BLR-00440</div></div>
+        <div class="irow"><div class="il">Mehr</div><div class="ir">₹1,00,000 (settled)</div></div>
+        <div class="irow"><div class="il">Wali of Bride</div><div class="ir">Yusuf Banu (Father)</div></div>
+        <div class="irow"><div class="il">Witness 1</div><div class="ir">Haji Abdul Rahman</div></div>
+        <div class="irow"><div class="il">Witness 2</div><div class="ir">Mohammed Siddiq</div></div>
+        <div class="irow"><div class="il">Imam</div><div class="ir">Maulana Abdul Qadir</div></div>
+        <div class="irow"><div class="il">Masjid</div><div class="ir">Jama Masjid, Bengaluru</div></div>
+        <div class="irow"><div class="il">Certificate No.</div><div class="ir" style="color:var(--g600);font-family:monospace">NIKA-2025-BLR-0218</div></div>
+        <div class="irow"><div class="il">BG Check Ref</div><div class="ir">BGC-2025-0421 ✓</div></div>
+      </div>
+      <div style="border-top:1px dashed var(--bdr);padding:16px 20px;display:flex;justify-content:space-between;align-items:center">
+        <div style="width:72px;height:72px;background:rgba(0,0,0,.05);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:42px">⬛</div>
+        <div style="text-align:right">
+          <div style="font-size:11px;color:var(--ink3);margin-bottom:4px">Authorised &amp; Stamped by</div>
+          <div style="font-size:13px;font-weight:700;color:var(--ink)">Haji Rashid Khan</div>
+          <div style="font-size:11px;color:var(--ink3)">Secretary · Jama Masjid</div>
+          <div style="font-size:10px;color:var(--ink4);margin-top:4px">Digitally signed — July 22, 2025</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info mb12"><span>✅</span><div>This certificate is valid for all legal and community purposes. Recognised across all 18,420 MIC-registered Masjids.</div></div>
+
+    <button class="btn-p mb12">⬇ Download Certificate PDF</button>
+    <button class="btn-s">📤 Share via WhatsApp</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+<div class="sc-lbl">D-02 · Nikaah Certificate</div>
+</div>
+
+<!-- D-04 Complaint Status Detail -->
+<div class="sc">
+<div class="sc-num">D-04</div>
+<div class="phone">
+  <div class="sb sb-l"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="tbar"><div class="tb-back">←</div><div class="tb-title">Complaint Status</div><div class="tb-act">Evidence</div></div>
+  <div class="scr" style="background:var(--bg);padding:16px">
+
+    <div style="background:linear-gradient(135deg,#1A1A1A,#2D2D2D);border-radius:var(--r20);padding:18px;margin-bottom:14px">
+      <div style="font-size:10px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Complaint Reference</div>
+      <div style="font-size:20px;font-weight:800;color:var(--gold2);letter-spacing:1px;font-family:monospace;margin-bottom:10px">#COMP-2025-0422</div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div><div style="font-size:12px;color:rgba(255,255,255,.5)">Type: Debt Dispute</div><div style="font-size:12px;color:rgba(255,255,255,.5)">Against: Khalid Merchant</div></div>
+        <div style="background:var(--ambb);border-radius:var(--r99);padding:5px 12px;font-size:11px;font-weight:700;color:var(--amber)">⚖️ In Mediation</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr"><div class="card-ico">📋</div><div><div class="card-title">Complaint Details</div></div></div>
+      <div class="irow"><div class="il">Filed By</div><div class="ir">Mohammed Irfan Khan</div></div>
+      <div class="irow"><div class="il">Filed On</div><div class="ir">July 5, 2025</div></div>
+      <div class="irow"><div class="il">Against</div><div class="ir">Khalid Merchant · KA-BLR-00310</div></div>
+      <div class="irow"><div class="il">Amount Disputed</div><div class="ir">₹45,000</div></div>
+      <div class="irow"><div class="il">Admin Handling</div><div class="ir">Haji Rashid Khan</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr"><div class="card-ico amber">📅</div><div><div class="card-title">Mediation Timeline</div></div></div>
+      <div style="display:flex;flex-direction:column;gap:0">
+        <div class="tl-item">
+          <div class="tl-dot done">✓</div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--ink)">Complaint Filed</div><div style="font-size:11px;color:var(--ink3)">July 5 · Acknowledged within 2 hours</div></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot done">✓</div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--ink)">Both Parties Notified</div><div style="font-size:11px;color:var(--ink3)">July 6 · Khalid Merchant notified by SMS</div></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot cur">⋯</div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--g800)">Mediation Session Scheduled</div><div style="font-size:11px;color:var(--ink3)">July 12 · 3:00 PM · Jama Masjid</div></div>
+        </div>
+        <div class="tl-item" style="padding-bottom:0">
+          <div class="tl-dot pend">4</div>
+          <div style="flex:1"><div style="font-size:13px;color:var(--ink3)">Resolution &amp; Closure</div><div style="font-size:11px;color:var(--ink4)">Expected July 19</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:var(--g50);border:1.5px solid var(--g300);border-radius:var(--r12);padding:14px;margin-bottom:14px">
+      <div style="font-size:12px;font-weight:700;color:var(--g800);margin-bottom:8px">📅 Your Mediation Appointment</div>
+      <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:3px">July 12, 2025 · 3:00 PM</div>
+      <div style="font-size:12px;color:var(--ink3)">Jama Masjid — Conference Room · Shivajinagar, Bengaluru</div>
+      <div style="margin-top:10px;display:flex;gap:8px">
+        <button class="btn-sm btn-g" style="flex:1;height:36px">📅 Add to Calendar</button>
+        <button class="btn-sm btn-gr" style="height:36px">📍 Get Directions</button>
+      </div>
+    </div>
+
+    <button class="btn-p mb12">📎 Add Evidence / Documents</button>
+    <button class="btn-s">📞 Contact Mediator Admin</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+<div class="sc-lbl">D-04 · Complaint Status Detail</div>
+</div>
+
+<!-- D-07 My Documents -->
+<div class="sc">
+<div class="sc-num">D-07</div>
+<div class="phone">
+  <div class="sb sb-l"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="tbar"><div class="tb-back">←</div><div class="tb-title">My Documents</div><div class="tb-act">Upload +</div></div>
+  <div class="tabs">
+    <div class="tab on">All (12)</div>
+    <div class="tab">Identity (3)</div>
+    <div class="tab">MIC (5)</div>
+    <div class="tab">Property (2)</div>
+    <div class="tab">Other (2)</div>
+  </div>
+  <div class="scr" style="background:var(--bg);padding:14px 16px">
+
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--ink4);margin-bottom:8px">MIC Documents</div>
+    <div style="background:var(--white);border-radius:var(--r16);border:1px solid var(--bdr);overflow:hidden;margin-bottom:14px">
+      <div class="li"><div class="li-ava">🪪</div><div style="flex:1"><div class="li-name">MIC Card — KA-BLR-00421</div><div class="li-det">Issued Jan 2019 · Valid Dec 2025</div></div><div style="display:flex;gap:6px"><button class="btn-sm btn-g" style="height:28px;font-size:10px">View</button><button class="btn-sm btn-gr" style="height:28px;font-size:10px">⬇</button></div></div>
+      <div class="li"><div class="li-ava">💒</div><div style="flex:1"><div class="li-name">Nikaah Certificate</div><div class="li-det">Aug 20, 2025 · NIKA-2025-BLR-0218</div></div><div style="display:flex;gap:6px"><button class="btn-sm btn-g" style="height:28px;font-size:10px">View</button><button class="btn-sm btn-gr" style="height:28px;font-size:10px">⬇</button></div></div>
+      <div class="li"><div class="li-ava">🚚</div><div style="flex:1"><div class="li-name">Relocation NOC — Mumbai</div><div class="li-det">July 5, 2025 · NOC-2025-BLR-0242</div></div><div style="display:flex;gap:6px"><button class="btn-sm btn-g" style="height:28px;font-size:10px">View</button><button class="btn-sm btn-gr" style="height:28px;font-size:10px">⬇</button></div></div>
+      <div class="li"><div class="li-ava">🌙</div><div style="flex:1"><div class="li-name">Zakat Receipt 2025</div><div class="li-det">₹15,113 · June 14 · RCP-2025-0842</div></div><div style="display:flex;gap:6px"><button class="btn-sm btn-g" style="height:28px;font-size:10px">View</button><button class="btn-sm btn-gr" style="height:28px;font-size:10px">⬇</button></div></div>
+      <div class="li"><div class="li-ava">💳</div><div style="flex:1"><div class="li-name">Registration Fee Receipt</div><div class="li-det">₹100 · January 2019 · TXN-2019-0001</div></div><div style="display:flex;gap:6px"><button class="btn-sm btn-g" style="height:28px;font-size:10px">View</button><button class="btn-sm btn-gr" style="height:28px;font-size:10px">⬇</button></div></div>
+    </div>
+
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--ink4);margin-bottom:8px">Identity Documents</div>
+    <div style="background:var(--white);border-radius:var(--r16);border:1px solid var(--bdr);overflow:hidden;margin-bottom:14px">
+      <div class="li"><div class="li-ava">📄</div><div style="flex:1"><div class="li-name">Aadhaar Card</div><div class="li-det">XXXX-XXXX-4821 · Uploaded Jan 2019</div></div><div style="display:flex;gap:6px"><button class="btn-sm btn-g" style="height:28px;font-size:10px">View</button></div></div>
+      <div class="li"><div class="li-ava">🏠</div><div style="flex:1"><div class="li-name">Property Deed — Al-Noor Apt</div><div class="li-det">Sale deed · 850 sq ft · 2018</div></div><div style="display:flex;gap:6px"><button class="btn-sm btn-g" style="height:28px;font-size:10px">View</button><button class="btn-sm btn-gr" style="height:28px;font-size:10px">⬇</button></div></div>
+      <div class="li"><div class="li-ava">🎓</div><div style="flex:1"><div class="li-name">Engineering Degree Certificate</div><div class="li-det">VTU · 2007 · Uploaded 2019</div></div><div style="display:flex;gap:6px"><button class="btn-sm btn-g" style="height:28px;font-size:10px">View</button></div></div>
+    </div>
+
+    <button class="btn-p mb12">📎 Upload New Document</button>
+    <button class="btn-s">📦 Download All (ZIP)</button>
+    <div class="spacer"></div>
+  </div>
+  <div class="bnav">
+    <div class="bni"><div class="bni-ico">🏠</div><div class="bni-lbl">Home</div></div>
+    <div class="bni"><div class="bni-ico">🪪</div><div class="bni-lbl">My Card</div></div>
+    <div class="bni"><div class="bni-ico">🛎️</div><div class="bni-lbl">Services</div></div>
+    <div class="bni"><div class="bni-ico">🔔</div><div class="bni-lbl">Alerts</div></div>
+    <div class="bni on"><div class="bni-ico">👤</div><div class="bni-lbl">Profile</div></div>
+  </div>
+</div>
+<div class="sc-lbl">D-07 · My Documents</div>
+</div>
+
+<!-- D-08 Maktab Admission Flow -->
+<div class="sc">
+<div class="sc-num">D-08</div>
+<div class="phone">
+  <div class="sb sb-l"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="tbar"><div class="tb-back">←</div><div class="tb-title">Maktab Admission</div></div>
+  <div class="ban ban-green"><span>📚</span><span>Register your child for Arabic &amp; Quran classes at your area Masjid Maktab. Fees start at ₹500/month.</span></div>
+  <div class="scr" style="background:var(--bg);padding:16px">
+    <div class="fgroup">
+      <label class="flabel">Child's Name <span class="req">*</span></label>
+      <div style="background:var(--g50);border:1.5px solid var(--g400);border-radius:var(--r12);padding:12px 14px;display:flex;gap:10px;align-items:center">
+        <span style="font-size:22px">👦</span>
+        <div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--g800)">Yusuf Irfan Khan</div><div style="font-size:11px;color:var(--g600)">Age 9 · Your Child</div></div>
+        <span style="color:var(--g500);font-size:18px">✓</span>
+      </div>
+    </div>
+    <div class="fgroup"><label class="flabel">Maktab / Masjid <span class="req">*</span></label>
+      <div style="background:var(--g50);border:1.5px solid var(--g400);border-radius:var(--r12);padding:12px 14px;display:flex;gap:10px;align-items:center">
+        <span style="font-size:22px">🕌</span>
+        <div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--g800)">Jama Masjid Maktab</div><div style="font-size:11px;color:var(--g600)">Shivajinagar · Mon–Sat · 7–9 AM</div></div>
+        <span style="color:var(--g500);font-size:18px">✓</span>
+      </div>
+    </div>
+    <div class="fgroup"><label class="flabel">Batch / Level <span class="req">*</span></label>
+      <div class="tag-row">
+        <span class="tag on">📖 Beginner (Qaida)</span>
+        <span class="tag">📗 Intermediate (Nazira)</span>
+        <span class="tag">📕 Advanced (Hifz)</span>
+        <span class="tag">🌙 Arabic Language</span>
+      </div>
+    </div>
+    <div class="frow">
+      <div class="fgroup"><label class="flabel">Preferred Batch</label><div class="finput on">Morning · 7–9 AM ▾</div></div>
+      <div class="fgroup"><label class="flabel">Start Date</label><div class="finput on">August 1, 2025</div></div>
+    </div>
+    <div class="fgroup"><label class="flabel">Previous Quran Education?</label>
+      <div class="tag-row"><span class="tag on">None — Beginner</span><span class="tag">Some — at home</span><span class="tag">Yes — Masjid class</span></div>
+    </div>
+    <div class="card">
+      <div class="card-hdr"><div class="card-ico gold">💰</div><div><div class="card-title">Fee Structure</div></div></div>
+      <div class="irow"><div class="il">Monthly Fee</div><div class="ir">₹500</div></div>
+      <div class="irow"><div class="il">Admission Fee</div><div class="ir">₹200 (one-time)</div></div>
+      <div class="irow"><div class="il">Payment Method</div><div class="ir">Monthly · UPI / Cash</div></div>
+      <div class="irow"><div class="il">First Payment Due</div><div class="ir">August 1, 2025</div></div>
+    </div>
+    <div class="fgroup"><label class="flabel">Notes to Teacher <span style="font-size:10px;color:var(--ink4);font-weight:400">(optional)</span></label><div class="ftxt">Yusuf knows the Arabic alphabet but has not read Quran yet. He is eager to learn. Morning batch preferred due to school timings.</div></div>
+    <button class="btn-p mb12">📚 Submit Admission Request</button>
+    <button class="btn-s">📞 Contact Maktab Teacher</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+<div class="sc-lbl">D-08 · Maktab Admission</div>
+</div>
+
+</div>
+
+<!-- ══════════════════════════════════
+  ADMIN APP — REMAINING DEEP SCREENS
+══════════════════════════════════ -->
+<div class="rl">Admin App · Deep Screens — BG Decision, Complaint Resolution, Maktab Detail, Masjid Finance</div>
+<div class="srow">
+
+<!-- AD-02 BG Check Decision -->
+<div class="sc">
+<div class="sc-num">AD-02</div>
+<div class="phone">
+  <div class="sb sb-l"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="tbar"><div class="tb-back">←</div><div class="tb-title">BG Check Decision</div></div>
+  <div class="ban ban-gold"><span>⚖️</span><span>Review all facts carefully before deciding. Once approved, a Nikaah Certificate is issued. Rejection must be documented.</span></div>
+  <div class="scr" style="background:var(--bg);padding:16px">
+    <div class="card">
+      <div class="card-hdr"><div class="card-ico">👫</div><div><div class="card-title">Couple Information</div></div></div>
+      <div class="irow"><div class="il">Groom</div><div class="ir">Mohammed Irfan Khan · KA-BLR-00421</div></div>
+      <div class="irow"><div class="il">Groom's Father</div><div class="ir">Ahmed Hassan Khan</div></div>
+      <div class="irow"><div class="il">Bride</div><div class="ir">Zainab Banu · KA-MYS-00218</div></div>
+      <div class="irow"><div class="il">Bride's Father</div><div class="ir">Yusuf Banu · KA-MYS-00190</div></div>
+      <div class="irow"><div class="il">Proposed Nikaah</div><div class="ir">August 20, 2025</div></div>
+      <div class="irow"><div class="il">Fee Paid</div><div class="ir">₹500 · July 2, 2025 ✓</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr"><div class="card-ico">📋</div><div><div class="card-title">Verification Checklist</div></div></div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;gap:10px;align-items:center"><div style="width:22px;height:22px;border-radius:6px;background:var(--g500);display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;flex-shrink:0">✓</div><div style="font-size:13px;color:var(--ink2)">Groom registered &amp; verified MIC member</div></div>
+        <div style="display:flex;gap:10px;align-items:center"><div style="width:22px;height:22px;border-radius:6px;background:var(--g500);display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;flex-shrink:0">✓</div><div style="font-size:13px;color:var(--ink2)">Bride registered — Al-Noor Masjid, Mysuru</div></div>
+        <div style="display:flex;gap:10px;align-items:center"><div style="width:22px;height:22px;border-radius:6px;background:var(--g500);display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;flex-shrink:0">✓</div><div style="font-size:13px;color:var(--ink2)">No active complaints on groom</div></div>
+        <div style="display:flex;gap:10px;align-items:center"><div style="width:22px;height:22px;border-radius:6px;background:var(--g500);display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;flex-shrink:0">✓</div><div style="font-size:13px;color:var(--ink2)">No active complaints on bride</div></div>
+        <div style="display:flex;gap:10px;align-items:center"><div style="width:22px;height:22px;border-radius:6px;background:var(--g500);display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;flex-shrink:0">✓</div><div style="font-size:13px;color:var(--ink2)">Groom not currently married (single)</div></div>
+        <div style="display:flex;gap:10px;align-items:center"><div style="width:22px;height:22px;border-radius:6px;background:var(--g500);display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;flex-shrink:0">✓</div><div style="font-size:13px;color:var(--ink2)">Mysuru admin confirmed — no objections</div></div>
+        <div style="display:flex;gap:10px;align-items:center"><div style="width:22px;height:22px;border-radius:6px;background:var(--g500);display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;flex-shrink:0">✓</div><div style="font-size:13px;color:var(--ink2)">Both families consent confirmed</div></div>
+      </div>
+    </div>
+
+    <div class="fgroup"><label class="flabel">Admin Notes / Decision Reason <span class="req">*</span></label><div class="ftxt">Both parties verified. No complaints, no pending issues. Mysuru admin (Al-Noor Masjid) confirmed bride's record is clean. Families have consented. Recommending approval.</div></div>
+
+    <button class="btn-p mb12">✅ Approve — Issue Nikaah Certificate</button>
+    <button class="btn-red mb12">✗ Reject — Document Reason</button>
+    <button class="btn-sm btn-gr" style="width:100%;height:44px;font-size:13px">📞 Call Groom / Bride Family</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+<div class="sc-lbl">AD-02 · BG Check Decision</div>
+</div>
+
+<!-- AD-04 Complaint Resolution -->
+<div class="sc">
+<div class="sc-num">AD-04</div>
+<div class="phone">
+  <div class="sb sb-l"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="tbar"><div class="tb-back">←</div><div class="tb-title">Complaint Resolution</div></div>
+  <div class="scr" style="background:var(--bg);padding:16px">
+    <div class="card" style="border-left:3px solid var(--amber)">
+      <div class="card-hdr"><div class="card-ico amber">⚖️</div><div><div class="card-title">COMP-2025-0422 · Debt Dispute</div><div class="card-sub">Filed July 5 · Day 7 · Mediation complete</div></div></div>
+      <div class="irow"><div class="il">Complainant</div><div class="ir">Mohammed Irfan Khan</div></div>
+      <div class="irow"><div class="il">Respondent</div><div class="ir">Khalid Merchant</div></div>
+      <div class="irow"><div class="il">Amount Disputed</div><div class="ir">₹45,000</div></div>
+      <div class="irow"><div class="il">Mediation Date</div><div class="ir">July 12, 2025</div></div>
+      <div class="irow"><div class="il">Both Attended</div><div class="ir"><span class="badge bg-green" style="font-size:10px">Yes ✓</span></div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr"><div class="card-ico">📝</div><div><div class="card-title">Mediation Outcome</div></div></div>
+      <div class="fgroup"><label class="flabel">Resolution Type <span class="req">*</span></label>
+        <div class="tag-row">
+          <span class="tag on">✅ Settled — Both agreed</span>
+          <span class="tag">⚖️ Partial settlement</span>
+          <span class="tag">❌ Unresolved — Escalate</span>
+        </div>
+      </div>
+      <div class="fgroup"><label class="flabel">Settlement Amount</label><div class="finput on">₹38,000 (agreed repayment)</div></div>
+      <div class="fgroup"><label class="flabel">Payment Timeline</label><div class="finput on">₹10,000/month for 4 months ▾</div></div>
+      <div class="fgroup"><label class="flabel">Resolution Notes <span class="req">*</span></label><div class="ftxt">Both parties attended mediation on July 12. Khalid Merchant acknowledged debt of ₹45,000. Agreed to repay ₹38,000 in 4 instalments of ₹9,500 each — first payment by July 31. Mohammed Irfan waived ₹7,000 as goodwill. Written agreement signed by both parties and witnessed by admin.</div></div>
+    </div>
+
+    <div class="fgroup">
+      <label class="flabel">Resolution Certificate</label>
+      <div style="display:flex;justify-content:space-between;align-items:center;background:var(--g50);border:1.5px solid var(--g300);border-radius:var(--r12);padding:12px 14px">
+        <div><div style="font-size:13px;font-weight:600;color:var(--g800)">Issue Resolution Letter PDF</div><div style="font-size:11px;color:var(--g600)">Sent to both parties by SMS</div></div>
+        <div class="tog"></div>
+      </div>
+    </div>
+
+    <button class="btn-p mb12">⚖️ Close Case &amp; Issue Resolution Letter</button>
+    <button class="btn-amber mb12">📡 Escalate to Super Admin</button>
+    <button class="btn-s">📞 Call Both Parties</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+<div class="sc-lbl">AD-04 · Complaint Resolution</div>
+</div>
+
+<!-- AD-06 Maktab Student Detail -->
+<div class="sc">
+<div class="sc-num">AD-06</div>
+<div class="phone">
+  <div class="sb sb-l"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="tbar"><div class="tb-back">←</div><div class="tb-title">Student Detail</div><div class="tb-act">Edit</div></div>
+  <div class="scr" style="background:var(--bg);padding:16px">
+    <!-- Student card -->
+    <div style="background:linear-gradient(135deg,var(--g900),var(--g700));border-radius:var(--r20);padding:18px;margin-bottom:14px;display:flex;gap:12px;align-items:center">
+      <div style="width:62px;height:62px;border-radius:50%;background:rgba(255,255,255,.12);border:2.5px solid rgba(201,168,76,.4);display:flex;align-items:center;justify-content:center;font-size:32px;flex-shrink:0">👦</div>
+      <div>
+        <div style="font-family:'Lora',serif;font-size:16px;font-weight:700;color:#fff;margin-bottom:2px">Yusuf Irfan Khan</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.55)">Age 9 · Beginner (Qaida) · Morning Batch</div>
+        <div style="font-size:11px;color:var(--gold2);margin-top:3px">Parent: Mohammed Irfan · KA-BLR-00421</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr"><div class="card-ico">📚</div><div><div class="card-title">Academic Progress</div></div></div>
+      <div class="irow"><div class="il">Current Level</div><div class="ir">Beginner (Qaida) — Week 8</div></div>
+      <div class="irow"><div class="il">Teacher</div><div class="ir">Hafiz Abdur Rahman</div></div>
+      <div class="irow"><div class="il">Batch Timing</div><div class="ir">Mon–Sat · 7:00–9:00 AM</div></div>
+      <div class="irow"><div class="il">Enrolled Since</div><div class="ir">January 1, 2025</div></div>
+      <div class="irow"><div class="il">Last Assessment</div><div class="ir">July 1 — MashAllah ⭐⭐⭐⭐</div></div>
+      <div style="margin-top:12px"><div style="font-size:12px;color:var(--ink3);margin-bottom:6px">Level Progress</div><div class="prog"><div class="prog-fill" style="width:55%"></div></div><div style="font-size:11px;color:var(--ink4);margin-top:4px">55% of Beginner level · Estimated 4 more weeks</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr"><div class="card-ico gold">💰</div><div><div class="card-title">Fee Record</div></div></div>
+      <div class="irow"><div class="il">Monthly Fee</div><div class="ir">₹500/month</div></div>
+      <div class="irow"><div class="il">Admission Fee</div><div class="ir">₹200 · Jan 1 ✓</div></div>
+      <div class="irow"><div class="il">July 2025</div><div class="ir"><span class="badge bg-green" style="font-size:10px">Paid ✓</span></div></div>
+      <div class="irow"><div class="il">August 2025</div><div class="ir"><span class="badge bg-red" style="font-size:10px">⏳ Due Aug 1</span></div></div>
+      <div class="irow"><div class="il">Total Paid</div><div class="ir">₹3,700 (Jan–Jul)</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr"><div class="card-ico">📊</div><div><div class="card-title">July 2025 Attendance</div></div></div>
+      <div class="irow"><div class="il">Classes Present</div><div class="ir">22 / 24</div></div>
+      <div class="irow"><div class="il">Attendance Rate</div><div class="ir" style="color:var(--g600)">91.7% ⭐</div></div>
+      <div class="irow"><div class="il">Absences</div><div class="ir">2 (with parent excuse)</div></div>
+    </div>
+
+    <button class="btn-p mb12">📢 Send Fee Reminder to Parent</button>
+    <button class="btn-s mb12">📝 Add Progress Note</button>
+    <button class="btn-sm btn-gr" style="width:100%;height:44px;font-size:13px">📞 Call Parent — +91 98760 54321</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+<div class="sc-lbl">AD-06 · Maktab Student Detail</div>
+</div>
+
+<!-- AD-07 Masjid Financials Deep -->
+<div class="sc">
+<div class="sc-num">AD-07</div>
+<div class="phone">
+  <div class="sb sb-l"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="tbar"><div class="tb-back">←</div><div class="tb-title">Masjid Financials</div><div class="tb-act">July 2025 ▾</div></div>
+  <div class="tabs">
+    <div class="tab on">Income</div>
+    <div class="tab">Expenses</div>
+    <div class="tab">Zakat</div>
+    <div class="tab">Reports</div>
+  </div>
+  <div class="scr" style="background:var(--bg);padding:14px 16px">
+    <!-- Balance summary -->
+    <div style="background:linear-gradient(135deg,var(--g900),var(--g700));border-radius:var(--r20);padding:20px;margin-bottom:14px">
+      <div style="font-size:10px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">July 2025 Balance Sheet</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+        <div style="text-align:center"><div style="font-size:8px;color:rgba(255,255,255,.4);text-transform:uppercase;margin-bottom:4px">Income</div><div style="font-size:16px;font-weight:800;color:#86EFAC">₹1.24L</div></div>
+        <div style="text-align:center"><div style="font-size:8px;color:rgba(255,255,255,.4);text-transform:uppercase;margin-bottom:4px">Expense</div><div style="font-size:16px;font-weight:800;color:#FCA5A5">₹0.82L</div></div>
+        <div style="text-align:center"><div style="font-size:8px;color:rgba(255,255,255,.4);text-transform:uppercase;margin-bottom:4px">Net</div><div style="font-size:16px;font-weight:800;color:var(--gold2)">₹0.42L</div></div>
+      </div>
+    </div>
+
+    <div style="font-size:13px;font-weight:700;margin-bottom:10px">Income Breakdown</div>
+    <div style="background:var(--white);border-radius:var(--r16);border:1px solid var(--bdr);overflow:hidden;margin-bottom:14px">
+      <div class="li"><div class="li-ava">🌙</div><div style="flex:1"><div class="li-name">Zakat &amp; Sadaqah Donations</div><div class="li-det">42 transactions · July</div></div><div style="font-size:13px;font-weight:700;color:var(--g700)">₹68,400</div></div>
+      <div class="li"><div class="li-ava">📚</div><div style="flex:1"><div class="li-name">Maktab Fees</div><div class="li-det">42 students · ₹500 each</div></div><div style="font-size:13px;font-weight:700;color:var(--g700)">₹21,000</div></div>
+      <div class="li"><div class="li-ava">🛎️</div><div style="flex:1"><div class="li-name">Service Fees (BG, NOC)</div><div class="li-det">8 services this month</div></div><div style="font-size:13px;font-weight:700;color:var(--g700)">₹4,600</div></div>
+      <div class="li"><div class="li-ava">💳</div><div style="flex:1"><div class="li-name">Registration Fees</div><div class="li-det">12 new members · ₹100 each</div></div><div style="font-size:13px;font-weight:700;color:var(--g700)">₹1,200</div></div>
+      <div class="li"><div class="li-ava">🏛️</div><div style="flex:1"><div class="li-name">Waqf Property Income</div><div class="li-det">Rental income — 3 shops</div></div><div style="font-size:13px;font-weight:700;color:var(--g700)">₹29,000</div></div>
+    </div>
+
+    <div style="font-size:13px;font-weight:700;margin-bottom:10px">Expense Breakdown</div>
+    <div style="background:var(--white);border-radius:var(--r16);border:1px solid var(--bdr);overflow:hidden;margin-bottom:14px">
+      <div class="li"><div class="li-ava">💚</div><div style="flex:1"><div class="li-name">Welfare Disbursements</div><div class="li-det">6 families assisted</div></div><div style="font-size:13px;font-weight:700;color:var(--red)">₹32,000</div></div>
+      <div class="li"><div class="li-ava">💡</div><div style="flex:1"><div class="li-name">Masjid Maintenance &amp; Utilities</div><div class="li-det">Electricity, cleaning, repairs</div></div><div style="font-size:13px;font-weight:700;color:var(--red)">₹18,400</div></div>
+      <div class="li"><div class="li-ava">🧑‍🏫</div><div style="flex:1"><div class="li-name">Teacher Salaries — Maktab</div><div class="li-det">2 teachers</div></div><div style="font-size:13px;font-weight:700;color:var(--red)">₹22,000</div></div>
+      <div class="li"><div class="li-ava">🏥</div><div style="flex:1"><div class="li-name">Medical Camp Expenses</div><div class="li-det">July 12 camp</div></div><div style="font-size:13px;font-weight:700;color:var(--red)">₹9,600</div></div>
+    </div>
+
+    <button class="btn-p mb12">📄 Generate Monthly Report PDF</button>
+    <button class="btn-s">📤 Submit to Super Admin</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+<div class="sc-lbl">AD-07 · Masjid Financials Deep</div>
+</div>
+
+</div>
+
+<!-- ══════════════════════════════════
+  SUPER ADMIN — REMAINING DETAIL SCREENS
+══════════════════════════════════ -->
+<div class="rl">Super Admin · Remaining Detail — Compliance, Campaign, User Search, Relocation Override</div>
+<div class="srow">
+
+<!-- SD-07 Compliance & Security -->
+<div class="sc">
+<div class="sc-num">SD-07</div>
+<div class="phone">
+  <div class="sb sb-sa"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="sa-tbar">
+    <div style="color:rgba(255,255,255,.5);font-size:22px">←</div>
+    <div style="font-family:'Lora',serif;font-size:16px;font-weight:700;color:#fff">Compliance &amp; Security</div>
+    <div style="font-size:13px;font-weight:600;color:var(--gold2)">Export</div>
+  </div>
+  <div class="tabs">
+    <div class="tab on">DPDP Act</div>
+    <div class="tab">Security Log</div>
+    <div class="tab">Consent</div>
+    <div class="tab">Audit</div>
+  </div>
+  <div class="scr" style="background:var(--bg);padding:14px 16px">
+    <div class="kpi-grid">
+      <div class="kpi"><div class="kpi-l">Data Deletion Pending</div><div class="kpi-n" style="color:var(--red)">3</div><div class="kpi-ch">1 due today</div></div>
+      <div class="kpi"><div class="kpi-l">Compliance Score</div><div class="kpi-n" style="color:var(--g600)">98.4%</div><div class="kpi-ch">Above threshold</div></div>
+      <div class="kpi"><div class="kpi-l">Consent Revocations</div><div class="kpi-n">12</div><div class="kpi-ch">YTD 2025</div></div>
+      <div class="kpi"><div class="kpi-l">Security Incidents</div><div class="kpi-n" style="color:var(--g600)">0</div><div class="kpi-ch">Last 90 days</div></div>
+    </div>
+
+    <div style="font-size:13px;font-weight:700;margin-bottom:10px">DPDP Act Compliance Status</div>
+    <div style="background:var(--white);border-radius:var(--r16);border:1px solid var(--bdr);overflow:hidden;margin-bottom:14px">
+      <div class="li"><div style="font-size:20px;flex-shrink:0">✅</div><div style="flex:1"><div class="li-name">Consent Management</div><div class="li-det">All 2.4M users have valid consent records</div></div><span class="badge bg-green" style="font-size:10px">Compliant</span></div>
+      <div class="li"><div style="font-size:20px;flex-shrink:0">⚠️</div><div style="flex:1"><div class="li-name">Data Deletion Requests</div><div class="li-det">3 pending · 1 overdue today</div></div><span class="badge bg-red" style="font-size:10px">Action Needed</span></div>
+      <div class="li"><div style="font-size:20px;flex-shrink:0">✅</div><div style="flex:1"><div class="li-name">Data Localisation</div><div class="li-det">All data stored on Indian servers (AWS Mumbai)</div></div><span class="badge bg-green" style="font-size:10px">Compliant</span></div>
+      <div class="li"><div style="font-size:20px;flex-shrink:0">✅</div><div style="flex:1"><div class="li-name">Privacy Policy</div><div class="li-det">Last updated April 2025 · DPDP-aligned</div></div><span class="badge bg-green" style="font-size:10px">Current</span></div>
+      <div class="li"><div style="font-size:20px;flex-shrink:0">✅</div><div style="flex:1"><div class="li-name">Data Breach Response Plan</div><div class="li-det">Reviewed June 2025 · 72hr reporting window</div></div><span class="badge bg-green" style="font-size:10px">Ready</span></div>
+      <div class="li"><div style="font-size:20px;flex-shrink:0">✅</div><div style="flex:1"><div class="li-name">Minor Data Protection</div><div class="li-det">Children under 18 — parent consent mandatory</div></div><span class="badge bg-green" style="font-size:10px">Enforced</span></div>
+    </div>
+
+    <div style="font-size:13px;font-weight:700;margin-bottom:10px">Security Overview</div>
+    <div class="card" style="margin-bottom:14px">
+      <div class="irow"><div class="il">2FA Enforcement</div><div class="ir"><span class="badge bg-green" style="font-size:10px">All Admins Mandatory</span></div></div>
+      <div class="irow"><div class="il">SSL Certificate</div><div class="ir">Valid until Dec 2025 ✓</div></div>
+      <div class="irow"><div class="il">Last Penetration Test</div><div class="ir">May 2025 · No critical issues</div></div>
+      <div class="irow"><div class="il">Database Backups</div><div class="ir">Daily · 30-day retention ✓</div></div>
+      <div class="irow"><div class="il">Audit Log Retention</div><div class="ir">7 years (legal minimum)</div></div>
+    </div>
+
+    <button class="btn-pur mb12">📋 Download Full Compliance Report</button>
+    <button class="btn-s">🗑️ Process Pending Deletions (3)</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+<div class="sc-lbl">SD-07 · Compliance &amp; Security</div>
+</div>
+
+<!-- SD-06 Campaign / Welfare Campaign Detail -->
+<div class="sc">
+<div class="sc-num">SD-06</div>
+<div class="phone">
+  <div class="sb sb-sa"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="sa-tbar">
+    <div style="color:rgba(255,255,255,.5);font-size:22px">←</div>
+    <div style="font-family:'Lora',serif;font-size:16px;font-weight:700;color:#fff">Campaign Detail</div>
+    <div style="font-size:13px;font-weight:600;color:var(--gold2)">Share</div>
+  </div>
+  <div class="scr" style="background:var(--bg);padding:16px">
+    <!-- Campaign hero -->
+    <div style="background:linear-gradient(135deg,#0A1628,#1A2E4A);border-radius:var(--r20);padding:20px;margin-bottom:14px">
+      <div style="font-size:10px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">National Welfare Campaign</div>
+      <div style="font-size:24px;margin-bottom:8px">🌊</div>
+      <div style="font-family:'Lora',serif;font-size:18px;font-weight:700;color:#fff;margin-bottom:4px">Bihar Flood Relief 2025</div>
+      <div style="font-size:12px;color:rgba(255,255,255,.55);margin-bottom:16px">Emergency relief for flood-affected Muslim families in Bihar &amp; Jharkhand</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+        <div style="background:rgba(255,255,255,.1);border-radius:10px;padding:10px;text-align:center"><div style="font-size:14px;font-weight:800;color:#86EFAC">₹28.4L</div><div style="font-size:9px;color:rgba(255,255,255,.4);margin-top:2px">Raised</div></div>
+        <div style="background:rgba(255,255,255,.1);border-radius:10px;padding:10px;text-align:center"><div style="font-size:14px;font-weight:800;color:var(--gold2)">₹50L</div><div style="font-size:9px;color:rgba(255,255,255,.4);margin-top:2px">Goal</div></div>
+        <div style="background:rgba(255,255,255,.1);border-radius:10px;padding:10px;text-align:center"><div style="font-size:14px;font-weight:800;color:#fff">14,820</div><div style="font-size:9px;color:rgba(255,255,255,.4);margin-top:2px">Donors</div></div>
+      </div>
+      <div style="margin-top:12px"><div class="prog" style="background:rgba(255,255,255,.15)"><div class="prog-fill" style="width:56.8%;background:linear-gradient(90deg,#86EFAC,#34D399)"></div></div><div style="font-size:10px;color:rgba(255,255,255,.4);margin-top:4px">56.8% of goal · 18 days remaining</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr"><div class="card-ico blue">📋</div><div><div class="card-title">Campaign Details</div></div></div>
+      <div class="irow"><div class="il">Started</div><div class="ir">July 1, 2025</div></div>
+      <div class="irow"><div class="il">Ends</div><div class="ir">July 31, 2025</div></div>
+      <div class="irow"><div class="il">States Covered</div><div class="ir">Bihar, Jharkhand, West Bengal</div></div>
+      <div class="irow"><div class="il">Masjids Participating</div><div class="ir">2,840 of 4,040 in region</div></div>
+      <div class="irow"><div class="il">Families Targeted</div><div class="ir">4,200 affected families</div></div>
+      <div class="irow"><div class="il">Avg Donation</div><div class="ir">₹1,915</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr"><div class="card-ico gold">💚</div><div><div class="card-title">Disbursement Progress</div></div></div>
+      <div class="irow"><div class="il">Total Raised</div><div class="ir">₹28,40,000</div></div>
+      <div class="irow"><div class="il">Disbursed to Families</div><div class="ir" style="color:var(--g600)">₹18,60,000</div></div>
+      <div class="irow"><div class="il">Pending Disbursement</div><div class="ir" style="color:var(--amber)">₹9,80,000</div></div>
+      <div class="irow"><div class="il">Families Served</div><div class="ir">1,860 of 4,200</div></div>
+      <div class="irow"><div class="il">Avg Relief / Family</div><div class="ir">₹10,000</div></div>
+    </div>
+
+    <button class="btn-pur mb12">📦 Allocate Next Batch of Relief</button>
+    <button class="btn-p mb12">📡 Broadcast Campaign Update</button>
+    <button class="btn-s">📄 Download Full Campaign Report</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+<div class="sc-lbl">SD-06 · Campaign Detail</div>
+</div>
+
+<!-- SD-05 National User Search (SA) -->
+<div class="sc">
+<div class="sc-num">SD-05</div>
+<div class="phone">
+  <div class="sb sb-sa"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="sa-tbar">
+    <div style="color:rgba(255,255,255,.5);font-size:22px">←</div>
+    <div style="font-family:'Lora',serif;font-size:16px;font-weight:700;color:#fff">National User Search</div>
+    <div style="font-size:13px;font-weight:600;color:var(--gold2)">Export</div>
+  </div>
+  <div style="padding:12px 16px;background:#06150D;flex-shrink:0">
+    <div style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.08);border-radius:var(--r12);padding:0 14px;height:44px;border:1px solid rgba(255,255,255,.15)">
+      <span style="color:rgba(255,255,255,.4);font-size:16px">🔍</span>
+      <p style="font-size:14px;color:rgba(255,255,255,.3)">Name, MIC ID, mobile, Aadhaar…</p>
+    </div>
+  </div>
+  <div class="scr" style="background:var(--bg);padding:14px 16px">
+    <!-- Filters -->
+    <div style="background:var(--white);border-radius:var(--r16);border:1px solid var(--bdr);padding:14px;margin-bottom:14px">
+      <div style="font-size:12px;font-weight:700;color:var(--ink);margin-bottom:10px">Advanced Filters <span class="sa-only">SA Only</span></div>
+      <div class="frow" style="margin-bottom:10px">
+        <div class="fgroup" style="margin-bottom:0"><label class="flabel" style="margin-bottom:4px">State</label><div class="finput on" style="height:40px;font-size:13px">Karnataka ▾</div></div>
+        <div class="fgroup" style="margin-bottom:0"><label class="flabel" style="margin-bottom:4px">Status</label><div class="finput" style="height:40px;font-size:13px;color:var(--ink4)">All ▾</div></div>
+      </div>
+      <div class="frow" style="margin-bottom:10px">
+        <div class="fgroup" style="margin-bottom:0"><label class="flabel" style="margin-bottom:4px">Housing Type</label><div class="finput" style="height:40px;font-size:13px;color:var(--ink4)">All ▾</div></div>
+        <div class="fgroup" style="margin-bottom:0"><label class="flabel" style="margin-bottom:4px">Blood Group</label><div class="finput" style="height:40px;font-size:13px;color:var(--ink4)">Any ▾</div></div>
+      </div>
+      <div class="frow">
+        <div class="fgroup" style="margin-bottom:0"><label class="flabel" style="margin-bottom:4px">Reg. From</label><div class="finput on" style="height:40px;font-size:13px">Jan 2019</div></div>
+        <div class="fgroup" style="margin-bottom:0"><label class="flabel" style="margin-bottom:4px">To</label><div class="finput on" style="height:40px;font-size:13px">Jul 2025</div></div>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div style="font-size:13px;font-weight:700;margin-bottom:10px">Results <span style="color:var(--ink3);font-weight:400;">(2,400,218 total · showing 5)</span></div>
+    <div style="background:var(--white);border-radius:var(--r16);border:1px solid var(--bdr);overflow:hidden;margin-bottom:14px">
+      <div class="li"><div class="li-ava">👤</div><div style="flex:1"><div class="li-name">Mohammed Irfan Khan</div><div class="li-det">KA-BLR-00421 · Bengaluru · Owner</div></div><span class="badge bg-green" style="font-size:10px">Active</span></div>
+      <div class="li"><div class="li-ava">👤</div><div style="flex:1"><div class="li-name">Fatima Begum</div><div class="li-det">KA-BLR-00411 · Bengaluru · Rent</div></div><span class="badge bg-green" style="font-size:10px">Active</span></div>
+      <div class="li"><div class="li-ava">👤</div><div style="flex:1"><div class="li-name">Salim Qureshi</div><div class="li-det">KA-BLR-00312 · Mysuru · Lease</div></div><span class="badge bg-red" style="font-size:10px">Expired</span></div>
+      <div class="li"><div class="li-ava">👤</div><div style="flex:1"><div class="li-name">Mohammed Arshad</div><div class="li-det">KA-BLR-00420 · Hubli · Owner</div></div><span class="badge bg-green" style="font-size:10px">Active</span></div>
+      <div class="li"><div class="li-ava">👤</div><div style="flex:1"><div class="li-name">Zainab Banu</div><div class="li-det">KA-BLR-00440 · Bengaluru · Owner</div></div><span class="badge bg-green" style="font-size:10px">Active</span></div>
+    </div>
+
+    <div class="info purple mb12"><span>🛡️</span><div>SA national search includes all 2.4M members across all states. Results show housing type for address verification. Search is logged in audit trail.</div></div>
+
+    <button class="btn-pur mb12">📥 Export Search Results (CSV)</button>
+    <button class="btn-s">🔍 Refine Search</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+<div class="sc-lbl">SD-05 · National User Search (SA)</div>
+</div>
+
+<!-- SD-03 Case Intervention (SA Override) -->
+<div class="sc">
+<div class="sc-num">SD-03</div>
+<div class="phone">
+  <div class="sb sb-sa"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="sa-tbar">
+    <div style="color:rgba(255,255,255,.5);font-size:22px">←</div>
+    <div style="font-family:'Lora',serif;font-size:16px;font-weight:700;color:#fff">SA Case Intervention</div>
+    <div class="sa-only">SA Only</div>
+  </div>
+  <div class="ban ban-purple"><span>🛡️</span><span>Super Admin intervention overrides all area admin decisions. Action is final, permanent and logged in the tamper-proof national audit trail.</span></div>
+  <div class="scr" style="background:var(--bg);padding:16px">
+    <div style="background:linear-gradient(135deg,#1A0A2E,var(--purdark));border-radius:var(--r16);padding:16px;margin-bottom:14px">
+      <div style="font-size:10px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Escalated Case</div>
+      <div style="font-family:'Lora',serif;font-size:16px;font-weight:700;color:#fff;margin-bottom:3px">#ESC-2025-0001 · Property Dispute</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.55);margin-bottom:10px">Srinagar · J&amp;K · Escalated — 18 days unresolved</div>
+      <span class="badge bg-red" style="font-size:10px">🚨 Urgent SA Intervention Required</span>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr"><div class="card-ico red">⚠️</div><div><div class="card-title">Case Summary</div></div></div>
+      <div class="irow"><div class="il">Complainant</div><div class="ir">Masjid-e-Rahman Committee</div></div>
+      <div class="irow"><div class="il">Respondent</div><div class="ir">Al-Falah Masjid Trustees</div></div>
+      <div class="irow"><div class="il">Nature</div><div class="ir">Shared boundary wall dispute</div></div>
+      <div class="irow"><div class="il">Area Admin</div><div class="ir">Yusuf Bhat (now suspended)</div></div>
+      <div class="irow"><div class="il">Days Unresolved</div><div class="ir" style="color:var(--red)">18 days</div></div>
+      <div class="irow"><div class="il">Civil Court Threat</div><div class="ir"><span class="badge bg-red" style="font-size:10px">Yes — High Risk</span></div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr"><div class="card-ico purple">🛡️</div><div><div class="card-title">SA Intervention Options</div></div></div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="background:var(--g50);border:2px solid var(--g500);border-radius:var(--r12);padding:12px 14px;display:flex;gap:10px;align-items:center"><span style="font-size:18px">⚖️</span><div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--g800)">Appoint Neutral Mediator</div><div style="font-size:11px;color:var(--g600)">SA assigns mediator from another state</div></div><span style="color:var(--g500);font-size:16px">✓</span></div>
+        <div style="background:var(--white);border:1.5px solid var(--bdr);border-radius:var(--r12);padding:12px 14px;display:flex;gap:10px;align-items:center"><span style="font-size:18px">📜</span><div><div style="font-size:13px;color:var(--ink)">Issue Binding SA Order</div><div style="font-size:11px;color:var(--ink3)">Both parties must comply</div></div></div>
+        <div style="background:var(--white);border:1.5px solid var(--bdr);border-radius:var(--r12);padding:12px 14px;display:flex;gap:10px;align-items:center"><span style="font-size:18px">🚫</span><div><div style="font-size:13px;color:var(--ink)">Freeze Both Masjid Accounts</div><div style="font-size:11px;color:var(--ink3)">Until dispute is settled</div></div></div>
+      </div>
+    </div>
+
+    <div class="fgroup"><label class="flabel">SA Intervention Notes <span class="req">*</span></label><div class="ftxt">Appointing Maulana Yusuf Ansari (Lucknow, UP — Rating 4.74) as neutral mediator. Both Masjid committees to present documents by July 15. SA binding decision to be issued by July 20 if mediation fails. Civil court action to be strongly discouraged.</div></div>
+
+    <button class="btn-pur mb12">🛡️ Execute SA Intervention (2FA Required)</button>
+    <button class="btn-s mb12">📞 Conference Call — Both Parties</button>
+    <button class="btn-amber" style="height:44px">📋 Full Case File</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+<div class="sc-lbl">SD-03 · SA Case Intervention</div>
+</div>
+
+</div>
+
+<!-- ══════════════════════════════════
+  GRAND PLATFORM SUMMARY — FINAL
+══════════════════════════════════ -->
+<div class="rl" style="margin-top:48px">MIC Platform — Complete Master Index (All Files)</div>
+<div style="max-width:1500px;width:100%;background:#0E0E0E;border-radius:24px;padding:36px;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:24px">
+
+  <div>
+    <div style="font-size:12px;font-weight:700;color:#86EFAC;margin-bottom:14px">📱 USER APP — 60 screens</div>
+    <div style="font-size:11px;color:#555;line-height:2">
+      Splash, Language, Mobile, OTP (4)<br>
+      Registration Steps 1–5 + Housing (10 updated)<br>
+      Home, Card, Notifications (3)<br>
+      BG Check, NOC, Maktab Request (3)<br>
+      Complaint, Donate, Memorial, Burial (4)<br>
+      Masjid, Documents, Profile, Death (4)<br>
+      NM Registration Flow NM-01→NM-06 (6)<br>
+      Detail: D-01→D-12 (12)<br>
+      Profile Edit, Settings, Language (3)<br>
+      Events RSVP, Card Renewal, Maktab Schedule (3)<br>
+      Help FAQ, Zakat Calc, Add Family, Collection (4)<br>
+      App Tour × 4, Empty States × 2 (6)<br>
+      Reg Success, Card Expired, QR View (3)
+    </div>
+  </div>
+
+  <div>
+    <div style="font-size:12px;font-weight:700;color:#E8C96A;margin-bottom:14px">🛡️ ADMIN APP — 46 screens</div>
+    <div style="font-size:11px;color:#555;line-height:2">
+      Home Dashboard, Notifications (2)<br>
+      Users List, Detail, Verify New (3)<br>
+      BG Check, NOC, Death, Maktab (4)<br>
+      Complaints List, Detail, Conversion (3)<br>
+      Masjid Profile, Financials, Announcements (3)<br>
+      Donations, Reports, Admin Profile (3)<br>
+      NM: List, Review, Profile, Card (4)<br>
+      Deep: AD-01→AD-12 (12)<br>
+      Pending Queue, Card Reissue (2)<br>
+      Report Gen, Admin Notifications (2)<br>
+      Create Event, Welfare Disbursement (2)<br>
+      Maktab Fees, Admin Login 2FA (2)<br>
+      Batch Verify, Advanced Search (2)<br>
+      Admin Profile Edit, Waqf Docs (2)
+    </div>
+  </div>
+
+  <div>
+    <div style="font-size:12px;font-weight:700;color:#C4B5FD;margin-bottom:14px">👑 SUPER ADMIN — 52 screens</div>
+    <div style="font-size:11px;color:#555;line-height:2">
+      National Dashboard, Notifications (2)<br>
+      All States, Masjid Directory, Verify Masjid (3)<br>
+      Admin List, Detail, Appoint, Review (4)<br>
+      Escalated Cases, Intervention, User Search (3)<br>
+      Financials, Welfare, Zakat Tracker (3)<br>
+      Analytics, Reports, Platform Settings (3)<br>
+      SA Profile, Broadcast, Broadcast History (3)<br>
+      Conversion Registry, Relocation Override (2)<br>
+      Audit Log, NM Dashboard, NM Search (3)<br>
+      NM Policy, NM Reports (2)<br>
+      Deep: SD-01→SD-12 (12)<br>
+      Leaderboard, Emergency Alert, Fee Confirm (3)<br>
+      Data Deletion, Warning Letter, Zakat Nisab (3)<br>
+      Conversion Cert, State Comparison (2)<br>
+      Maintenance Mode, Bulk Admin Review (2)<br>
+      Live National Dashboard (1)
+    </div>
+  </div>
+
+  <div style="background:#181818;border-radius:18px;padding:30px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center">
+    <div style="font-size:11px;color:#3A3A3A;text-transform:uppercase;letter-spacing:2px;margin-bottom:12px">Platform Grand Total</div>
+    <div style="font-family:'Lora',serif;font-size:80px;font-weight:700;color:#fff;line-height:1">158</div>
+    <div style="font-size:15px;color:#3A3A3A;margin:8px 0 24px">screens · 3 apps · 1 platform</div>
+    <div style="display:flex;flex-direction:column;gap:10px;width:100%">
+      <div style="background:linear-gradient(135deg,#0D2B1A,#1A4731);border-radius:12px;padding:14px 18px;display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:13px;color:#86EFAC">📱 User App</span>
+        <span style="font-size:26px;font-weight:800;color:#fff">60</span>
+      </div>
+      <div style="background:linear-gradient(135deg,#1A1600,#2A2200);border-radius:12px;padding:14px 18px;display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:13px;color:#E8C96A">🛡️ Admin App</span>
+        <span style="font-size:26px;font-weight:800;color:#fff">46</span>
+      </div>
+      <div style="background:linear-gradient(135deg,#1A0A2E,#2A0A4E);border-radius:12px;padding:14px 18px;display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:13px;color:#C4B5FD">👑 Super Admin</span>
+        <span style="font-size:26px;font-weight:800;color:#fff">52</span>
+      </div>
+    </div>
+    <div style="margin-top:16px;font-size:11px;color:#2A2A2A;line-height:1.8">
+      Files: UserApp · AdminApp · SuperAdmin<br>
+      + Continuation · Registration Update<br>
+      + Batch 5 · Batch 6 (this file)
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center;margin-top:48px;padding-bottom:60px;font-size:12px;color:#222;line-height:2.4">
+  Muslim India Card (MIC) · Batch 6 · Complete Platform<br>
+  User (60) + Admin (46) + Super Admin (52) = <strong style="color:#444">158 Total Screens</strong><br>
+  New in Batch 6: Nikaah Certificate · Complaint Timeline · My Documents · Maktab Admission<br>
+  BG Check Decision · Complaint Resolution · Maktab Student · Masjid Financials Deep<br>
+  SA: Compliance &amp; Security · Campaign Detail · National User Search · Case Intervention<br>
+  Colors: #0D2B1A · #1A4731 · #C9A84C · #7C3AED · #DC2626 · #06150D<br>
+  Fonts: Lora (display) · Inter (UI) · Frame: 390px iPhone · Zero JS template literals
+</div>
+
+</div>
+</body>
+</html>

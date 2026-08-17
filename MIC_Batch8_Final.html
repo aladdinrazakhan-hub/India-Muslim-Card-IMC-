@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MIC Platform — Batch 8</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#080808;font-family:'Inter',sans-serif;padding:40px 24px 80px}
+:root{
+  --g900:#0D2B1A;--g800:#1A4731;--g700:#22593D;--g600:#2D6A4F;--g500:#40916C;--g400:#52B788;--g300:#74C69D;--g200:#B7E4C7;--g100:#D8F3DC;--g50:#F0FAF3;
+  --gold:#C9A84C;--gold2:#E8C96A;--goldb:#FFF8E1;
+  --red:#DC2626;--redb:#FEF2F2;--amber:#D97706;--ambb:#FFFBEB;
+  --blue:#2563EB;--blueb:#EFF6FF;--purple:#7C3AED;--purb:#F5F3FF;--purdark:#6D28D9;
+  --ink:#111827;--ink2:#374151;--ink3:#6B7280;--ink4:#9CA3AF;
+  --bg:#F2F4F2;--white:#FFFFFF;--bdr:#E5E7EB;--bdr2:#F3F4F6;
+  --r8:8px;--r12:12px;--r16:16px;--r20:20px;--r99:99px
+}
+.canvas{display:flex;flex-direction:column;align-items:center;gap:56px}
+.rl{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#444;padding:7px 16px;border:1px solid #222;border-radius:99px;margin-bottom:-36px}
+.srow{display:flex;flex-wrap:wrap;gap:28px;justify-content:center;align-items:flex-start;width:100%}
+.sc{display:flex;flex-direction:column;align-items:center;gap:10px}
+.sc-num{font-size:10px;font-weight:700;color:#555;letter-spacing:1px;background:#1A1A1A;padding:3px 10px;border-radius:99px}
+.sc-lbl{font-size:11px;font-weight:600;color:#888;text-align:center;max-width:200px}
+.phone{width:390px;background:var(--bg);border-radius:50px;overflow:hidden;box-shadow:0 0 0 10px #1C1C1E,0 0 0 12px #3A3A3C,0 28px 60px rgba(0,0,0,.6);display:flex;flex-direction:column;position:relative;min-height:900px}
+.phone::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:126px;height:34px;background:#1C1C1E;border-radius:0 0 20px 20px;z-index:100}
+.sb{height:50px;padding:14px 24px 0;display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:700;flex-shrink:0;position:relative;z-index:10}
+.sb-l{background:var(--white);color:var(--ink)}.sb-d{background:var(--g800);color:#fff}.sb-sa{background:#06150D;color:#fff}
+.sico{display:flex;gap:5px;font-size:11px}
+.tbar{height:54px;padding:0 20px;display:flex;align-items:center;justify-content:space-between;background:var(--white);border-bottom:1px solid var(--bdr);flex-shrink:0}
+.tb-back{font-size:22px;color:var(--ink3)}.tb-title{font-family:'Lora',serif;font-size:16px;font-weight:700;color:var(--ink)}.tb-act{font-size:13px;font-weight:600;color:var(--g600)}
+.sa-tbar{height:54px;padding:0 20px;display:flex;align-items:center;justify-content:space-between;background:#06150D;flex-shrink:0}
+.tabs{display:flex;border-bottom:1px solid var(--bdr);background:var(--white);flex-shrink:0;overflow-x:auto}
+.tab{padding:12px 14px;font-size:12px;font-weight:600;color:var(--ink3);white-space:nowrap;cursor:pointer;border-bottom:2.5px solid transparent;flex-shrink:0}
+.tab.on{color:var(--g700);border-bottom-color:var(--g600)}
+.scr{flex:1;overflow-y:auto;padding:16px}.scr::-webkit-scrollbar{display:none}
+.card{background:var(--white);border-radius:var(--r16);border:1px solid var(--bdr);padding:16px;margin-bottom:12px}
+.card-hdr{display:flex;gap:10px;align-items:center;margin-bottom:12px}
+.card-ico{width:36px;height:36px;border-radius:10px;background:var(--g100);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.card-ico.gold{background:var(--goldb)}.card-ico.red{background:var(--redb)}.card-ico.blue{background:var(--blueb)}.card-ico.purple{background:var(--purb)}.card-ico.amber{background:var(--ambb)}
+.card-title{font-size:14px;font-weight:700;color:var(--ink)}.card-sub{font-size:11px;color:var(--ink3);margin-top:2px}
+.irow{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--bdr2)}
+.irow:last-child{border:none}.il{font-size:13px;color:var(--ink3)}.ir{font-size:13px;font-weight:600;color:var(--ink);text-align:right;max-width:58%}
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:var(--r99);font-size:11px;font-weight:700}
+.bg-green{background:var(--g100);color:var(--g700)}.bg-gold{background:var(--goldb);color:var(--amber)}.bg-red{background:var(--redb);color:var(--red)}.bg-blue{background:var(--blueb);color:var(--blue)}.bg-gray{background:var(--bdr2);color:var(--ink3)}.bg-purple{background:var(--purb);color:var(--purple)}
+.fgroup{margin-bottom:14px}.flabel{font-size:12px;font-weight:600;color:var(--ink2);margin-bottom:6px;display:block}.req{color:var(--red)}
+.finput{width:100%;height:46px;background:var(--white);border:1.5px solid var(--bdr);border-radius:var(--r12);padding:0 14px;font-size:14px;color:var(--ink);display:flex;align-items:center}
+.finput.on{border-color:var(--g400)}.finput.ph{color:var(--ink4)}
+.ftxt{width:100%;background:var(--white);border:1.5px solid var(--bdr);border-radius:var(--r12);padding:12px 14px;font-size:13px;color:var(--ink);line-height:1.55;min-height:80px}
+.frow{display:flex;gap:10px}.frow .fgroup{flex:1}
+.tag{padding:7px 13px;border-radius:var(--r99);border:1.5px solid var(--bdr);background:var(--white);font-size:12px;font-weight:600;color:var(--ink3)}
+.tag.on{border-color:var(--g500);background:var(--g50);color:var(--g700)}
+.tag-row{display:flex;flex-wrap:wrap;gap:8px}
+.tog{width:44px;height:26px;border-radius:13px;background:var(--g500);position:relative;flex-shrink:0}
+.tog::after{content:'';position:absolute;right:3px;top:3px;width:20px;height:20px;border-radius:50%;background:#fff}
+.tog.off{background:var(--bdr)}.tog.off::after{right:auto;left:3px}
+.ban{display:flex;gap:10px;align-items:flex-start;padding:12px 16px;font-size:12px;line-height:1.55;flex-shrink:0}
+.ban-green{background:var(--g50);border-bottom:1px solid var(--g200);color:var(--g800)}
+.ban-gold{background:var(--goldb);border-bottom:1px solid #FFE082;color:#7C5C00}
+.ban-red{background:var(--redb);border-bottom:1px solid #FECACA;color:var(--red)}
+.ban-purple{background:var(--purb);border-bottom:1px solid #DDD6FE;color:var(--purple)}
+.btn-p{width:100%;height:52px;background:linear-gradient(135deg,var(--g800),var(--g600));color:#fff;border:none;border-radius:var(--r16);font-size:15px;font-weight:700;cursor:pointer}
+.btn-s{width:100%;height:48px;background:var(--white);color:var(--g800);border:2px solid var(--g700);border-radius:var(--r16);font-size:14px;font-weight:700;cursor:pointer}
+.btn-pur{width:100%;height:52px;background:linear-gradient(135deg,var(--purple),var(--purdark));color:#fff;border:none;border-radius:var(--r16);font-size:15px;font-weight:700;cursor:pointer}
+.btn-red{width:100%;height:48px;background:linear-gradient(135deg,#991B1B,var(--red));color:#fff;border:none;border-radius:var(--r16);font-size:14px;font-weight:700;cursor:pointer}
+.btn-sm{height:34px;padding:0 14px;border-radius:var(--r8);border:none;font-size:12px;font-weight:700;cursor:pointer}
+.btn-g{background:var(--g100);color:var(--g800)}.btn-r{background:var(--redb);color:var(--red)}.btn-gr{background:var(--bdr2);color:var(--ink3)}.btn-gold{background:var(--goldb);color:var(--amber)}
+.li{display:flex;align-items:center;gap:12px;padding:13px 16px;background:var(--white);border-bottom:1px solid var(--bdr2)}
+.li:last-child{border-bottom:none}
+.li-ava{width:44px;height:44px;border-radius:50%;background:var(--g100);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.li-name{font-size:14px;font-weight:600;color:var(--ink)}.li-det{font-size:12px;color:var(--ink3);margin-top:2px}
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.kpi{background:var(--white);border-radius:var(--r12);padding:14px;border:1px solid var(--bdr)}
+.kpi-l{font-size:11px;color:var(--ink3);margin-bottom:4px}.kpi-n{font-size:22px;font-weight:800;color:var(--ink);line-height:1}.kpi-ch{font-size:10px;color:var(--ink4);margin-top:3px}
+.prog{height:6px;background:var(--bdr2);border-radius:99px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--g500),var(--g400));border-radius:99px}
+.bnav{height:82px;background:var(--white);border-top:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-around;padding:0 10px;flex-shrink:0}
+.bni{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:8px 12px;border-radius:12px}
+.bni.on{background:var(--g50)}.bni-ico{font-size:22px}.bni-lbl{font-size:10px;font-weight:600;color:var(--ink3)}.bni.on .bni-lbl{color:var(--g700)}
+.info{background:var(--g50);border:1px solid var(--g200);border-radius:var(--r12);padding:12px 14px;margin-bottom:12px;display:flex;gap:8px;font-size:12px;color:var(--g800);line-height:1.55}
+.info.amber{background:var(--ambb);border-color:#FFE082;color:#7C5C00}.info.blue{background:var(--blueb);border-color:#BFDBFE;color:var(--blue)}.info.red{background:var(--redb);border-color:#FECACA;color:var(--red)}.info.purple{background:var(--purb);border-color:#DDD6FE;color:var(--purple)}
+.sa-only{background:var(--purb);border:1px solid #DDD6FE;border-radius:6px;padding:2px 8px;font-size:10px;font-weight:700;color:var(--purple)}
+.tl-item{display:flex;gap:12px;align-items:flex-start;padding-bottom:16px}
+.tl-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.tl-dot.done{background:var(--g500);color:#fff}.tl-dot.cur{background:var(--g800);color:#fff;box-shadow:0 0 0 4px rgba(26,71,49,.18)}.tl-dot.pend{background:var(--bdr2);color:var(--ink4)}
+.sec-div{display:flex;align-items:center;gap:10px;margin:16px 0 12px}
+.sec-label{font-size:12px;font-weight:700;color:var(--ink);white-space:nowrap}.sec-line{flex:1;height:1px;background:var(--bdr)}
+.shdr{background:linear-gradient(150deg,#06150D,var(--g900));padding:14px 20px 20px;flex-shrink:0}
+.chat-msg{display:flex;gap:8px;margin-bottom:12px}
+.chat-bubble{padding:10px 14px;border-radius:18px;max-width:72%;font-size:13px;line-height:1.5}
+.bubble-in{background:var(--white);border:1px solid var(--bdr);color:var(--ink);border-bottom-left-radius:4px}
+.bubble-out{background:var(--g800);color:#fff;border-bottom-right-radius:4px;margin-left:auto}
+.spacer{height:100px}
+.mb8{margin-bottom:8px}.mb12{margin-bottom:12px}.mb14{margin-bottom:14px}.mt12{margin-top:12px}
+</style>
+</head>
+<body>
+<div class="canvas">
+
+<div style="text-align:center;padding:20px 0 4px">
+  <div style="font-family:'Lora',serif;font-size:28px;font-weight:700;color:#fff;margin-bottom:6px">MIC Platform — Batch 8</div>
+  <div style="font-size:13px;color:#555">Prayer Times · Islamic Calendar · Notice Board · Poll · Death Flow · Admin Chat · SA Activity Log</div>
+</div>
+
+<!-- ══════════════════════════════════
+  USER APP — COMMUNITY SCREENS
+══════════════════════════════════ -->
+<div class="rl">User App · Community Screens — Prayer Times, Calendar, Notice Board, Poll, Card Share</div>
+<div class="srow">
+
+<!-- U-65 Prayer Times -->
+<div class="sc">
+<div class="sc-num">U-65</div>
+<div class="phone">
+  <div class="sb sb-l"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="tbar"><div class="tb-back">←</div><div class="tb-title">Prayer Times</div><div class="tb-act">Settings</div></div>
+  <div class="scr" style="background:var(--bg);padding:0">
+
+    <!-- Hero -->
+    <div style="background:linear-gradient(160deg,#0A1628,var(--g900));padding:24px 20px 28px">
+      <div style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:4px">Bengaluru · Jama Masjid</div>
+      <div style="font-size:13px;color:rgba(255,255,255,.6);margin-bottom:16px">Saturday, 5 July 2025 · 8 Muharram 1447</div>
+
+      <!-- Next prayer highlight -->
+      <div style="background:rgba(255,255,255,.1);border-radius:var(--r20);padding:20px;margin-bottom:16px;text-align:center">
+        <div style="font-size:11px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Next Prayer</div>
+        <div style="font-family:'Lora',serif;font-size:30px;font-weight:700;color:#fff;margin-bottom:4px">Dhuhr</div>
+        <div style="font-size:36px;font-weight:800;color:var(--gold2);letter-spacing:2px">12:54 PM</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.5);margin-top:6px">Azan in 1 hour 13 minutes</div>
+      </div>
+    </div>
+
+    <!-- All prayers -->
+    <div style="background:var(--white);margin:0">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--bdr2)">
+        <div style="display:flex;gap:12px;align-items:center"><div style="font-size:20px">🌅</div><div><div style="font-size:14px;font-weight:600;color:var(--ink2)">Fajr</div><div style="font-size:11px;color:var(--ink4)">Iqamah 5:16 AM</div></div></div>
+        <div style="text-align:right"><div style="font-size:16px;font-weight:700;color:var(--ink3)">5:01 AM</div><span class="badge bg-green" style="font-size:9px">Done ✓</span></div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--bdr2)">
+        <div style="display:flex;gap:12px;align-items:center"><div style="font-size:20px">☀️</div><div><div style="font-size:14px;font-weight:600;color:var(--ink2)">Sunrise</div><div style="font-size:11px;color:var(--ink4)">No prayer</div></div></div>
+        <div style="font-size:16px;font-weight:700;color:var(--ink3)">6:12 AM</div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:2px solid var(--g200);background:var(--g50)">
+        <div style="display:flex;gap:12px;align-items:center"><div style="font-size:20px">🕐</div><div><div style="font-size:14px;font-weight:700;color:var(--g800)">Dhuhr</div><div style="font-size:11px;color:var(--g600)">Iqamah 1:10 PM · Jumah 1:15</div></div></div>
+        <div style="text-align:right"><div style="font-size:16px;font-weight:800;color:var(--g700)">12:54 PM</div><span class="badge" style="background:var(--g200);color:var(--g800);font-size:9px">▶ Next</span></div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--bdr2)">
+        <div style="display:flex;gap:12px;align-items:center"><div style="font-size:20px">🌤️</div><div><div style="font-size:14px;font-weight:600;color:var(--ink2)">Asr</div><div style="font-size:11px;color:var(--ink4)">Iqamah 4:30 PM</div></div></div>
+        <div style="font-size:16px;font-weight:700;color:var(--ink)">4:18 PM</div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--bdr2)">
+        <div style="display:flex;gap:12px;align-items:center"><div style="font-size:20px">🌆</div><div><div style="font-size:14px;font-weight:600;color:var(--ink2)">Maghrib</div><div style="font-size:11px;color:var(--ink4)">Iqamah after Azan</div></div></div>
+        <div style="font-size:16px;font-weight:700;color:var(--ink)">6:52 PM</div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 20px">
+        <div style="display:flex;gap:12px;align-items:center"><div style="font-size:20px">🌙</div><div><div style="font-size:14px;font-weight:600;color:var(--ink2)">Isha</div><div style="font-size:11px;color:var(--ink4)">Iqamah 8:30 PM</div></div></div>
+        <div style="font-size:16px;font-weight:700;color:var(--ink)">8:14 PM</div>
+      </div>
+    </div>
+
+    <div style="padding:16px">
+      <div class="card" style="margin-bottom:12px">
+        <div class="card-hdr"><div class="card-ico gold">📢</div><div><div class="card-title">Jumah Special Notice</div></div></div>
+        <div style="font-size:13px;color:var(--ink2);line-height:1.6">Today's Jumah Khutbah: <strong>"Patience in Hardship — Lessons from Surah Al-Baqarah"</strong> by Maulana Abdul Qadir. Begin at 1:15 PM sharp.</div>
+      </div>
+      <button class="btn-p mb12">🔔 Set Azan Reminders</button>
+      <button class="btn-s">📅 Full Month Prayer Schedule</button>
+      <div class="spacer"></div>
+    </div>
+  </div>
+  <div class="bnav">
+    <div class="bni on"><div class="bni-ico">🏠</div><div class="bni-lbl">Home</div></div>
+    <div class="bni"><div class="bni-ico">🪪</div><div class="bni-lbl">My Card</div></div>
+    <div class="bni"><div class="bni-ico">🛎️</div><div class="bni-lbl">Services</div></div>
+    <div class="bni"><div class="bni-ico">🔔</div><div class="bni-lbl">Alerts</div></div>
+    <div class="bni"><div class="bni-ico">👤</div><div class="bni-lbl">Profile</div></div>
+  </div>
+</div>
+<div class="sc-lbl">U-65 · Prayer Times</div>
+</div>
+
+<!-- U-66 Islamic Calendar -->
+<div class="sc">
+<div class="sc-num">U-66</div>
+<div class="phone">
+  <div class="sb sb-l"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="tbar"><div class="tb-back">←</div><div class="tb-title">Islamic Calendar</div><div class="tb-act">2025</div></div>
+  <div class="scr" style="background:var(--bg);padding:0">
+
+    <!-- Current month header -->
+    <div style="background:linear-gradient(135deg,var(--g900),var(--g700));padding:20px">
+      <div style="font-size:11px;color:rgba(255,255,255,.5);margin-bottom:4px">Muharram 1447 AH</div>
+      <div style="font-family:'Lora',serif;font-size:22px;font-weight:700;color:#fff;margin-bottom:2px">July 2025</div>
+      <div style="font-size:12px;color:rgba(255,255,255,.5)">Islamic New Year Month</div>
+    </div>
+
+    <!-- Upcoming events -->
+    <div style="padding:16px">
+      <div style="font-size:13px;font-weight:700;color:var(--ink);margin-bottom:12px">Upcoming Islamic Dates</div>
+
+      <div style="background:var(--white);border-radius:var(--r16);border:1px solid var(--bdr);overflow:hidden;margin-bottom:14px">
+        <div style="padding:14px 16px;border-bottom:1px solid var(--bdr2);display:flex;gap:12px;align-items:center">
+          <div style="width:48px;height:48px;background:var(--g100);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0"><div style="font-size:16px;font-weight:800;color:var(--g800)">10</div><div style="font-size:8px;color:var(--g600);text-transform:uppercase">Jul</div></div>
+          <div style="flex:1"><div style="font-size:14px;font-weight:700;color:var(--ink)">Ashura — 10 Muharram</div><div style="font-size:11px;color:var(--ink3);margin-top:2px">Day of fasting · Special significance in Islam</div></div>
+          <div class="tog off" style="width:36px;height:22px"></div>
+        </div>
+        <div style="padding:14px 16px;border-bottom:1px solid var(--bdr2);display:flex;gap:12px;align-items:center">
+          <div style="width:48px;height:48px;background:var(--goldb);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0"><div style="font-size:16px;font-weight:800;color:var(--amber)">27</div><div style="font-size:8px;color:var(--amber);text-transform:uppercase">Sep</div></div>
+          <div style="flex:1"><div style="font-size:14px;font-weight:700;color:var(--ink)">Mawlid al-Nabi ﷺ</div><div style="font-size:11px;color:var(--ink3);margin-top:2px">12 Rabi al-Awwal · Prophet's birthday celebration</div></div>
+          <div class="tog" style="width:36px;height:22px"></div>
+        </div>
+        <div style="padding:14px 16px;border-bottom:1px solid var(--bdr2);display:flex;gap:12px;align-items:center">
+          <div style="width:48px;height:48px;background:var(--purb);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0"><div style="font-size:16px;font-weight:800;color:var(--purple)">27</div><div style="font-size:8px;color:var(--purple);text-transform:uppercase">Jan 26</div></div>
+          <div style="flex:1"><div style="font-size:14px;font-weight:700;color:var(--ink)">Ramadan 1447 AH</div><div style="font-size:11px;color:var(--ink3);margin-top:2px">Fasting begins · 30 nights of ibadah</div></div>
+          <div class="tog" style="width:36px;height:22px"></div>
+        </div>
+        <div style="padding:14px 16px;display:flex;gap:12px;align-items:center">
+          <div style="width:48px;height:48px;background:var(--g100);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0"><div style="font-size:16px;font-weight:800;color:var(--g800)">27</div><div style="font-size:8px;color:var(--g600);text-transform:uppercase">Feb 26</div></div>
+          <div style="flex:1"><div style="font-size:14px;font-weight:700;color:var(--ink)">Eid al-Fitr 1447 AH</div><div style="font-size:11px;color:var(--ink3);margin-top:2px">End of Ramadan · Celebration &amp; Zakat al-Fitr</div></div>
+          <div class="tog" style="width:36px;height:22px"></div>
+        </div>
+      </div>
+
+      <!-- Masjid events this month -->
+      <div style="font-size:13px;font-weight:700;color:var(--ink);margin-bottom:10px">Jama Masjid Events — July</div>
+      <div style="background:var(--white);border-radius:var(--r16);border:1px solid var(--bdr);overflow:hidden;margin-bottom:14px">
+        <div class="li"><div class="li-ava">🏥</div><div style="flex:1"><div class="li-name">Medical Camp</div><div class="li-det">July 12 · 9 AM–2 PM · Masjid Hall</div></div><span class="badge bg-green" style="font-size:10px">RSVP'd</span></div>
+        <div class="li"><div class="li-ava">📖</div><div style="flex:1"><div class="li-name">Tafseer Class — Surah Yusuf</div><div class="li-det">July 18 · After Maghrib</div></div><span class="badge bg-gray" style="font-size:10px">+ RSVP</span></div>
+        <div class="li"><div class="li-ava">🤝</div><div style="flex:1"><div class="li-name">Community Iftar — Ashura</div><div class="li-det">July 10 · 6:30 PM · All welcome</div></div><span class="badge bg-gray" style="font-size:10px">+ RSVP</span></div>
+      </div>
+
+      <button class="btn-p mb12">🔔 Set Reminders for All Dates</button>
+      <button class="btn-s">📅 Export to Phone Calendar</button>
+      <div class="spacer"></div>
+    </div>
+  </div>
+</div>
+<div class="sc-lbl">U-66 · Islamic Calendar</div>
+</div>
+
+<!-- U-67 Community Notice Board -->
+<div class="sc">
+<div class="sc-num">U-67</div>
+<div class="phone">
+  <div class="sb sb-l"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="tbar"><div class="tb-back">←</div><div class="tb-title">Notice Board</div><div class="tb-act">Filter</div></div>
+  <div class="tabs">
+    <div class="tab on">Pinned (3)</div>
+    <div class="tab">All (18)</div>
+    <div class="tab">Events</div>
+    <div class="tab">Alerts</div>
+  </div>
+  <div class="scr" style="background:var(--bg);padding:14px 16px">
+
+    <!-- Pinned notices -->
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--ink4);margin-bottom:8px">📌 Pinned</div>
+
+    <div style="background:var(--goldb);border:1.5px solid #FFE082;border-radius:var(--r16);padding:14px;margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+        <div style="font-size:14px;font-weight:700;color:var(--ink)">🔨 Masjid Repairs — July 12–14</div>
+        <span class="badge bg-gold" style="font-size:9px">📌 Pinned</span>
+      </div>
+      <div style="font-size:12px;color:var(--ink2);line-height:1.6;margin-bottom:8px">Masjid will be partially closed for roof repairs July 12–14. Jumah prayers will be held at Al-Noor Masjid, MG Road. All other prayers in the side hall.</div>
+      <div style="font-size:11px;color:var(--ink4)">Haji Rashid Khan · July 5 · 847 seen</div>
+    </div>
+
+    <div style="background:var(--redb);border:1.5px solid #FECACA;border-radius:var(--r16);padding:14px;margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+        <div style="font-size:14px;font-weight:700;color:var(--ink)">🩸 O− Blood Needed — Urgent</div>
+        <span class="badge bg-red" style="font-size:9px">Urgent</span>
+      </div>
+      <div style="font-size:12px;color:var(--ink2);line-height:1.6;margin-bottom:8px">O− blood urgently needed for a community member at Victoria Hospital. If you are O− and can donate, contact admin immediately or respond in the Blood Donation section.</div>
+      <div style="font-size:11px;color:var(--ink4)">Admin · July 6 · 2 hours ago</div>
+    </div>
+
+    <div style="background:var(--g50);border:1.5px solid var(--g200);border-radius:var(--r16);padding:14px;margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+        <div style="font-size:14px;font-weight:700;color:var(--ink)">📢 Zakat Collection Open — July</div>
+        <span class="badge bg-green" style="font-size:9px">📌 Pinned</span>
+      </div>
+      <div style="font-size:12px;color:var(--ink2);line-height:1.6;margin-bottom:8px">Annual Zakat collection is open. Visit your Masjid admin or use the Donate section. Nisab this year: ₹60,480 (85g gold). Zakat = 2.5% of zakatable wealth.</div>
+      <div style="font-size:11px;color:var(--ink4)">Admin · June 28 · 840 seen</div>
+    </div>
+
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--ink4);margin-bottom:8px">Recent Notices</div>
+    <div style="background:var(--white);border-radius:var(--r16);border:1px solid var(--bdr);overflow:hidden;margin-bottom:14px">
+      <div class="li"><div class="li-ava">🏥</div><div style="flex:1"><div class="li-name">Medical Camp — July 12</div><div class="li-det">Free health check-up · 9 AM–2 PM</div></div><div style="font-size:11px;color:var(--ink4)">3d ago</div></div>
+      <div class="li"><div class="li-ava">📚</div><div style="flex:1"><div class="li-name">Maktab — New Batch Open</div><div class="li-det">Arabic class · Ages 6–14 · Morning</div></div><div style="font-size:11px;color:var(--ink4)">5d ago</div></div>
+      <div class="li"><div class="li-ava">🌊</div><div style="flex:1"><div class="li-name">Bihar Flood Relief Campaign</div><div class="li-det">Donate via app · ₹28.4L raised so far</div></div><div style="font-size:11px;color:var(--ink4)">1w ago</div></div>
+      <div class="li"><div class="li-ava">💒</div><div style="flex:1"><div class="li-name">BG Check Processing Time Update</div><div class="li-det">Now 5–7 working days · Apply early</div></div><div style="font-size:11px;color:var(--ink4)">2w ago</div></div>
+    </div>
+    <div class="spacer"></div>
+  </div>
+  <div class="bnav">
+    <div class="bni on"><div class="bni-ico">🏠</div><div class="bni-lbl">Home</div></div>
+    <div class="bni"><div class="bni-ico">🪪</div><div class="bni-lbl">My Card</div></div>
+    <div class="bni"><div class="bni-ico">🛎️</div><div class="bni-lbl">Services</div></div>
+    <div class="bni"><div class="bni-ico">🔔</div><div class="bni-lbl">Alerts</div></div>
+    <div class="bni"><div class="bni-ico">👤</div><div class="bni-lbl">Profile</div></div>
+  </div>
+</div>
+<div class="sc-lbl">U-67 · Community Notice Board</div>
+</div>
+
+<!-- U-68 Community Poll / Vote -->
+<div class="sc">
+<div class="sc-num">U-68</div>
+<div class="phone">
+  <div class="sb sb-l"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="tbar"><div class="tb-back">←</div><div class="tb-title">Community Poll</div></div>
+  <div class="scr" style="background:var(--bg);padding:16px">
+
+    <!-- Active poll -->
+    <div style="background:linear-gradient(135deg,var(--g900),var(--g700));border-radius:var(--r20);padding:20px;margin-bottom:14px">
+      <div style="font-size:10px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Active Poll · Closes July 15</div>
+      <div style="font-family:'Lora',serif;font-size:17px;font-weight:700;color:#fff;line-height:1.4;margin-bottom:6px">When should Maktab run for older children (14–18)?</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.5)">By Haji Rashid Khan · 312 votes so far</div>
+    </div>
+
+    <!-- Options with results -->
+    <div style="font-size:13px;font-weight:700;margin-bottom:10px">Cast Your Vote</div>
+    <div style="background:var(--white);border-radius:var(--r16);border:1px solid var(--bdr);overflow:hidden;margin-bottom:14px">
+      <div style="padding:14px 16px;border-bottom:1px solid var(--bdr2)">
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:13px;font-weight:600;color:var(--ink)">🌅 After Fajr (5–7 AM)</span><span style="font-size:13px;font-weight:700;color:var(--g700)">38%</span></div>
+        <div class="prog"><div class="prog-fill" style="width:38%"></div></div>
+        <div style="font-size:11px;color:var(--ink4);margin-top:3px">119 votes</div>
+      </div>
+      <div style="padding:14px 16px;border-bottom:1px solid var(--bdr2);background:var(--g50);border-left:3px solid var(--g500)">
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:13px;font-weight:700;color:var(--g800)">🌆 After Asr (4–6 PM)</span><span style="font-size:13px;font-weight:800;color:var(--g700)">47%</span></div>
+        <div class="prog"><div class="prog-fill" style="width:47%"></div></div>
+        <div style="font-size:11px;color:var(--g600);margin-top:3px">147 votes · 🏆 Leading · Your vote</div>
+      </div>
+      <div style="padding:14px 16px;border-bottom:1px solid var(--bdr2)">
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:13px;font-weight:600;color:var(--ink)">🌙 After Isha (8–10 PM)</span><span style="font-size:13px;font-weight:700;color:var(--ink)">11%</span></div>
+        <div class="prog"><div class="prog-fill" style="width:11%"></div></div>
+        <div style="font-size:11px;color:var(--ink4);margin-top:3px">34 votes</div>
+      </div>
+      <div style="padding:14px 16px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:13px;font-weight:600;color:var(--ink)">📅 Weekends only</span><span style="font-size:13px;font-weight:700;color:var(--ink)">4%</span></div>
+        <div class="prog"><div class="prog-fill" style="width:4%"></div></div>
+        <div style="font-size:11px;color:var(--ink4);margin-top:3px">12 votes</div>
+      </div>
+    </div>
+
+    <!-- Past polls -->
+    <div style="font-size:13px;font-weight:700;margin-bottom:10px">Past Polls</div>
+    <div style="background:var(--white);border-radius:var(--r16);border:1px solid var(--bdr);overflow:hidden;margin-bottom:14px">
+      <div class="li"><div class="li-ava">🗳️</div><div style="flex:1"><div class="li-name">Which relief campaign to fund?</div><div class="li-det">Bihar Flood won · 89% · June 28</div></div><span class="badge bg-green" style="font-size:10px">Closed</span></div>
+      <div class="li"><div class="li-ava">🗳️</div><div style="flex:1"><div class="li-name">Preferred Friday Jumah time?</div><div class="li-det">1:15 PM won · 72% · June 10</div></div><span class="badge bg-green" style="font-size:10px">Closed</span></div>
+    </div>
+
+    <button class="btn-p mb12">✏️ Change My Vote</button>
+    <button class="btn-s">📤 Share Poll</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+<div class="sc-lbl">U-68 · Community Poll</div>
+</div>
+
+</div>
+
+<!-- ══════════════════════════════════
+  ADMIN APP — MISSING DEEP SCREENS
+══════════════════════════════════ -->
+<div class="rl">Admin App · Deep Screens — Death &amp; Burial Full, Admin Chat Dashboard, Poll Creation, AD-05</div>
+<div class="srow">
+
+<!-- AD-05 Death & Burial Full Flow -->
+<div class="sc">
+<div class="sc-num">AD-05</div>
+<div class="phone">
+  <div class="sb sb-l"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="tbar"><div class="tb-back">←</div><div class="tb-title">Death &amp; Burial Case</div></div>
+  <div class="ban ban-gold"><span>🕊️</span><span>Handle with care and urgency. Islamic burial should be completed within 24 hours if possible. Coordinate with the family at every step.</span></div>
+  <div class="scr" style="background:var(--bg);padding:16px">
+
+    <!-- Deceased info -->
+    <div style="background:linear-gradient(135deg,#1A1A1A,#2D2D2D);border-radius:var(--r20);padding:18px;margin-bottom:14px">
+      <div style="font-size:10px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Deceased Member</div>
+      <div style="font-family:'Lora',serif;font-size:18px;font-weight:700;color:#fff;margin-bottom:3px">Haji Abdul Rahman</div>
+      <div style="font-size:12px;color:rgba(255,255,255,.55);margin-bottom:10px">KA-BLR-00210 · Age 78 · Passed July 5, 2025 — 11:42 PM</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <span class="badge bg-gray" style="font-size:9px">🕊️ Burial Pending</span>
+        <span class="badge bg-gold" style="font-size:9px">⏱ 4 hrs 18 min ago</span>
+      </div>
+    </div>
+
+    <!-- Checklist -->
+    <div class="card">
+      <div class="card-hdr"><div class="card-ico gold">📋</div><div><div class="card-title">Burial Coordination Checklist</div></div></div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;gap:10px;align-items:center"><div style="width:24px;height:24px;border-radius:6px;background:var(--g500);display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;flex-shrink:0">✓</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--ink)">Death confirmed &amp; registered in MIC</div><div style="font-size:11px;color:var(--ink3)">Completed — July 5, 11:58 PM</div></div></div>
+        <div style="display:flex;gap:10px;align-items:center"><div style="width:24px;height:24px;border-radius:6px;background:var(--g500);display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;flex-shrink:0">✓</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--ink)">Family notified</div><div style="font-size:11px;color:var(--ink3)">Son — Ibrahim Abdul Rahman +91 98001 12345</div></div></div>
+        <div style="display:flex;gap:10px;align-items:center"><div style="width:24px;height:24px;border-radius:6px;background:var(--g500);display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;flex-shrink:0">✓</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--ink)">Ghusl (ritual washing) arranged</div><div style="font-size:11px;color:var(--ink3)">Masjid ghusl room — 4:00 AM July 6</div></div></div>
+        <div style="display:flex;gap:10px;align-items:center"><div style="width:24px;height:24px;border-radius:6px;background:var(--g800);display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;flex-shrink:0;box-shadow:0 0 0 3px rgba(26,71,49,.2)">4</div><div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--g800)">Kafan (shroud) prepared</div><div style="font-size:11px;color:var(--ink3)">In progress — Masjid store</div></div></div>
+        <div style="display:flex;gap:10px;align-items:center"><div style="width:24px;height:24px;border-radius:6px;background:var(--bdr2);display:flex;align-items:center;justify-content:center;color:var(--ink4);font-size:12px;flex-shrink:0">5</div><div style="flex:1"><div style="font-size:13px;color:var(--ink3)">Janazah prayer scheduled</div><div style="font-size:11px;color:var(--ink4)">After Fajr · July 6 · 5:30 AM</div></div></div>
+        <div style="display:flex;gap:10px;align-items:center"><div style="width:24px;height:24px;border-radius:6px;background:var(--bdr2);display:flex;align-items:center;justify-content:center;color:var(--ink4);font-size:12px;flex-shrink:0">6</div><div style="flex:1"><div style="font-size:13px;color:var(--ink3)">Burial plot confirmed</div><div style="font-size:11px;color:var(--ink4)">Shivajinagar Muslim Cemetery — Plot 42-B</div></div></div>
+        <div style="display:flex;gap:10px;align-items:center"><div style="width:24px;height:24px;border-radius:6px;background:var(--bdr2);display:flex;align-items:center;justify-content:center;color:var(--ink4);font-size:12px;flex-shrink:0">7</div><div style="flex:1"><div style="font-size:13px;color:var(--ink3)">Death certificate issued</div><div style="font-size:11px;color:var(--ink4)">BBMP registration — July 6</div></div></div>
+        <div style="display:flex;gap:10px;align-items:center"><div style="width:24px;height:24px;border-radius:6px;background:var(--bdr2);display:flex;align-items:center;justify-content:center;color:var(--ink4);font-size:12px;flex-shrink:0">8</div><div style="flex:1"><div style="font-size:13px;color:var(--ink3)">MIC card deactivated</div><div style="font-size:11px;color:var(--ink4)">Pending burial completion</div></div></div>
+      </div>
+    </div>
+
+    <button class="btn-p mb12">✓ Mark Step 4 Complete</button>
+    <button class="btn-s mb12">📢 Broadcast Janazah Time to Members</button>
+    <button class="btn-sm btn-g" style="width:100%;height:44px;font-size:13px">📞 Call Family — Ibrahim +91 98001 12345</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+<div class="sc-lbl">AD-05 · Death &amp; Burial Full Flow</div>
+</div>
+
+<!-- Admin Chat Dashboard -->
+<div class="sc">
+<div class="sc-num">A-51</div>
+<div class="phone">
+  <div class="sb sb-l"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="tbar"><div class="tb-back">←</div><div class="tb-title">Member Chats</div><div class="tb-act">🔍</div></div>
+  <div class="tabs">
+    <div class="tab on">All (24)</div>
+    <div class="tab">Unread (3)</div>
+    <div class="tab">Welfare (5)</div>
+    <div class="tab">Services (12)</div>
+  </div>
+  <div class="scr" style="background:var(--bg);padding:0">
+
+    <!-- Unread indicator -->
+    <div class="ban ban-green"><span>💬</span><span>3 unread messages from members. Welfare-related chats are marked confidential and visible only to you.</span></div>
+
+    <div style="background:var(--white);border-radius:0;overflow:hidden">
+
+      <!-- Unread chats -->
+      <div style="padding:10px 16px;background:var(--bdr2)"><div style="font-size:11px;font-weight:700;color:var(--ink4);text-transform:uppercase;letter-spacing:.5px">Unread</div></div>
+
+      <div style="padding:14px 16px;border-bottom:1px solid var(--bdr2);display:flex;gap:12px;align-items:flex-start;background:var(--g50)">
+        <div class="li-ava" style="width:48px;height:48px;font-size:22px;position:relative">👤<div style="position:absolute;top:-2px;right:-2px;width:14px;height:14px;background:var(--red);border-radius:50%;border:2px solid var(--white)"></div></div>
+        <div style="flex:1">
+          <div style="display:flex;justify-content:space-between;margin-bottom:2px"><div style="font-size:14px;font-weight:700;color:var(--ink)">Ruqaiyya Banu</div><div style="font-size:11px;color:var(--ink4)">Just now</div></div>
+          <div style="font-size:12px;color:var(--ink3)">Assalamu alaykum, I submitted welfare form...</div>
+          <div style="margin-top:4px;display:flex;gap:4px"><span class="badge" style="background:var(--redb);color:var(--red);font-size:9px">💚 Welfare</span><span class="badge bg-gray" style="font-size:9px">Confidential</span></div>
+        </div>
+      </div>
+
+      <div style="padding:14px 16px;border-bottom:1px solid var(--bdr2);display:flex;gap:12px;align-items:flex-start;background:var(--g50)">
+        <div class="li-ava" style="width:48px;height:48px;font-size:22px;position:relative">👤<div style="position:absolute;top:-2px;right:-2px;width:14px;height:14px;background:var(--red);border-radius:50%;border:2px solid var(--white)"></div></div>
+        <div style="flex:1">
+          <div style="display:flex;justify-content:space-between;margin-bottom:2px"><div style="font-size:14px;font-weight:700;color:var(--ink)">Mohammed Irfan Khan</div><div style="font-size:11px;color:var(--ink4)">2h ago</div></div>
+          <div style="font-size:12px;color:var(--ink3)">JazakAllah Khair! I'll submit the Maktab form...</div>
+          <div style="margin-top:4px"><span class="badge bg-green" style="font-size:9px">📚 Maktab</span></div>
+        </div>
+      </div>
+
+      <div style="padding:10px 16px;background:var(--bdr2);margin-top:2px"><div style="font-size:11px;font-weight:700;color:var(--ink4);text-transform:uppercase;letter-spacing:.5px">Read</div></div>
+
+      <div style="padding:14px 16px;border-bottom:1px solid var(--bdr2);display:flex;gap:12px;align-items:flex-start">
+        <div class="li-ava" style="width:48px;height:48px;font-size:22px">👤</div>
+        <div style="flex:1">
+          <div style="display:flex;justify-content:space-between;margin-bottom:2px"><div style="font-size:14px;font-weight:600;color:var(--ink)">Fatima Begum</div><div style="font-size:11px;color:var(--ink4)">July 5</div></div>
+          <div style="font-size:12px;color:var(--ink3)">Thank you for approving my complaint case admin ji</div>
+          <div style="margin-top:4px"><span class="badge bg-gray" style="font-size:9px">⚖️ Complaint</span></div>
+        </div>
+      </div>
+
+      <div style="padding:14px 16px;border-bottom:1px solid var(--bdr2);display:flex;gap:12px;align-items:flex-start">
+        <div class="li-ava" style="width:48px;height:48px;font-size:22px">👤</div>
+        <div style="flex:1">
+          <div style="display:flex;justify-content:space-between;margin-bottom:2px"><div style="font-size:14px;font-weight:600;color:var(--ink)">Yusuf Ansari</div><div style="font-size:11px;color:var(--ink4)">July 4</div></div>
+          <div style="font-size:12px;color:var(--ink3)">When will my relocation NOC be ready?</div>
+          <div style="margin-top:4px"><span class="badge bg-blue" style="font-size:9px">🚚 NOC</span></div>
+        </div>
+      </div>
+
+      <div style="padding:14px 16px;display:flex;gap:12px;align-items:flex-start">
+        <div class="li-ava" style="width:48px;height:48px;font-size:22px">👤</div>
+        <div style="flex:1">
+          <div style="display:flex;justify-content:space-between;margin-bottom:2px"><div style="font-size:14px;font-weight:600;color:var(--ink)">Ibrahim Sharif</div><div style="font-size:11px;color:var(--ink4)">July 3</div></div>
+          <div style="font-size:12px;color:var(--ink3)">Assalamu alaykum, I need help with...</div>
+          <div style="margin-top:4px"><span class="badge" style="background:var(--redb);color:var(--red);font-size:9px">💚 Welfare</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="spacer"></div>
+  </div>
+</div>
+<div class="sc-lbl">A-51 · Admin Chat Dashboard</div>
+</div>
+
+<!-- Poll Creation (Admin) -->
+<div class="sc">
+<div class="sc-num">A-52</div>
+<div class="phone">
+  <div class="sb sb-l"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="tbar"><div class="tb-back">←</div><div class="tb-title">Create Poll</div></div>
+  <div class="scr" style="background:var(--bg);padding:16px">
+    <div class="fgroup">
+      <label class="flabel">Poll Question <span class="req">*</span></label>
+      <div class="ftxt" style="min-height:64px">When should Maktab run for older children (14–18)?</div>
+    </div>
+
+    <div style="margin-bottom:14px">
+      <label class="flabel">Poll Options <span class="req">*</span></label>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;gap:8px;align-items:center"><div class="finput on" style="flex:1">🌅 After Fajr (5–7 AM)</div><button class="btn-sm btn-r" style="height:40px;width:40px;padding:0">✕</button></div>
+        <div style="display:flex;gap:8px;align-items:center"><div class="finput on" style="flex:1">🌆 After Asr (4–6 PM)</div><button class="btn-sm btn-r" style="height:40px;width:40px;padding:0">✕</button></div>
+        <div style="display:flex;gap:8px;align-items:center"><div class="finput on" style="flex:1">🌙 After Isha (8–10 PM)</div><button class="btn-sm btn-r" style="height:40px;width:40px;padding:0">✕</button></div>
+        <div style="display:flex;gap:8px;align-items:center"><div class="finput on" style="flex:1">📅 Weekends only</div><button class="btn-sm btn-r" style="height:40px;width:40px;padding:0">✕</button></div>
+        <button style="width:100%;height:40px;border:2px dashed var(--g400);border-radius:var(--r12);background:var(--g50);color:var(--g700);font-size:13px;font-weight:600;cursor:pointer">+ Add Option</button>
+      </div>
+    </div>
+
+    <div class="frow">
+      <div class="fgroup"><label class="flabel">Open Date</label><div class="finput on">July 8, 2025</div></div>
+      <div class="fgroup"><label class="flabel">Close Date</label><div class="finput on">July 15, 2025</div></div>
+    </div>
+
+    <div class="fgroup"><label class="flabel">Who Can Vote?</label>
+      <div class="tag-row">
+        <span class="tag on">All Members</span>
+        <span class="tag">Parents Only</span>
+        <span class="tag">Maktab Enrolled</span>
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;background:var(--white);border:1px solid var(--bdr);border-radius:var(--r12);padding:12px 14px;margin-bottom:14px">
+      <div><div style="font-size:13px;font-weight:600;color:var(--ink)">Show Results in Real-time</div><div style="font-size:11px;color:var(--ink3)">Members see live vote counts</div></div>
+      <div class="tog"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;background:var(--white);border:1px solid var(--bdr);border-radius:var(--r12);padding:12px 14px;margin-bottom:14px">
+      <div><div style="font-size:13px;font-weight:600;color:var(--ink)">Anonymous Voting</div><div style="font-size:11px;color:var(--ink3)">Admin cannot see individual votes</div></div>
+      <div class="tog off"></div>
+    </div>
+
+    <button class="btn-p mb12">📢 Publish Poll to All Members</button>
+    <button class="btn-s">👁️ Preview Poll</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+<div class="sc-lbl">A-52 · Create Community Poll</div>
+</div>
+
+</div>
+
+<!-- ══════════════════════════════════
+  SUPER ADMIN — FINAL DETAIL SCREENS
+══════════════════════════════════ -->
+<div class="rl">Super Admin · Final Screens — Admin Activity Log, Admin Onboarding, NM Policy, Platform Mgmt</div>
+<div class="srow">
+
+<!-- SD-04 Admin Activity Log Full -->
+<div class="sc">
+<div class="sc-num">SD-04</div>
+<div class="phone">
+  <div class="sb sb-sa"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="sa-tbar">
+    <div style="color:rgba(255,255,255,.5);font-size:22px">←</div>
+    <div style="font-family:'Lora',serif;font-size:16px;font-weight:700;color:#fff">Admin Activity Log</div>
+    <div style="font-size:13px;font-weight:600;color:var(--gold2)">Export</div>
+  </div>
+  <div class="tabs">
+    <div class="tab on">All Actions</div>
+    <div class="tab">SA Actions</div>
+    <div class="tab">Sensitive</div>
+    <div class="tab">By Admin</div>
+  </div>
+  <div class="scr" style="background:var(--bg);padding:14px 16px">
+
+    <div class="info purple mb12"><span>🔒</span><div>Tamper-proof national audit log. All entries are cryptographically signed. Cannot be modified or deleted by any user, including Super Admins.</div></div>
+
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--ink4);margin-bottom:8px">July 6, 2025</div>
+    <div style="background:var(--white);border-radius:var(--r16);border:1px solid var(--bdr);overflow:hidden;margin-bottom:10px">
+      <div style="padding:12px 14px;border-bottom:1px solid var(--bdr2)">
+        <div style="display:flex;justify-content:space-between;margin-bottom:3px"><div style="font-size:13px;font-weight:700;color:var(--ink)">SA: Emergency Alert Broadcast</div><div style="font-size:11px;color:var(--ink4)">4:12 AM</div></div>
+        <div style="font-size:12px;color:var(--ink3)">2.4M members · Flood warning · By SA Khalid Ansari</div>
+        <span class="badge bg-purple" style="font-size:9px;margin-top:6px">SA Action</span>
+      </div>
+      <div style="padding:12px 14px;border-bottom:1px solid var(--bdr2)">
+        <div style="display:flex;justify-content:space-between;margin-bottom:3px"><div style="font-size:13px;font-weight:700;color:var(--ink)">Death Registered — Haji Abdul Rahman</div><div style="font-size:11px;color:var(--ink4)">11:58 PM</div></div>
+        <div style="font-size:12px;color:var(--ink3)">KA-BLR-00210 · By Haji Rashid Khan · Jama Masjid</div>
+        <span class="badge bg-gray" style="font-size:9px;margin-top:6px">Admin Action</span>
+      </div>
+      <div style="padding:12px 14px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:3px"><div style="font-size:13px;font-weight:700;color:var(--ink)">BG Check Approved — BGC-2025-0421</div><div style="font-size:11px;color:var(--ink4)">6:30 PM</div></div>
+        <div style="font-size:12px;color:var(--ink3)">Mohammed Irfan + Zainab Banu · Nikaah cert issued</div>
+        <span class="badge bg-green" style="font-size:9px;margin-top:6px">Service Action</span>
+      </div>
+    </div>
+
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--ink4);margin-bottom:8px">July 5, 2025</div>
+    <div style="background:var(--white);border-radius:var(--r16);border:1px solid var(--bdr);overflow:hidden;margin-bottom:10px">
+      <div style="padding:12px 14px;border-bottom:1px solid var(--bdr2)">
+        <div style="display:flex;justify-content:space-between;margin-bottom:3px"><div style="font-size:13px;font-weight:700;color:var(--ink)">SA: Admin Suspended — Yusuf Bhat</div><div style="font-size:11px;color:var(--ink4)">2:14 PM</div></div>
+        <div style="font-size:12px;color:var(--ink3)">J&amp;K · 18-day case unresolved · By SA Khalid Ansari</div>
+        <span class="badge bg-red" style="font-size:9px;margin-top:6px">Sensitive</span>
+      </div>
+      <div style="padding:12px 14px;border-bottom:1px solid var(--bdr2)">
+        <div style="display:flex;justify-content:space-between;margin-bottom:3px"><div style="font-size:13px;font-weight:700;color:var(--ink)">NOC Issued — BLR to Mumbai</div><div style="font-size:11px;color:var(--ink4)">11:40 AM</div></div>
+        <div style="font-size:12px;color:var(--ink3)">Mohammed Irfan Khan · NOC-2025-BLR-0242</div>
+        <span class="badge bg-green" style="font-size:9px;margin-top:6px">Service Action</span>
+      </div>
+      <div style="padding:12px 14px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:3px"><div style="font-size:13px;font-weight:700;color:var(--ink)">SA: Fee Config Updated</div><div style="font-size:11px;color:var(--ink4)">9:00 AM</div></div>
+        <div style="font-size:12px;color:var(--ink3)">BG Check fee unchanged · By SA Khalid Ansari · 2FA verified</div>
+        <span class="badge bg-purple" style="font-size:9px;margin-top:6px">SA Action</span>
+      </div>
+    </div>
+
+    <button class="btn-pur mb12">📄 Export Full Audit Log (CSV)</button>
+    <button class="btn-s">🔍 Search Audit Log</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+<div class="sc-lbl">SD-04 · Admin Activity Log Full</div>
+</div>
+
+<!-- SA Admin Onboarding -->
+<div class="sc">
+<div class="sc-num">SA-41</div>
+<div class="phone">
+  <div class="sb sb-sa"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="sa-tbar">
+    <div style="color:rgba(255,255,255,.5);font-size:22px">←</div>
+    <div style="font-family:'Lora',serif;font-size:16px;font-weight:700;color:#fff">Appoint New Admin</div>
+    <div class="sa-only">SA</div>
+  </div>
+  <div class="ban ban-purple"><span>🧑‍💼</span><span>New admin appointments require SA authorisation and 2FA. The appointed admin receives an onboarding SMS and must complete training before activation.</span></div>
+  <div class="scr" style="background:var(--bg);padding:16px">
+
+    <div class="fgroup">
+      <label class="flabel">Select Member <span class="req">*</span></label>
+      <div style="background:var(--g50);border:1.5px solid var(--g400);border-radius:var(--r12);padding:12px 14px;display:flex;gap:10px;align-items:center">
+        <span style="font-size:22px">👤</span>
+        <div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--g800)">Mohammed Arshad Khan</div><div style="font-size:11px;color:var(--g600)">KA-BLR-00520 · Age 48 · 6 years member</div></div>
+        <span style="color:var(--g500);font-size:16px">✓</span>
+      </div>
+    </div>
+
+    <div class="fgroup">
+      <label class="flabel">Assign to Masjid <span class="req">*</span></label>
+      <div style="background:var(--g50);border:1.5px solid var(--g400);border-radius:var(--r12);padding:12px 14px;display:flex;gap:10px;align-items:center">
+        <span style="font-size:22px">🕌</span>
+        <div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--g800)">Al-Rahma Masjid, Yelahanka</div><div style="font-size:11px;color:var(--g600)">340 members · Currently no admin</div></div>
+        <span style="color:var(--g500);font-size:16px">✓</span>
+      </div>
+    </div>
+
+    <div class="fgroup"><label class="flabel">Admin Role</label>
+      <div class="tag-row">
+        <span class="tag on">Area Admin (Full)</span>
+        <span class="tag">Assistant Admin</span>
+        <span class="tag">Maktab Admin</span>
+      </div>
+    </div>
+
+    <div class="fgroup"><label class="flabel">Appointment Reason / Notes <span class="req">*</span></label>
+      <div class="ftxt">Mohammed Arshad Khan has been a trusted community leader for 6 years. Recommended by Jama Masjid admin Haji Rashid. Al-Rahma Masjid has been without admin for 3 months. Background verified — no complaints or issues.</div>
+    </div>
+
+    <!-- Onboarding steps -->
+    <div class="card">
+      <div class="card-hdr"><div class="card-ico purple">📋</div><div><div class="card-title">Onboarding Process</div><div class="card-sub">Will be triggered on appointment</div></div></div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;gap:8px;align-items:center;font-size:12px;color:var(--ink2)"><span>1️⃣</span>SMS + App notification sent to new admin</div>
+        <div style="display:flex;gap:8px;align-items:center;font-size:12px;color:var(--ink2)"><span>2️⃣</span>Admin completes 2-hour MIC training module</div>
+        <div style="display:flex;gap:8px;align-items:center;font-size:12px;color:var(--ink2)"><span>3️⃣</span>Admin account activated after training quiz</div>
+        <div style="display:flex;gap:8px;align-items:center;font-size:12px;color:var(--ink2)"><span>4️⃣</span>SA receives confirmation — admin is live</div>
+      </div>
+    </div>
+
+    <button class="btn-pur mb12">🧑‍💼 Appoint Admin (2FA Required)</button>
+    <button class="btn-s">👁️ Preview Appointment Letter</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+<div class="sc-lbl">SA-41 · Admin Onboarding &amp; Appointment</div>
+</div>
+
+<!-- SA-42 NM Policy Configuration -->
+<div class="sc">
+<div class="sc-num">SA-42</div>
+<div class="phone">
+  <div class="sb sb-sa"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="sa-tbar">
+    <div style="color:rgba(255,255,255,.5);font-size:22px">←</div>
+    <div style="font-family:'Lora',serif;font-size:16px;font-weight:700;color:#fff">NM Policy Config</div>
+    <div class="sa-only">SA</div>
+  </div>
+  <div class="scr" style="background:var(--bg);padding:16px">
+    <div class="info purple mb12"><span>📋</span><div>NM (Non-Muslim Community Visitor) policy governs what services NM members can access. Changes apply platform-wide instantly.</div></div>
+
+    <div style="font-size:13px;font-weight:700;margin-bottom:10px">Services Available to NM Members</div>
+    <div style="background:var(--white);border-radius:var(--r16);border:1px solid var(--bdr);overflow:hidden;margin-bottom:14px">
+      <div style="padding:12px 14px;border-bottom:1px solid var(--bdr2);display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:13px;font-weight:600;color:var(--ink)">🏥 Medical Camps &amp; Health Events</div><div style="font-size:11px;color:var(--ink3)">Open community events</div></div><div class="tog"></div></div>
+      <div style="padding:12px 14px;border-bottom:1px solid var(--bdr2);display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:13px;font-weight:600;color:var(--ink)">🤝 Interfaith Dialogue Events</div><div style="font-size:11px;color:var(--ink3)">Open to all</div></div><div class="tog"></div></div>
+      <div style="padding:12px 14px;border-bottom:1px solid var(--bdr2);display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:13px;font-weight:600;color:var(--ink)">💚 Welfare &amp; Relief Campaigns</div><div style="font-size:11px;color:var(--ink3)">Can receive &amp; donate</div></div><div class="tog"></div></div>
+      <div style="padding:12px 14px;border-bottom:1px solid var(--bdr2);display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:13px;font-weight:600;color:var(--ink)">📖 Arabic Language Classes</div><div style="font-size:11px;color:var(--ink3)">Non-religious linguistic study</div></div><div class="tog off"></div></div>
+      <div style="padding:12px 14px;border-bottom:1px solid var(--bdr2);display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:13px;font-weight:600;color:var(--ink)">🩸 Blood Donation Registry</div><div style="font-size:11px;color:var(--ink3)">Can donate &amp; request</div></div><div class="tog"></div></div>
+      <div style="padding:12px 14px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:13px;font-weight:600;color:var(--ink)">📢 Notice Board (Read Only)</div></div><div class="tog"></div></div>
+    </div>
+
+    <div style="font-size:13px;font-weight:700;margin-bottom:10px">Services NOT Available to NM (Locked)</div>
+    <div style="background:var(--redb);border:1px solid #FECACA;border-radius:var(--r16);padding:14px;margin-bottom:14px">
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="font-size:12px;color:var(--red)">✗ Marriage Background Check</div>
+        <div style="font-size:12px;color:var(--red)">✗ Relocation NOC</div>
+        <div style="font-size:12px;color:var(--red)">✗ Quran / Maktab Classes</div>
+        <div style="font-size:12px;color:var(--red)">✗ Complaint &amp; Mediation Services</div>
+        <div style="font-size:12px;color:var(--red)">✗ Death &amp; Burial Services</div>
+        <div style="font-size:12px;color:var(--red)">✗ Zakat / Fitrana collection</div>
+      </div>
+    </div>
+
+    <div class="fgroup"><label class="flabel">NM Registration Fee</label>
+      <div style="display:flex;align-items:center;gap:10px;background:var(--g50);border:1.5px solid var(--g400);border-radius:var(--r12);padding:12px 14px">
+        <span style="font-size:20px">💳</span>
+        <div style="flex:1"><div style="font-size:14px;font-weight:700;color:var(--g800)">₹0 — Always Free</div><div style="font-size:11px;color:var(--g600)">Locked. NM registration is permanently free.</div></div>
+        <span class="badge bg-green" style="font-size:10px">Locked</span>
+      </div>
+    </div>
+
+    <button class="btn-pur mb12">💾 Save NM Policy (2FA Required)</button>
+    <button class="btn-s">📄 Download NM Policy Document</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+<div class="sc-lbl">SA-42 · NM Policy Configuration</div>
+</div>
+
+<!-- SA-43 Platform Version Management -->
+<div class="sc">
+<div class="sc-num">SA-43</div>
+<div class="phone">
+  <div class="sb sb-sa"><span>9:41</span><div class="sico">📶 🔋</div></div>
+  <div class="sa-tbar">
+    <div style="color:rgba(255,255,255,.5);font-size:22px">←</div>
+    <div style="font-family:'Lora',serif;font-size:16px;font-weight:700;color:#fff">Platform Management</div>
+    <div class="sa-only">SA</div>
+  </div>
+  <div class="scr" style="background:var(--bg);padding:16px">
+
+    <div class="kpi-grid">
+      <div class="kpi"><div class="kpi-l">Current Version</div><div class="kpi-n" style="color:var(--g600)">v4.8.2</div><div class="kpi-ch">Released Jun 28</div></div>
+      <div class="kpi"><div class="kpi-l">Platform Uptime</div><div class="kpi-n" style="color:var(--g600)">99.94%</div><div class="kpi-ch">Last 90 days</div></div>
+      <div class="kpi"><div class="kpi-l">Active Sessions</div><div class="kpi-n">84,200</div><div class="kpi-ch">Right now</div></div>
+      <div class="kpi"><div class="kpi-l">API Calls Today</div><div class="kpi-n">3.2M</div><div class="kpi-ch">↑12% vs yesterday</div></div>
+    </div>
+
+    <div style="font-size:13px;font-weight:700;margin-bottom:10px">Version History</div>
+    <div style="background:var(--white);border-radius:var(--r16);border:1px solid var(--bdr);overflow:hidden;margin-bottom:14px">
+      <div style="padding:12px 14px;border-bottom:1px solid var(--bdr2);background:var(--g50);border-left:3px solid var(--g500)">
+        <div style="display:flex;justify-content:space-between;margin-bottom:2px"><div style="font-size:13px;font-weight:700;color:var(--g800)">v4.8.2 — Current</div><div style="font-size:11px;color:var(--ink4)">Jun 28, 2025</div></div>
+        <div style="font-size:12px;color:var(--ink3)">Blood donation registry · Welfare application flow · Bulk SMS admin tool</div>
+      </div>
+      <div style="padding:12px 14px;border-bottom:1px solid var(--bdr2)">
+        <div style="display:flex;justify-content:space-between;margin-bottom:2px"><div style="font-size:13px;font-weight:600;color:var(--ink)">v4.8.0</div><div style="font-size:11px;color:var(--ink4)">Jun 1, 2025</div></div>
+        <div style="font-size:12px;color:var(--ink3)">Housing type registration · ₹100 fee · Family member detail</div>
+      </div>
+      <div style="padding:12px 14px;border-bottom:1px solid var(--bdr2)">
+        <div style="display:flex;justify-content:space-between;margin-bottom:2px"><div style="font-size:13px;font-weight:600;color:var(--ink)">v4.7.0</div><div style="font-size:11px;color:var(--ink4)">Apr 15, 2025</div></div>
+        <div style="font-size:12px;color:var(--ink3)">NM community visitor flow · Support chat · Prayer times module</div>
+      </div>
+      <div style="padding:12px 14px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:2px"><div style="font-size:13px;font-weight:600;color:var(--ink)">v4.6.0</div><div style="font-size:11px;color:var(--ink4)">Feb 20, 2025</div></div>
+        <div style="font-size:12px;color:var(--ink3)">Super Admin app launch · National analytics · SA audit log</div>
+      </div>
+    </div>
+
+    <div style="font-size:13px;font-weight:700;margin-bottom:10px">Upcoming Release — v4.9.0</div>
+    <div style="background:var(--purb);border:1.5px solid #DDD6FE;border-radius:var(--r16);padding:14px;margin-bottom:14px">
+      <div style="font-size:11px;color:var(--purple);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Planned Features</div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div style="font-size:12px;color:var(--ink2)">📊 AI-powered donation fraud detection</div>
+        <div style="font-size:12px;color:var(--ink2)">🗺️ Live Masjid map (national view)</div>
+        <div style="font-size:12px;color:var(--ink2)">📱 WhatsApp integration for notifications</div>
+        <div style="font-size:12px;color:var(--ink2)">🌙 Ramadan special features &amp; timetable</div>
+      </div>
+    </div>
+
+    <button class="btn-pur mb12">🚀 Schedule Platform Update</button>
+    <button class="btn-s mb12">🔧 Enter Maintenance Mode</button>
+    <button class="btn-sm btn-gr" style="width:100%;height:44px;font-size:13px">📊 View Server Health Dashboard</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+<div class="sc-lbl">SA-43 · Platform Version Mgmt</div>
+</div>
+
+</div>
+
+<!-- ══ FINAL GRAND SUMMARY ══ -->
+<div class="rl" style="margin-top:48px">MIC Platform — Complete. All Screens Designed.</div>
+<div style="max-width:1400px;width:100%;background:#0A0A0A;border-radius:24px;padding:40px;display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:24px">
+
+  <div style="background:#111;border-radius:18px;padding:24px">
+    <div style="font-size:12px;font-weight:700;color:#86EFAC;margin-bottom:14px">📱 USER APP — 68 screens</div>
+    <div style="font-size:11px;color:#444;line-height:2">
+      Onboarding: 4<br>Registration (incl. housing): 9<br>Main app: 3<br>Services request: 6<br>Community: 4<br>Account: 4<br>NM Registration: 6<br>Detail pages D-01→D-12: 12<br>Profile &amp; settings: 6<br>App tour &amp; states: 6<br>New screens U-61→U-68: 8
+    </div>
+  </div>
+
+  <div style="background:#111;border-radius:18px;padding:24px">
+    <div style="font-size:12px;font-weight:700;color:#E8C96A;margin-bottom:14px">🛡️ ADMIN APP — 52 screens</div>
+    <div style="font-size:11px;color:#444;line-height:2">
+      Dashboard: 2<br>User management: 3<br>Services review: 4<br>Complaints: 3<br>Masjid: 3<br>Donations: 3<br>NM management: 4<br>Detail AD-01→AD-12: 12<br>Continuation A-35→A-46: 12<br>New A-47→A-52: 6<br>Death &amp; Burial full: 1
+    </div>
+  </div>
+
+  <div style="background:#111;border-radius:18px;padding:24px">
+    <div style="font-size:12px;font-weight:700;color:#C4B5FD;margin-bottom:14px">👑 SUPER ADMIN — 63 screens</div>
+    <div style="font-size:11px;color:#444;line-height:2">
+      National dashboard: 2<br>States &amp; Masjids: 3<br>Admin management: 4<br>Escalated cases: 3<br>Financials &amp; welfare: 3<br>Analytics &amp; reports: 3<br>Profile &amp; broadcast: 3<br>Special powers: 3<br>NM oversight: 4<br>Detail SD-01→SD-12: 12<br>SA-29→SA-40: 12<br>SA-41→SA-43 (Batch 8): 3<br>Other SA screens: 8
+    </div>
+  </div>
+
+  <div style="background:#181818;border-radius:18px;padding:28px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center">
+    <div style="font-size:11px;color:#2A2A2A;text-transform:uppercase;letter-spacing:2px;margin-bottom:14px">Platform Grand Total</div>
+    <div style="font-family:'Lora',serif;font-size:88px;font-weight:700;color:#fff;line-height:1">231</div>
+    <div style="font-size:14px;color:#2A2A2A;margin:8px 0 22px">screens · 3 apps</div>
+    <div style="display:flex;flex-direction:column;gap:8px;width:100%;margin-bottom:18px">
+      <div style="background:#0D2B1A;border-radius:10px;padding:10px 14px;display:flex;justify-content:space-between"><span style="font-size:12px;color:#86EFAC">📱 User</span><span style="font-size:20px;font-weight:800;color:#fff">68</span></div>
+      <div style="background:#1A1600;border-radius:10px;padding:10px 14px;display:flex;justify-content:space-between"><span style="font-size:12px;color:#E8C96A">🛡️ Admin</span><span style="font-size:20px;font-weight:800;color:#fff">52</span></div>
+      <div style="background:#1A0A2E;border-radius:10px;padding:10px 14px;display:flex;justify-content:space-between"><span style="font-size:12px;color:#C4B5FD">👑 SA</span><span style="font-size:20px;font-weight:800;color:#fff">63</span></div>
+    </div>
+    <div style="font-size:10px;color:#252525;line-height:1.9">
+      8 files · Pure static HTML<br>
+      Zero JS template literals<br>
+      390px · iPhone frame<br>
+      Lora + Inter · MIC design system
+    </div>
+  </div>
+
+</div>
+
+<div style="text-align:center;margin-top:44px;padding-bottom:60px;font-size:12px;color:#222;line-height:2.4">
+  MIC Platform — Batch 8 · 12 screens · Platform Design Complete<br>
+  User: Prayer Times · Islamic Calendar · Notice Board · Community Poll<br>
+  Admin: Death &amp; Burial Full Flow · Admin Chat Dashboard · Poll Creation<br>
+  SA: Admin Activity Log · Admin Onboarding · NM Policy Config · Platform Version Mgmt<br>
+  <strong style="color:#333">Grand Total: 231 screens across 8 files · User (68) + Admin (52) + Super Admin (63)</strong>
+</div>
+
+</div>
+</body>
+</html>
